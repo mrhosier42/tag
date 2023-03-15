@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="d-flex bg-color1 text-white justify-content-center align-items-center m-5 p-3">
+        <div class="d-flex flex-column">
+            <h1>Edit Semester</h1>
+            <div>
+                <%= bootstrap_form_with model: @semester, url: semester_path(@semester), method: :patch, local: true do |f| %>
+                    <div class="field-dark">
+<!--                      removed summer-->
+                        <% semester_array = ['Fall','Spring'] %>
+                        <%= f.select :semester, semester_array%>
+                        <%= f.select :year, (Time.zone.now.year - 10)..(Time.zone.now.year + 10) %>
+                    </div>
+                    
+                    <div>
+                        <%= f.file_field :student_csv, :accept => 'text/csv' %>
+                        <%= f.file_field :sponsor_csv, :accept => 'text/csv' %>
+                    </div>
+                    <%= f.submit %>
+                    <%= link_to "Back",semester_path(@semester), class: "btn btn-secondary"%>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
