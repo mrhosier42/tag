@@ -5,12 +5,8 @@
                 <div>
                     <h3><%= link_to semesters_path, class: "" do %><%= image_tag "arrow-left-circle-fill.svg", class:"mr-1", style: "height:32px"%><% end %><%= @semester.semester%> <%= @semester.year%></h3>
                     <ul class="list-unstyled ps-0">
-                        
-<!--                        <li class="mb-1"><%#= link_to "Add API Key", enter_github_key_path(@semester), class: "btn btn-t d-inline-flex align-items-center rounded border-0"%></li>-->
-<!--                        <li class="mb-1"><%#= link_to "New Repository", post_new_repository_path(@semester), class: "btn btn-t d-inline-flex align-items-center rounded border-0"%></li>-->
                         <li class="border-top my-3"></li>
                         <li class="mb-1"><%= link_to "Edit Semester", edit_semester_path(@semester), class: "btn btn-t d-inline-flex align-items-center rounded border-0"%></li>
-<!--                        <li class="mb-1"><%#= link_to "Edit Sprints", semester_sprints_path(@semester), class: "btn btn-t d-inline-flex align-items-center rounded border-0"%></li>-->
                     </ul>
                 </div>
             </div>
@@ -25,31 +21,6 @@
                         <%= f.submit "View"%>
                     <% end %>
                 </div>
-
-<!--              HIDING GITHUB ACTIVITY UNTIL IT IS PROPERLY WORKING-->
-<!--                <div class="col-6">-->
-<!--                    <h2>GitHub Activity</h2>-->
-                    <%#= form_with(url: show_repository_url(@semester), method: "get", local: true) do%>
-<!--                        <div class = "mb-3">-->
-<!--                            <label class = "form-label" for = "repo_id">Team</label>-->
-<!--                            <select name = "repo_id" class = "form-select">-->
-                                <%#= @repos.each do |repo| %>
-<!--                                    <option <%#=if session[:repo_id]=="#{repo.id}" then "selected" end%> value="<%#= repo.id %>"><%#= repo.team %></option>-->
-                                <%# end %>
-<!--                            </select>-->
-<!--                        </div>-->
-<!--                        <div class = "mb-3">-->
-<!--                            <label class = "form-label" for = "repo_id">Sprint</label>-->
-<!--                            <select name = "sprint_id" class = "form-select">-->
-                            <%#= @sprints.each do |sprint| %>
-<!--                                <option <%#=if session[:repo_sprint_id]=="#{sprint.id}" then "selected" end%> value="<%#= sprint.id  %>"><%#= sprint.name %></option>-->
-                            <%# end %>
-<!--                            </select>-->
-<!--                        </div>-->
-<!--                        <input type = "submit" name = "commit" value = "Submit" class="btn btn-secondary" data-disable-with = "Submit">-->
-                    <%# end %>
-<!--                    <p style = "color: red"><i class="material-icons">warning</i>This process takes a while to load!</p>-->
-<!--                </div>-->
                 <div class="mt-4">
                     <% if teamExist(@teams)%>
                         <h2>Team Status</h2>
@@ -99,9 +70,6 @@
                                 <% end %>
                             </tbody>
                         </table>
-                    <% else %>
-<!--                    TODO: Might need to add some content here-->
-<!--                        <h2>There are no teams in this semester</h2>-->
                     <% end %>
                 </div>
             </div>
