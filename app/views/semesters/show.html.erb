@@ -1,26 +1,36 @@
-<div class="container mt-3 maint">
+<div class="container mt-3">
     <div class="row">
         <div class="col-2">
             <div>
                 <div>
-                    <h3><%= link_to semesters_path, class: "" do %><%= image_tag "arrow-left-circle-fill.svg", class:"mr-1", style: "height:32px"%><% end %><%= @semester.semester%> <%= @semester.year%></h3>
+                    <h2><%= link_to semesters_path, class: "" do %><i class="bi bi-arrow-return-left"></i><% end %></h2>
+                      <h3><%= @semester.semester%> <%= @semester.year%></h3>
                     <ul class="list-unstyled ps-0">
                         <li class="border-top my-3"></li>
-                        <li class="mb-1"><%= link_to "Edit Semester", edit_semester_path(@semester), class: "btn btn-t d-inline-flex align-items-center rounded border-0"%></li>
+                        <li>
+                          <div class="col-sm-8">
+                            <%= bootstrap_form_with url: semester_team_path(@semester), method: "get", local: true do |f|%>
+                              <%= f.select :team, @teams %>
+                              <hr>
+                              <%= f.select :sprint, @sprintList %>
+                              <%= f.submit "View"%>
+                            <% end %>
+                          </div>
+                          <hr>
+                        </li>
+                      <li class="mb-1">
+                        <button class="btn btn-primary">
+                          <%= link_to "Edit Semester",
+                                      edit_semester_path(@semester),
+                                      class: "btn btn-t d-inline-flex align-items-center rounded border-0"%>
+                        </button>
+                      </li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="col-10 justify-content-center align-items-center text-center">
+        <div class="col-10 text-center">
             <div class="row">
-                <div class="col-6">
-                    <h2>Student Survey</h2>
-                    <%= bootstrap_form_with url: semester_team_path(@semester), method: "get", local: true do |f|%>
-                        <%= f.select :team, @teams %>
-                        <%= f.select :sprint, @sprintList %>
-                        <%= f.submit "View"%>
-                    <% end %>
-                </div>
                 <div class="mt-4">
                     <% if teamExist(@teams)%>
                         <h2>Team Status</h2>
@@ -30,7 +40,7 @@
                                 <tr>
                                     <th scope="col">Team</th>
                                     <% @sprintList.each do |s| %>
-                                        <th scope="col"><%= s %> Status</th>
+                                        <th scope="col"><%= s %></th>
                                     <% end %>
                                 </tr>
                             </thead>
@@ -40,7 +50,7 @@
                                         <th><%= item %></th>
                                         <% @sprintList.each do |s| %>
                                             <td>
-                                                <div class="d-flex flex-row m-0">
+                                                <div>
                                                     <% if @flags[s][item].include?("student blank")%>
                                                         <% if unfinishedSprint(@teams, @flags, s)%>
                                                             <div class="p-2 m-0"><p class="p-0 m-0"><%= image_tag "question-circle-fill.svg", class:"", style: "height:16px", title: "This sprint has not yet concluded"%></p></div>
