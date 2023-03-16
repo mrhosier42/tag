@@ -13,7 +13,7 @@ This application is
 # Installating Software
 ## Windows or Linux/macOS
 #### NOTE: Be sure to download and install the corresponding operating system supported files.
-1. Download and install [Ruby Installer](https://rubyinstaller.org/downloads/)
+1. Download and install [Ruby Installer](https://www.ruby-lang.org/en/downloads/releases/)
 2. Download and install [Node Installer](https://nodejs.org/en/download/)
 3. Download and install [Postgress](https://www.postgresql.org/download/)
 
