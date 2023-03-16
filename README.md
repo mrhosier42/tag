@@ -18,13 +18,13 @@ This application is
 ## Windows
 ### Step-by-step instructions on how to install your project on Windows.
 
-1. Install Node: download the Windows installer from the Node.js website and run it.
+1. Install [Node]{https://nodejs.org/en/download/}: download the Windows installer from the Node.js website and run it.
 2. Install Ruby: download the Ruby installer from the RubyInstaller website and run it.
 3. Install Rails: open a command prompt and run the following command: gem install rails
 4. Install Yarn: download the Windows installer from the Yarn website and run it.
-5. Install Python: download the Python installer from the Python website and run it.
+5. Install [Python]{}: download the Python installer from the Python website and run it.
 6. Clone the repository using the following command: ```git clone``` 
-7. Navigate to the project directory using the following command: ```cd your-project
+7. Navigate to the project directory using the following command: ```cd your-project```
 8. Install the necessary dependencies using the following command: ```yarn install```
 9. Install Ruby gems using the following command: ```bundle install```
 10. Create the database using the following command: ```rails db:create```
