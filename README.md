@@ -34,5 +34,6 @@ This application is
 2. Create a new semester
 3. Input client and student survey data
 4. Select a sprint and semester
+5. View the page team you want to review
 
 
