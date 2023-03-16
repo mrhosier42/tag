@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="row">
+        <div class="col-2 sticky-top h-100">
+            <div>
+              <div class="text-center">
+                <div class="d-inline-block mx-auto" style="margin-left: 50px;">
+                  <%= image_tag 'Homepage.png', class: 'w-100', style: 'max-width: 25rem;'%>
+                  <%= link_to "Create Semester", new_semester_path, class: "btn btn-t btn-primary d-inline-flex align-items-center rounded border-0"%>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="col-10 justify-content-center align-items-center text-center">
+            <h3>Select Semester</h3>
+          <div class="box">
+          <div class="semester-list">
+            <% current_year = nil %>
+            <% @semesters.each do |s| %>
+              <% year = s.year %>
+              <% semester = s.semester %>
+              <% if year != current_year %>
+                <% current_year = year %>
+                <h3 class="year-header"><%= year %></h3>
+              <% end %>
+              <div class="semester-item">
+                <div class="semester-name"><%= semester.capitalize %> <%= year %></div>
+                <div class="semester-link-container">
+                  <%= link_to "#{s.semester} #{s.year}", semester_path(s), class: "lnk-blue d-inline-flex text-decoration-none rounded"%>
+                  <%= semester_dropdown_menu(s) %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+
+        </div>
+    </div>
+</div>

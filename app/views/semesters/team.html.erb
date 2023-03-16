@@ -1,0 +1,737 @@
+<body>
+    <%# overwrite the navbar %>
+    <nav class="navbar navbar-expand-md navbar-dark bg-color1 fixed-top"; style = "height: 65px;">
+        <%=link_to 'Capstone App', semesters_path, class:"navbar-brand ml-2"%>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse"></div>
+        <div class="collapse navbar-collapse">
+            <div class="container ml-1" style="max-width:500px">
+                <div class="row">
+                    <div class="col">
+                        <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[@sprints.index(@sprint)-1]) do %>
+                            <%= image_tag "chevron-double-left.svg", class:"", style: "height:48px", title: "sprint left"%>
+                        <% end %>
+                    </div>
+                    <div class="col">
+                        <%= link_to semester_team_path(@semester, :team => @teams[@teams.index(@team)-1], :sprint => @sprint) do %>
+                            <%= image_tag "chevron-left.svg", class:"", style: "height:48px", title: "team left"%>
+                        <% end %>
+                    </div>
+                    <div class="col">
+                        <h2 class="navbar-brand ml-2 text-center"><%= "#{@team}, #{@sprint}"%></h2>
+                    </div>
+                    <div class="col">
+                        <% if @teams[@teams.index(@team)+1].nil? == true %>
+                            <%= link_to semester_team_path(@semester, :team => @teams[0], :sprint => @sprint) do %>
+                                <%= image_tag "chevron-right.svg", class:"", style: "height:48px", title: "team right"%>
+                            <% end %>
+                        <% else %>
+                            <%= link_to semester_team_path(@semester, :team => @teams[@teams.index(@team)+1], :sprint => @sprint) do %>
+                                <%= image_tag "chevron-right.svg", class:"", style: "height:48px", title: "team right"%>
+                            <% end %>
+                        <% end %>
+                    </div>
+                    <div class="col">
+                        <% if @sprints[@sprints.index(@sprint)+1].nil? == true %>
+                            <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[0]) do %>
+                                <%= image_tag "chevron-double-right.svg", class:"", style: "height:48px", title: "sprint right"%>
+                            <% end %>
+                        <% else %>
+                            <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[@sprints.index(@sprint)+1]) do %>
+                                <%= image_tag "chevron-double-right.svg", class:"", style: "height:48px", title: "sprint right"%>
+                            <% end %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+            <% if user_signed_in? %>
+                <%= link_to current_user.email, edit_user_registration_path, method: :get, class: 'pr-1 nav-link text-white'%>
+                <%= image_tag "person-circle.svg", class:"pr-2" %>
+                <%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: 'btn btn-secondary'%>
+            <% else %>
+                <%= link_to 'Sign In', new_user_session_path, class: 'btn btn-secondary'%>
+            <% end %>
+        </div>
+    </nav>
+    <div class="container">
+        <button type="button" class="btn btn-floating btn-lg" id="btn-back-to-top">
+            <%= image_tag "arrow-up.svg", style: "height:32px"%>
+        </button>
+        <div class="row">
+            <div class="col-3">
+                <div>
+                    <h1 class="ml-2 mt-2" style="position:fixed;"><%= link_to semester_path(@semester), class: "", style: "position:fixed;" do %><%= image_tag "arrow-left-circle-fill.svg", class:"mr-5 mb-1", style: "height:32px;"%><% end %> <span class="ml-5">Menu</span> </h1>
+                    <br>
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small mt-5" style="position:fixed;">
+                        <li class="border-top my-3" style="position:fixed;"></li>
+                        <li class="mb-2"><button id="btn-jump-to-tms" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Team Member Scores</button></li>
+                        <br>
+                        <br>
+                        <li class="mb-2"><button id="btn-jump-to-cs" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Scores</button></li>
+                        <br>
+                        <br>
+                        <li class="mb-2"><button id="btn-jump-to-tmr" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;"> Team Member Responses</button></li>
+                        <br>
+                        <br>
+                        <li class="mb-2"><button id="btn-jump-to-sqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Student Qualitative Questions</button></li>
+                        <br>
+                        <br>
+                        <li class="mb-2"><button id="btn-jump-to-cqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Qualitative Questions</button></li>
+                        <br>
+                        <br>
+                        <li>
+                            <div>
+                                <%= bootstrap_form_with url: semester_team_path(@semester), method: "get", local: true do |f|%>
+                                    <%= f.select :team, @teams %>
+                                    <%= f.select :sprint, ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"] %>
+                                    <%= f.submit "Submit"%>
+                                <% end %>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-9">
+
+<!--              Hiding team flags (one in big red text) for now-->
+                <%# if !@flags.empty? %>
+<!--                    <div class="bg-danger text-white p-2">-->
+<!--                        <h1>Team Flags</h1>-->
+<!--                        <div class="mb-2 pb-2">-->
+<!--                            <div>-->
+<!--                                <div>-->
+<!--                                    <ul>-->
+                                        <%# if @flags.include?("student blank") %>
+<!--                                            <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> There is no student survey data for this semester</p>-->
+                                        <%# end %>
+                                        <%# if @flags.include?("client blank") %>
+<!--                                            <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> There is no sponsor survey data for this semester</p>-->
+                                        <%# end %>
+                                        <%# if @flags.include?("missing submit") %>
+<!--                                            <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> At least one of the students failed to submit a survey</p>-->
+                                        <%# end %>
+                                        <%# if @flags.include?("low score") %>
+<!--                                            <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> At least one of the students received an average rating lower than 4</p>-->
+                                        <%# end %>
+                                        <%# if !getClientScore(@semester, @team, @sprint).instance_of?(String)%>
+                                            <%# if getClientScore(@semester, @team, @sprint) <= 3 %>
+<!--                                                <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> The client is unsatisfied</p>-->
+                                            <%# end %>
+                                        <%# end %>
+<!--                                    </ul>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                <%# end %>
+                <% unless @flags.include?("student blank") %>
+                    <div>
+                        <h1 id="tms">Team Member Scores</h1>
+                        <div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Average Score (including self-scores)</th>
+                                        <th>Average Score (NOT including self-scores)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @self_submitted_names.each do |name|%>
+                                        <tr>
+                                            <th><%=name[0]%></th>
+                                            <td class="<%=if name[-2].is_a?(String) or name[-2] < 4 then "text-white bg-danger" end%>"><%=name[-2]%></td>
+                                            <td class="<%=if name.last() < 4 then "text-white bg-danger" end%>"><%=name.last()%></td>
+                                        </tr>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <% end %>
+
+                <br>
+                <% if !@flags.include?("client blank") %>
+                    <div>
+                        <h1 id="cs">Client Scores</h1>
+                        <div>
+                            <table class="table">
+                                <tr>
+                                    <th>The team was on time and professional during our meeting</th>
+                                    <td class="<%=if @cliSurvey[0][:q2_1] != "Exceeded expectations" && @cliSurvey[0][:q2_1] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_1]%></td>                               
+                                </tr>
+                                <tr>
+                                    <th>The team was prepared for their meeting with me</th>
+                                    <td class="<%=if @cliSurvey[0][:q2_2] != "Exceeded expectations" && @cliSurvey[0][:q2_2] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_2]%></td>                               
+                                </tr>
+                                <tr>
+                                    <th>The team is communicating with me clearly</th>
+                                    <td class="<%=if @cliSurvey[0][:q2_3] != "Exceeded expectations" && @cliSurvey[0][:q2_3] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_3]%></td>                               
+                                </tr>
+                                <tr>
+                                    <th>The team met the goals we agreed to at our last meeting</th>
+                                    <td class="<%=if @cliSurvey[0][:q2_4] != "Exceeded expectations" && @cliSurvey[0][:q2_4] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_4]%></td>                               
+                                </tr>
+                                <tr>
+                                    <th>The team listended to my feedback</th>
+                                    <td class="<%=if @cliSurvey[0][:q2_5] != "Exceeded expectations" && @cliSurvey[0][:q2_5] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_5]%></td>                               
+                                </tr>
+                                <tr>
+                                    <th>The team set appropriate goals for the next two weeks</th>
+                                    <td class="<%=if @cliSurvey[0][:q2_6] != "Exceeded expectations" && @cliSurvey[0][:q2_6] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_6]%></td>                               
+                                </tr>
+                                <tr>
+                                    <th>Clients average score</th>
+                                    <td><%=getClientScore(@semester, @team, @sprint)%></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                <% end %>
+
+                <br>
+                <% unless @flags.include?("student blank") %>
+                    <div id="tmr">
+                        <h1>Team Member Responses <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="<% @studSurvey.each do |s| %> <%="#{s[:q1]}Collapse"%> <%end%>">Expand All</button></h1>
+                        <div>
+                            <% @studSurvey.each do |s| %>
+                                <div class="mb-2">
+                                    <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target=<%="##{s[:q1]}Collapse"%> aria-expanded="false" aria-controls=<%="#{s[:q1]}Collapse"%>><%="#{s[:q1]}'s Responses"%></button>
+                                    <% if   (s[:q11_1] != "Always" && s[:q11_1] != "Most of the time") || 
+                                            (s[:q21_1] != "Always" && s[:q21_1] != "Most of the time") ||
+                                            (s[:q15_1] && s[:q15_1] != "Always" && s[:q15_1] != "Most of the time") ||
+                                            (s[:q16_1] && s[:q16_1] != "Always" && s[:q16_1] != "Most of the time") ||
+                                            (s[:q25_1] && s[:q25_1] != "Always" && s[:q25_1] != "Most of the time") ||
+                                            (s[:q11_2] != "Always" && s[:q11_2] != "Most of the time") || 
+                                            (s[:q21_2] != "Always" && s[:q21_2] != "Most of the time") ||
+                                            (s[:q15_2] && s[:q15_2] != "Always" && s[:q15_2] != "Most of the time") ||
+                                            (s[:q16_2] && s[:q16_2] != "Always" && s[:q16_2] != "Most of the time") ||
+                                            (s[:q25_2] && s[:q25_2] != "Always" && s[:q25_2] != "Most of the time") ||
+                                            (s[:q11_3] != "Always" && s[:q11_3] != "Most of the time") || 
+                                            (s[:q21_3] != "Always" && s[:q21_3] != "Most of the time") ||
+                                            (s[:q15_3] && s[:q15_3] != "Always" && s[:q15_3] != "Most of the time") ||
+                                            (s[:q16_3] && s[:q16_3] != "Always" && s[:q16_3] != "Most of the time") ||
+                                            (s[:q25_3] && s[:q25_3] != "Always" && s[:q25_3] != "Most of the time") ||
+                                            (s[:q11_4] != "Always" && s[:q11_4] != "Most of the time") || 
+                                            (s[:q21_4] != "Always" && s[:q21_4] != "Most of the time") ||
+                                            (s[:q15_4] && s[:q15_4] != "Always" && s[:q15_4] != "Most of the time") ||
+                                            (s[:q16_4] && s[:q16_4] != "Always" && s[:q16_4] != "Most of the time") ||
+                                            (s[:q25_4] && s[:q25_4] != "Always" && s[:q25_4] != "Most of the time") ||
+                                            (s[:q11_5] != "Always" && s[:q11_5] != "Most of the time") || 
+                                            (s[:q21_5] != "Always" && s[:q21_5] != "Most of the time") ||
+                                            (s[:q15_5] && s[:q15_5] != "Always" && s[:q15_5] != "Most of the time") ||
+                                            (s[:q16_5] && s[:q16_5] != "Always" && s[:q16_5] != "Most of the time") ||
+                                            (s[:q25_5] && s[:q25_5] != "Always" && s[:q25_5] != "Most of the time") ||
+                                            (s[:q11_6] != "Always" && s[:q11_6] != "Most of the time") || 
+                                            (s[:q21_6] != "Always" && s[:q21_6] != "Most of the time") ||
+                                            (s[:q15_6] && s[:q15_6] != "Always" && s[:q15_6] != "Most of the time") ||
+                                            (s[:q16_6] && s[:q16_6] != "Always" && s[:q16_6] != "Most of the time") ||
+                                            (s[:q25_6] && s[:q25_6] != "Always" && s[:q25_6] != "Most of the time")  %>
+                                    <div class="multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th><%=s[:q1]%></th>
+                                                    <th><%=s[:q10]%></th>
+                                                    <%if s[:q13_2_text]%>
+                                                        <th><%=s[:q13_2_text]%></th>
+                                                    <%end%>
+                                                    <%if s[:q23_2_text]%>
+                                                        <th><%=s[:q23_2_text]%></th>
+                                                    <%end%>
+                                                    <%if s[:q24_2_text]%>
+                                                        <th><%=s[:q24_2_text]%></th>
+                                                    <%end%>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th>Attends group meetings and arrives on time</th>
+                                                    <td class="<%=if s[:q11_1] != "Always" && s[:q11_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_1]%></td>
+                                                    <td class="<%=if s[:q21_1] != "Always" && s[:q21_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_1]%></td>
+                                                    <%if s[:q15_1]%>
+                                                        <td class="<%=if s[:q15_1] != "Always" && s[:q15_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_1]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_1]%>
+                                                        <td class="<%=if s[:q16_1] != "Always" && s[:q16_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_1]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_1]%>
+                                                        <td class="<%=if s[:q25_1] != "Always" && s[:q25_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_1]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Does high quality work</th>
+                                                    <td class="<%=if s[:q11_2] != "Always" && s[:q11_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_2]%></td>
+                                                    <td class="<%=if s[:q21_2] != "Always" && s[:q21_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_2]%></td>
+                                                    <%if s[:q15_2]%>
+                                                        <td class="<%=if s[:q15_2] != "Always" && s[:q15_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_2]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_2]%>
+                                                        <td class="<%=if s[:q16_2] != "Always" && s[:q16_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_2]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_2]%>
+                                                        <td class="<%=if s[:q25_2] != "Always" && s[:q25_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_2]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Completes their work on time</th>
+                                                    <td class="<%=if s[:q11_3] != "Always" && s[:q11_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_3]%></td>
+                                                    <td class="<%=if s[:q21_3] != "Always" && s[:q21_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_3]%></td>
+                                                    <%if s[:q15_3]%>
+                                                        <td class="<%=if s[:q15_3] != "Always" && s[:q15_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_3]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_3]%>
+                                                        <td class="<%=if s[:q16_3] != "Always" && s[:q16_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_3]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_3]%>
+                                                        <td class="<%=if s[:q25_3] != "Always" && s[:q25_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_3]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Does a fair share of the team's work</th>
+                                                    <td class="<%=if s[:q11_4] != "Always" && s[:q11_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_4]%></td>
+                                                    <td class="<%=if s[:q21_4] != "Always" && s[:q21_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_4]%></td>
+                                                    <%if s[:q15_4]%>
+                                                        <td class="<%=if s[:q15_4] != "Always" && s[:q15_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_4]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_4]%>
+                                                        <td class="<%=if s[:q16_4] != "Always" && s[:q16_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_4]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_4]%>
+                                                        <td class="<%=if s[:q25_4] != "Always" && s[:q25_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_4]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Communicates effectively and respectfully with their teammates</th>
+                                                    <td class="<%=if s[:q11_5] != "Always" && s[:q11_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_5]%></td>
+                                                    <td class="<%=if s[:q21_5] != "Always" && s[:q21_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_5]%></td>
+                                                    <%if s[:q15_5]%>
+                                                        <td class="<%=if s[:q15_5] != "Always" && s[:q15_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_5]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_5]%>
+                                                        <td class="<%=if s[:q16_5] != "Always" && s[:q16_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_5]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_5]%>
+                                                        <td class="<%=if s[:q25_5] != "Always" && s[:q25_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_5]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Choose one additional category</th>
+                                                    <td class="<%=if s[:q11_6] != "Always" && s[:q11_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_6_text]%> - <%=s[:q11_6]%></td>
+                                                    <td class="<%=if s[:q21_6] != "Always" && s[:q21_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_6_text]%> - <%=s[:q21_6]%></td>
+                                                    <%if s[:q15_6]%>
+                                                        <td class="<%=if s[:q15_6] != "Always" && s[:q15_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_6_text]%> - <%=s[:q15_6]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_5]%>
+                                                        <td class="<%=if s[:q16_6] != "Always" && s[:q16_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_6_text]%> - <%=s[:q16_6]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_6]%>
+                                                        <td class="<%=if s[:q25_6] != "Always" && s[:q25_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_6_text]%> - <%=s[:q25_6]%></td>
+                                                    <%end%>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <% else %>
+                                    <div class="collapse multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th><%=s[:q1]%></th>
+                                                    <th><%=s[:q10]%></th>
+                                                    <%if s[:q13_2_text]%>
+                                                        <th><%=s[:q13_2_text]%></th>
+                                                    <%end%>
+                                                    <%if s[:q23_2_text]%>
+                                                        <th><%=s[:q23_2_text]%></th>
+                                                    <%end%>
+                                                    <%if s[:q24_2_text]%>
+                                                        <th><%=s[:q24_2_text]%></th>
+                                                    <%end%>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th>Attends group meetings and arrives on time</th>
+                                                    <td class="<%=if s[:q11_1] != "Always" && s[:q11_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_1]%></td>
+                                                    <td class="<%=if s[:q21_1] != "Always" && s[:q21_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_1]%></td>
+                                                    <%if s[:q15_1]%>
+                                                        <td class="<%=if s[:q15_1] != "Always" && s[:q15_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_1]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_1]%>
+                                                        <td class="<%=if s[:q16_1] != "Always" && s[:q16_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_1]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_1]%>
+                                                        <td class="<%=if s[:q25_1] != "Always" && s[:q25_1] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_1]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Does high quality work</th>
+                                                    <td class="<%=if s[:q11_2] != "Always" && s[:q11_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_2]%></td>
+                                                    <td class="<%=if s[:q21_2] != "Always" && s[:q21_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_2]%></td>
+                                                    <%if s[:q15_2]%>
+                                                        <td class="<%=if s[:q15_2] != "Always" && s[:q15_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_2]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_2]%>
+                                                        <td class="<%=if s[:q16_2] != "Always" && s[:q16_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_2]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_2]%>
+                                                        <td class="<%=if s[:q25_2] != "Always" && s[:q25_2] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_2]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Completes their work on time</th>
+                                                    <td class="<%=if s[:q11_3] != "Always" && s[:q11_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_3]%></td>
+                                                    <td class="<%=if s[:q21_3] != "Always" && s[:q21_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_3]%></td>
+                                                    <%if s[:q15_3]%>
+                                                        <td class="<%=if s[:q15_3] != "Always" && s[:q15_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_3]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_3]%>
+                                                        <td class="<%=if s[:q16_3] != "Always" && s[:q16_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_3]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_3]%>
+                                                        <td class="<%=if s[:q25_3] != "Always" && s[:q25_3] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_3]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Does a fair share of the team's work</th>
+                                                    <td class="<%=if s[:q11_4] != "Always" && s[:q11_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_4]%></td>
+                                                    <td class="<%=if s[:q21_4] != "Always" && s[:q21_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_4]%></td>
+                                                    <%if s[:q15_4]%>
+                                                        <td class="<%=if s[:q15_4] != "Always" && s[:q15_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_4]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_4]%>
+                                                        <td class="<%=if s[:q16_4] != "Always" && s[:q16_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_4]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_4]%>
+                                                        <td class="<%=if s[:q25_4] != "Always" && s[:q25_4] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_4]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Communicates effectively and respectfully with their teammates</th>
+                                                    <td class="<%=if s[:q11_5] != "Always" && s[:q11_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_5]%></td>
+                                                    <td class="<%=if s[:q21_5] != "Always" && s[:q21_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_5]%></td>
+                                                    <%if s[:q15_5]%>
+                                                        <td class="<%=if s[:q15_5] != "Always" && s[:q15_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_5]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_5]%>
+                                                        <td class="<%=if s[:q16_5] != "Always" && s[:q16_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_5]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_5]%>
+                                                        <td class="<%=if s[:q25_5] != "Always" && s[:q25_5] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_5]%></td>
+                                                    <%end%>
+                                                </tr>
+                                                <tr>
+                                                    <th>Choose one additional category</th>
+                                                    <td class="<%=if s[:q11_6] != "Always" && s[:q11_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q11_6_text]%> - <%=s[:q11_6]%></td>
+                                                    <td class="<%=if s[:q21_6] != "Always" && s[:q21_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q21_6_text]%> - <%=s[:q21_6]%></td>
+                                                    <%if s[:q15_6]%>
+                                                        <td class="<%=if s[:q15_6] != "Always" && s[:q15_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q15_6_text]%> - <%=s[:q15_6]%></td>
+                                                    <%end%>
+                                                    <%if s[:q16_5]%>
+                                                        <td class="<%=if s[:q16_6] != "Always" && s[:q16_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q16_6_text]%> - <%=s[:q16_6]%></td>
+                                                    <%end%>
+                                                    <%if s[:q25_6]%>
+                                                        <td class="<%=if s[:q25_6] != "Always" && s[:q25_6] != "Most of the time" then "text-white bg-danger" end%>"><%=s[:q25_6_text]%> - <%=s[:q25_6]%></td>
+                                                    <%end%>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <% end %>
+                                </div>
+                            <% end %>
+                        </div>
+                    </div>
+
+                    <br>
+                    <div>
+                        <h1 id="sqq">Student Qualitative Questions</h1>
+                        <div>
+                            <% if @not_empty_questions.include?(1) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@question_titles[:q4]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @studSurvey.each do |s|%>
+                                        <% if s[:q4] != nil %>
+                                        <tr>
+                                            <td>
+                                                <%="#{s[:q1]}: #{s[:q4]}"%>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(2) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@question_titles[:q5]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @studSurvey.each do |s|%>
+                                        <% if s[:q5] != nil %>
+                                        <tr>
+                                            <td>
+                                                <%="#{s[:q1]}: #{s[:q5]}"%>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(3) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@question_titles[:q6]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @studSurvey.each do |s|%>
+                                        <% if s[:q6] != nil %>
+                                        <tr>
+                                            <td>
+                                                <%="#{s[:q1]}: #{s[:q6]}"%>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(4) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@question_titles[:q7]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @studSurvey.each do |s|%>
+                                        <% if s[:q7] != nil %>
+                                        <tr>
+                                            <td>
+                                                <%="#{s[:q1]}: #{s[:q7]}"%>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(5) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@question_titles[:q8]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @studSurvey.each do |s|%>
+                                        <% if s[:q8] != nil %>
+                                        <tr>
+                                            <td>
+                                                <%="#{s[:q1]}: #{s[:q8]}"%>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(6) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@question_titles[:q18]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @studSurvey.each do |s|%>
+                                        <% if s[:q18] != nil %>
+                                        <tr>
+                                            <td>
+                                                <%="#{s[:q1]}: #{s[:q18]}"%>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(7) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@question_titles[:q19]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @studSurvey.each do |s|%>
+                                        <% if s[:q19] != nil %>
+                                        <tr>
+                                            <td>
+                                                <%="#{s[:q1]}: #{s[:q19]}"%>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(8) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@question_titles[:q20]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @studSurvey.each do |s|%>
+                                        <% if s[:q20] != nil %>
+                                        <tr>
+                                            <td>
+                                                <%="#{s[:q1]}: #{s[:q20]}"%>
+                                            </td>
+                                        </tr>
+                                        <% end %>
+                                    <% end %>
+                                </tbody>
+                            </table>
+                            <% end %>
+                        </div>
+                    </div>
+                <% end %>
+
+                <br>
+                <% unless @flags.include?("client blank") %>
+                    <div>
+                        <h1 id="cqq">Client Qualitative Questions</h1>
+                        <div>
+                            <% if @not_empty_questions.include?(9) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@client_question_titles[:q4]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <%=@cliSurvey[0][:q4]%>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(10) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@client_question_titles[:q5]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <%=@cliSurvey[0][:q5]%>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(11) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@client_question_titles[:q6]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <%=@cliSurvey[0][:q6]%>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <% end %>
+                            <% if @not_empty_questions.include?(12) %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p><%=@client_question_titles[:q7]%></p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <%=@cliSurvey[0][:q7]%>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <% end %>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+    <script>
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            if (
+                document.body.scrollTop > 20 ||
+                document.documentElement.scrollTop > 20
+            ) {
+                document.getElementById("btn-back-to-top").style.display = "block";
+            } else {
+                document.getElementById("btn-back-to-top").style.display = "none";
+            }
+        }
+        // When the user clicks on the button, scroll to the top of the document
+        document.getElementById("btn-back-to-top").addEventListener("click", backToTop);
+
+        function backToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        document.getElementById("btn-jump-to-tms").addEventListener("click", function jumpToTms(params) {
+            document.getElementById("tms").scrollIntoView();
+            document.body.scrollTop = -65;
+        });
+        document.getElementById("btn-jump-to-cs").addEventListener("click", function jumpToCs(params) {
+            document.getElementById("cs").scrollIntoView();
+            document.body.scrollTop = -65;
+        });
+        document.getElementById("btn-jump-to-tmr").addEventListener("click", function jumpToTmr(params) {
+            document.getElementById("tmr").scrollIntoView();
+            document.body.scrollTop = -65;
+        });
+        document.getElementById("btn-jump-to-sqq").addEventListener("click", function jumpToSqq(params) {
+            document.getElementById("sqq").scrollIntoView();
+            document.body.scrollTop = -65;
+        });
+        document.getElementById("btn-jump-to-cqq").addEventListener("click", function jumpToCqq(params) {
+            document.getElementById("cqq").scrollIntoView();
+        });
+    </script>
