@@ -18,7 +18,7 @@ This application is
 ## Windows
 ### Step-by-step instructions on how to install your project on Windows.
 
-1. Install [Node]{https://nodejs.org/en/download/}: download the Windows installer from the Node.js website and run it.
+1. Install [Node](https://nodejs.org/en/download/: download the Windows installer from the Node.js website and run it.
 2. Install Ruby: download the Ruby installer from the RubyInstaller website and run it.
 3. Install Rails: open a command prompt and run the following command: gem install rails
 4. Install Yarn: download the Windows installer from the Yarn website and run it.
