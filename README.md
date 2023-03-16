@@ -12,7 +12,7 @@ This application is
 * Ruby (version 3.2.0 or higher)
 * Rails (version 7.0.4.3 or higher)
 * Yarn (version 1.22.19 or higher)
-* Python (version X or higher)
+* Python (version 2.8 or higher)
 
 # Installation
 ## Windows
@@ -21,15 +21,13 @@ This application is
 1. Install [Node](https://nodejs.org/en/download/): download the Windows installer from the Node.js website and run it.
 2. Install [Ruby](https://rubyinstaller.org/downloads/): download the Ruby installer from the RubyInstaller website and run it.
 3. Install Rails: open a command prompt and run the following command: gem install rails
-4. Install Yarn: download the Windows installer from the Yarn website and run it.
-5. Install [Python]{}: download the Python installer from the Python website and run it.
-6. Clone the repository using the following command: ```git clone``` 
-7. Navigate to the project directory using the following command: ```cd your-project```
-8. Install the necessary dependencies using the following command: ```yarn install```
-9. Install Ruby gems using the following command: ```bundle install```
-10. Create the database using the following command: ```rails db:create```
-11. Run the database migrations using the following command: ```rails db:migrate```
-12. Start the server using the following command: ```rails server```
+4. Clone the repository using the following command: ```git clone``` 
+5. Navigate to the project directory using the following command: ```cd your-project```
+6. Install the necessary dependencies using the following command: ```yarn install```
+7. Install Ruby gems using the following command: ```bundle install```
+8. Create the database using the following command: ```rails db:create```
+9. Run the database migrations using the following command: ```rails db:migrate```
+10. Start the server using the following command: ```rails server```
 
 ## Linux/macOS
 ### Step-by-step instructions on how to install your project on Linux/macOS.
@@ -37,12 +35,10 @@ This application is
 1. Install [Node](https://nodejs.org/en/download/): follow the instructions on the Node.js website for your distribution.
 2. Install [Ruby](https://rubyinstaller.org/downloads/): follow the instructions on the Ruby website for your distribution.
 3. Install Rails: open a terminal and run the following command: ```gem install rails```
-4. Install Yarn: follow the instructions on the Yarn website for your distribution.
-5. Install Python: follow the instructions on the Python website for your distribution.
-6. Clone the repository using the following command: ```git clone```
-7. Navigate to the project directory using the following command: ```cd your-project```
-8. Install the necessary dependencies using the following command: ```yarn install```
-9. Install Ruby gems using the following command: ```bundle install```
-10. Create the database using the following command: ```rails db:create```
-11. Run the database migrations using the following command: ```rails db:migrate```
-12. Start the server using the following command: ```rails server```
+4. Clone the repository using the following command: ```git clone```
+5. Navigate to the project directory using the following command: ```cd your-project```
+6. Install the necessary dependencies using the following command: ```yarn install```
+7. Install Ruby gems using the following command: ```bundle install```
+8. Create the database using the following command: ```rails db:create```
+9. Run the database migrations using the following command: ```rails db:migrate```
+10. Start the server using the following command: ```rails server```
