@@ -8,7 +8,7 @@ This application is built on Ruby on Rails web framework.
 ## Prerequisites
 ### You'll need these specific versions
 * Ruby - v3.2.0
-* Node - v19.6.0 (latest may be fine)
+* Node - v19.8.1 (currently latest version)
 
 # Installating Software
 ## Windows or Linux/macOS
