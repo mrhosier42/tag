@@ -18,8 +18,8 @@ This application is
 ## Windows
 ### Step-by-step instructions on how to install your project on Windows.
 
-1. Install [Node](https://nodejs.org/en/download/: download the Windows installer from the Node.js website and run it.
-2. Install Ruby: download the Ruby installer from the RubyInstaller website and run it.
+1. Install [Node](https://nodejs.org/en/download/): download the Windows installer from the Node.js website and run it.
+2. Install [Ruby](https://rubyinstaller.org/downloads/): download the Ruby installer from the RubyInstaller website and run it.
 3. Install Rails: open a command prompt and run the following command: gem install rails
 4. Install Yarn: download the Windows installer from the Yarn website and run it.
 5. Install [Python]{}: download the Python installer from the Python website and run it.
@@ -34,8 +34,8 @@ This application is
 ## Linux/macOS
 ### Step-by-step instructions on how to install your project on Linux/macOS.
 
-1. Install Node: follow the instructions on the Node.js website for your distribution.
-2. Install Ruby: follow the instructions on the Ruby website for your distribution.
+1. Install [Node](https://nodejs.org/en/download/): follow the instructions on the Node.js website for your distribution.
+2. Install [Ruby](https://rubyinstaller.org/downloads/): follow the instructions on the Ruby website for your distribution.
 3. Install Rails: open a terminal and run the following command: ```gem install rails```
 4. Install Yarn: follow the instructions on the Yarn website for your distribution.
 5. Install Python: follow the instructions on the Python website for your distribution.
