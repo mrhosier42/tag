@@ -1,7 +1,11 @@
 # README
 
-# Project Name
-### A brief introduction to your project, including what it does and why it's useful.
+# Tool-Assisted Grading (TAG)
+### Welcome to TAG, a web-based application designed to assist professors and teaching assistants in grading and evaluating students in the University of Memphis's Capstone Course.
+
+Using the Ruby on Rails web application framework, TAG manages all back-end and front-end functions, streamlining the grading process and providing a comprehensive tool for managing student evaluations.
+
+With TAG, grading is easier, faster, and more efficient than ever before. We hope you find this tool useful and welcome any feedback or suggestions for improving it.
 
 ## Prerequisites
 * List any prerequisites required to run your project, such as software and hardware requirements.
