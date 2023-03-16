@@ -1,19 +1,17 @@
 # README
 
 # Tool-Assisted Grading (TAG)
-### Welcome to TAG, a web-based application designed to assist professors and teaching assistants in grading and evaluating students in the University of Memphis's Capstone Course.
+TAG is a web-based application designed to assist professors and teaching assistants in evaluating and grading students. With this application, you can manage grading student an client survey survey's served by Qualtrics (and more features to come).
 
-Using the Ruby on Rails web application framework, TAG manages all back-end and front-end functions, streamlining the grading process and providing a comprehensive tool for managing student evaluations.
-
-With TAG, grading is easier, faster, and more efficient than ever before. We hope you find this tool useful and welcome any feedback or suggestions for improving it.
+This application is 
 
 ## Prerequisites
 * List any prerequisites required to run your project, such as software and hardware requirements.
 
-* Node (version X or higher)
-* Ruby (version X or higher)
-* Rails (version X or higher)
-* Yarn (version X or higher)
+* Node (version 19.6.0 or higher)
+* Ruby (version 3.2.0 or higher)
+* Rails (version 7.0.4.3 or higher)
+* Yarn (version 1.22.19 or higher)
 * Python (version X or higher)
 
 # Installation
