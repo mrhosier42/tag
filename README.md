@@ -15,30 +15,18 @@ This application is
 * Python (version 2.8 or higher)
 
 # Installation
-## Windows
-### Step-by-step instructions on how to install your project on Windows.
+## Windows and Linux/macOS
+### Step-by-step instructions on how to install your project.
+#### NOTE: Be sure to download and install the corresponding operating system supported files.
 
-1. Install [Node](https://nodejs.org/en/download/): download the Windows installer from the Node.js website and run it.
-2. Install [Ruby](https://rubyinstaller.org/downloads/): download the Ruby installer from the RubyInstaller website and run it.
-3. Install Rails: open a command prompt and run the following command: gem install rails
-4. Clone the repository using the following command: ```git clone``` 
-5. Navigate to the project directory using the following command: ```cd your-project```
-6. Install the necessary dependencies using the following command: ```yarn install```
-7. Install Ruby gems using the following command: ```bundle install```
-8. Create the database using the following command: ```rails db:create```
-9. Run the database migrations using the following command: ```rails db:migrate```
-10. Start the server using the following command: ```rails server```
-
-## Linux/macOS
-### Step-by-step instructions on how to install your project on Linux/macOS.
-
-1. Install [Node](https://nodejs.org/en/download/): follow the instructions on the Node.js website for your distribution.
-2. Install [Ruby](https://rubyinstaller.org/downloads/): follow the instructions on the Ruby website for your distribution.
-3. Install Rails: open a terminal and run the following command: ```gem install rails```
-4. Clone the repository using the following command: ```git clone```
-5. Navigate to the project directory using the following command: ```cd your-project```
-6. Install the necessary dependencies using the following command: ```yarn install```
-7. Install Ruby gems using the following command: ```bundle install```
-8. Create the database using the following command: ```rails db:create```
-9. Run the database migrations using the following command: ```rails db:migrate```
-10. Start the server using the following command: ```rails server```
+1. Download and install [Node Installer](https://nodejs.org/en/download/)
+2. Download and install [Ruby Installer](https://rubyinstaller.org/downloads/)
+3. Download and install [Postgress](https://www.postgresql.org/download/)
+4. Install Rails: open a terminal and run the following command: ```gem install rails```
+5. Clone the repository using the following command: ```git clone```
+6. Navigate to the project directory using the following command: ```cd your-project```
+7. Install the necessary dependencies using the following command: ```yarn install```
+8. Install Ruby gems using the following command: ```bundle install```
+9. Create the database using the following command: ```rails db:create```
+10. Run the database migrations using the following command: ```rails db:migrate```
+11. Start the server using the following command: ```rails server``
