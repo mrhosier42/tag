@@ -160,27 +160,27 @@
                             <table class="table">
                                 <tr>
                                     <th>The team was on time and professional during our meeting</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_1] != "Exceeded expectations" && @cliSurvey[0][:q2_1] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_1]%></td>                               
+                                    <td class="<%=if @cliSurvey[0][:q2_1] != "Exceeded expectations" && @cliSurvey[0][:q2_1] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_1]%></td>
                                 </tr>
                                 <tr>
                                     <th>The team was prepared for their meeting with me</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_2] != "Exceeded expectations" && @cliSurvey[0][:q2_2] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_2]%></td>                               
+                                    <td class="<%=if @cliSurvey[0][:q2_2] != "Exceeded expectations" && @cliSurvey[0][:q2_2] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_2]%></td>
                                 </tr>
                                 <tr>
                                     <th>The team is communicating with me clearly</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_3] != "Exceeded expectations" && @cliSurvey[0][:q2_3] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_3]%></td>                               
+                                    <td class="<%=if @cliSurvey[0][:q2_3] != "Exceeded expectations" && @cliSurvey[0][:q2_3] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_3]%></td>
                                 </tr>
                                 <tr>
                                     <th>The team met the goals we agreed to at our last meeting</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_4] != "Exceeded expectations" && @cliSurvey[0][:q2_4] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_4]%></td>                               
+                                    <td class="<%=if @cliSurvey[0][:q2_4] != "Exceeded expectations" && @cliSurvey[0][:q2_4] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_4]%></td>
                                 </tr>
                                 <tr>
                                     <th>The team listended to my feedback</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_5] != "Exceeded expectations" && @cliSurvey[0][:q2_5] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_5]%></td>                               
+                                    <td class="<%=if @cliSurvey[0][:q2_5] != "Exceeded expectations" && @cliSurvey[0][:q2_5] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_5]%></td>
                                 </tr>
                                 <tr>
                                     <th>The team set appropriate goals for the next two weeks</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_6] != "Exceeded expectations" && @cliSurvey[0][:q2_6] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_6]%></td>                               
+                                    <td class="<%=if @cliSurvey[0][:q2_6] != "Exceeded expectations" && @cliSurvey[0][:q2_6] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_6]%></td>
                                 </tr>
                                 <tr>
                                     <th>Clients average score</th>
@@ -199,32 +199,32 @@
                             <% @studSurvey.each do |s| %>
                                 <div class="mb-2">
                                     <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target=<%="##{s[:q1]}Collapse"%> aria-expanded="false" aria-controls=<%="#{s[:q1]}Collapse"%>><%="#{s[:q1]}'s Responses"%></button>
-                                    <% if   (s[:q11_1] != "Always" && s[:q11_1] != "Most of the time") || 
+                                    <% if   (s[:q11_1] != "Always" && s[:q11_1] != "Most of the time") ||
                                             (s[:q21_1] != "Always" && s[:q21_1] != "Most of the time") ||
                                             (s[:q15_1] && s[:q15_1] != "Always" && s[:q15_1] != "Most of the time") ||
                                             (s[:q16_1] && s[:q16_1] != "Always" && s[:q16_1] != "Most of the time") ||
                                             (s[:q25_1] && s[:q25_1] != "Always" && s[:q25_1] != "Most of the time") ||
-                                            (s[:q11_2] != "Always" && s[:q11_2] != "Most of the time") || 
+                                            (s[:q11_2] != "Always" && s[:q11_2] != "Most of the time") ||
                                             (s[:q21_2] != "Always" && s[:q21_2] != "Most of the time") ||
                                             (s[:q15_2] && s[:q15_2] != "Always" && s[:q15_2] != "Most of the time") ||
                                             (s[:q16_2] && s[:q16_2] != "Always" && s[:q16_2] != "Most of the time") ||
                                             (s[:q25_2] && s[:q25_2] != "Always" && s[:q25_2] != "Most of the time") ||
-                                            (s[:q11_3] != "Always" && s[:q11_3] != "Most of the time") || 
+                                            (s[:q11_3] != "Always" && s[:q11_3] != "Most of the time") ||
                                             (s[:q21_3] != "Always" && s[:q21_3] != "Most of the time") ||
                                             (s[:q15_3] && s[:q15_3] != "Always" && s[:q15_3] != "Most of the time") ||
                                             (s[:q16_3] && s[:q16_3] != "Always" && s[:q16_3] != "Most of the time") ||
                                             (s[:q25_3] && s[:q25_3] != "Always" && s[:q25_3] != "Most of the time") ||
-                                            (s[:q11_4] != "Always" && s[:q11_4] != "Most of the time") || 
+                                            (s[:q11_4] != "Always" && s[:q11_4] != "Most of the time") ||
                                             (s[:q21_4] != "Always" && s[:q21_4] != "Most of the time") ||
                                             (s[:q15_4] && s[:q15_4] != "Always" && s[:q15_4] != "Most of the time") ||
                                             (s[:q16_4] && s[:q16_4] != "Always" && s[:q16_4] != "Most of the time") ||
                                             (s[:q25_4] && s[:q25_4] != "Always" && s[:q25_4] != "Most of the time") ||
-                                            (s[:q11_5] != "Always" && s[:q11_5] != "Most of the time") || 
+                                            (s[:q11_5] != "Always" && s[:q11_5] != "Most of the time") ||
                                             (s[:q21_5] != "Always" && s[:q21_5] != "Most of the time") ||
                                             (s[:q15_5] && s[:q15_5] != "Always" && s[:q15_5] != "Most of the time") ||
                                             (s[:q16_5] && s[:q16_5] != "Always" && s[:q16_5] != "Most of the time") ||
                                             (s[:q25_5] && s[:q25_5] != "Always" && s[:q25_5] != "Most of the time") ||
-                                            (s[:q11_6] != "Always" && s[:q11_6] != "Most of the time") || 
+                                            (s[:q11_6] != "Always" && s[:q11_6] != "Most of the time") ||
                                             (s[:q21_6] != "Always" && s[:q21_6] != "Most of the time") ||
                                             (s[:q15_6] && s[:q15_6] != "Always" && s[:q15_6] != "Most of the time") ||
                                             (s[:q16_6] && s[:q16_6] != "Always" && s[:q16_6] != "Most of the time") ||
@@ -735,3 +735,6 @@
             document.getElementById("cqq").scrollIntoView();
         });
     </script>
+
+    <p><%= name1 %></p>
+

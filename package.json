@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "bootstrap": "^5.2.3"
+    "@rails/activestorage": "^7.0.4-3",
+    "@rails/ujs": "^7.0.4-3",
+    "bootstrap": "^5.2.3",
+    "jquery": "^3.6.4"
   }
 }
