@@ -25,7 +25,7 @@ This application is built on Ruby on Rails web framework.
 5. Install the necessary dependencies using the following command: ```yarn install```
 6. Install Ruby gems using the following command: ```bundle install```
 7. Create the database using the following command: ```rails db:create```
-8. Run the database migrations using the following command: ```rails db:reset db:migrate db:seed```
+8. Run the database migrations using the following command: ```rails db:reset db:migrate```
 9. Start the server: ```rails server```
 10. Type ```localhost:3000``` into your browser.
 
