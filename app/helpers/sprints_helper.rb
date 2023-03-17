@@ -21,13 +21,48 @@ module SprintsHelper
   end
 
   def team_rows(teams, sprint_list, flags)
-    teams.map do |current_team|
-      content_tag(:tr) do
-        concat(content_tag(:th, current_team))
-        concat(sprint_team_cells(teams, sprint_list, flags, current_team))
+    rows = ''
+    teams.each do |team|
+      rows += "<tr><th>#{team}</th>"
+      sprint_list.each do |sprint|
+        rows += "<td>"
+        if flags[sprint][team].include?("student blank")
+          if unfinished_sprint(teams, flags, sprint)
+            rows += icon_html("question-circle-fill.svg", "This sprint has not yet concluded")
+          else
+            rows += icon_html("exclamation-triangle-fill-red.svg", "All students failed to submit a survey")
+          end
+        elsif flags[sprint][team].empty?
+          rows += icon_html("check-circle-fill.svg", "All is well")
+        else
+          flags[sprint][team].each do |flag|
+            case flag
+            when "missing submit"
+              rows += icon_html("exclamation-triangle-fill-red.svg", "At least one of the students failed to submit a survey")
+            when "low score"
+              rows += icon_html("exclamation-triangle-fill-red.svg", "At least one of the students received an average rating lower than 4")
+            when "no client score"
+              rows += icon_html("exclamation-circle-fill-yellow.svg", "The client did not submit a survey")
+            when "low client score"
+              rows += icon_html("exclamation-triangle-fill-red.svg", "The client is unsatisfied")
+            end
+          end
+        end
+        rows += "</td>"
       end
-    end.join.html_safe
+      rows += "</tr>"
+    end
+    rows.html_safe
   end
+
+
+  def icon_html(icon, title)
+    "<div class='p-2 m-0'><p class='p-0 m-0'>" +
+      ActionController::Base.helpers.image_tag(icon, class: "", style: "height:16px", title: title) +
+      "</p></div>"
+  end
+
+
 
   def sprint_team_cells(teams, sprint_list, flags, current_team)
     sprint_list.map do |sprint|
@@ -48,21 +83,26 @@ module SprintsHelper
     end.join.html_safe
   end
 
-  def flag_icon_and_title(flags)
-    flags.each do |flag|
-      case flag
-      when "missing submit"
-        return ["exclamation-triangle-fill-red.svg", "At least one of the students failed to submit a survey"]
-      when "low score"
-        return ["exclamation-triangle-fill-red.svg", "At least one of the students received an average rating lower than 4"]
-      when "no client score"
-        return ["exclamation-circle-fill-yellow.svg", "The client did not submit a survey"]
-      when "low client score"
-        return ["exclamation-triangle-fill-red.svg", "The client is unsatisfied"]
-      end
+  def flag_icon_and_title(flag)
+    case flag
+    when "student blank"
+      return ["question-circle-fill.svg", "This sprint has not yet concluded"]
+    when "all failed"
+      return ["exclamation-triangle-fill-red.svg", "All students failed to submit a survey"]
+    when "missing submit"
+      return ["exclamation-triangle-fill-red.svg", "At least one of the students failed to submit a survey"]
+    when "low score"
+      return ["exclamation-triangle-fill-red.svg", "At least one of the students received an average rating lower than 4"]
+    when "no client score"
+      return ["exclamation-circle-fill-yellow.svg", "The client did not submit a survey"]
+    when "low client score"
+      return ["exclamation-triangle-fill-red.svg", "The client is unsatisfied"]
+    when "all good"
+      return ["check-circle-fill.svg", "All is well"]
     end
     ["", ""]
   end
+
 
   def unfinished_sprint(teams, flags, sprint)
     # Add the implementation for this method
