@@ -29,5 +29,4 @@ module SemestersHelper
             class: 'dropdown-item'
   end
 
-
 end

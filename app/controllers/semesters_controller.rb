@@ -1,9 +1,9 @@
 class SemestersController < ApplicationController
     require 'text'
-    helper_method :getClientScore
-    helper_method :teamExist
-    helper_method :getFlags
-    helper_method :unfinishedSprint
+    helper_method :get_client_score
+    helper_method :team_exist
+    helper_method :get_flags
+    helper_method :unfinished_sprint
 
     def home
         @semesters = Semester.order(:year)
@@ -15,12 +15,12 @@ class SemestersController < ApplicationController
         @semester = Semester.find(params[:id])
         @teams = getTeams(@semester)
         # TODO: allow user to select how many Sprints there are
-        @sprintList = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
+        @sprint_list = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
         @flags = {}
-        @sprintList.each do |sprint|
+        @sprint_list.each do |sprint|
             @flags[sprint] = {}
             @teams.each do |team|
-                @flags[sprint][team] = getFlags(@semester, sprint, team)
+                @flags[sprint][team] = get_flags(@semester, sprint, team)
             end
         end
         @repos = current_user.repositories
@@ -97,7 +97,7 @@ class SemestersController < ApplicationController
         return @teams
     end
 
-    def getClientScore(semester, team, sprint)
+    def get_client_score(semester, team, sprint)
         @scores = -1
         clientScore = []
 
@@ -355,7 +355,7 @@ class SemestersController < ApplicationController
         render :team
     end
 
-    def getFlags(semester, sprint, team)
+    def get_flags(semester, sprint, team)
         # stores all the flags for the team
         flags = []
 
@@ -482,7 +482,7 @@ class SemestersController < ApplicationController
                             flags.append("low score")
                         end
 
-                        cscore = getClientScore(semester, team, sprint) 
+                        cscore = get_client_score(semester, team, sprint) 
                         if cscore == "No Score"
                             flags.append("no client score")
                         end
@@ -499,14 +499,14 @@ class SemestersController < ApplicationController
     end
 
     # Use to test if there are any teams that exist
-    def teamExist(arr)
+    def team_exist(arr)
         if arr.length() > 0
             return true
         end
         return false
     end
 
-    def unfinishedSprint(teams, flags, sprint)
+    def unfinished_sprint(teams, flags, sprint)
         teams.each do |t|
             if flags[sprint][t] != ["student blank"]
                 puts flags[sprint][t]

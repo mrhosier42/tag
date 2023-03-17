@@ -115,8 +115,8 @@
                                         <%# if @flags.include?("low score") %>
 <!--                                            <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> At least one of the students received an average rating lower than 4</p>-->
                                         <%# end %>
-                                        <%# if !getClientScore(@semester, @team, @sprint).instance_of?(String)%>
-                                            <%# if getClientScore(@semester, @team, @sprint) <= 3 %>
+                                        <%# if !get_client_score(@semester, @team, @sprint).instance_of?(String)%>
+                                            <%# if get_client_score(@semester, @team, @sprint) <= 3 %>
 <!--                                                <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> The client is unsatisfied</p>-->
                                             <%# end %>
                                         <%# end %>
@@ -184,7 +184,7 @@
                                 </tr>
                                 <tr>
                                     <th>Clients average score</th>
-                                    <td><%=getClientScore(@semester, @team, @sprint)%></td>
+                                    <td><%=get_client_score(@semester, @team, @sprint)%></td>
                                 </tr>
                             </table>
                         </div>
