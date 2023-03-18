@@ -23,34 +23,14 @@ Rails.application.routes.draw do
   put 'semesters/:semester_id/sprints/:id', to: 'sprints#update'
   get 'semesters/:semester_id/sprints/:id/edit', to: 'sprints#edit', as: 'edit_semester_sprint'
 
-  # Repository controller
-  get 'semesters/:semester_id/repositories/new', to: 'repositories#new', as: 'post_new_repository'
-  post 'semesters/:semester_id/repositories', to: 'repositories#create', as: 'create_new_repository'
-  get 'semesters/:semester_id/repositories/show', to: 'repositories#show', as: 'show_repository'
-
-  # Page controller
-  get 'semesters/:semester_id/github_key', to: 'pages#github_key', as: 'enter_github_key'
-  post 'semesters/:semester_id/github_key', to: 'pages#post_github_key'
 end
 
-# TODO: Simplify routes to make it easier to manage
-# Rails.application.routes.draw do
+# TODO: Simplify routes in the future
+# # Repository controller
+# get 'semesters/:semester_id/repositories/new', to: 'repositories#new', as: 'post_new_repository'
+# post 'semesters/:semester_id/repositories', to: 'repositories#create', as: 'create_new_repository'
+# get 'semesters/:semester_id/repositories/show', to: 'repositories#show', as: 'show_repository'
 #
-#   root to: 'semesters#home'
-#   devise_for :users
-#
-#   resources :semesters, except: [:index] do
-#     get 'team', on: :member
-#     resources :sprints
-#     scope module: 'semesters' do # controllers/semesters/*
-#       resources :semesters do
-#         resources :repositories, only: [:new, :create, :show], module: :semesters
-#         resources :sprints, only: [:index, :new, :create, :edit, :update, :destroy], module: :semesters
-#         get 'github_key', to: 'pages#github_key', as: 'enter_github_key'
-#         post 'github_key', to: 'pages#post_github_key'
-#         get ':id/team', to: 'semesters#team', as: 'team'
-#       end
-#
-#     end
-#   end
-# end
+# # Page controller
+# get 'semesters/:semester_id/github_key', to: 'pages#github_key', as: 'enter_github_key'
+# post 'semesters/:semester_id/github_key', to: 'pages#post_github_key'

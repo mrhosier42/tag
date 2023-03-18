@@ -52,7 +52,7 @@ class SemestersController < ApplicationController
 
     def update
         @semester = Semester.find(params[:id])
-        if @semester.update(params.require(:semester).permit(:semester, :year, :student_csv, :sponsor_csv))
+        if @semester.update(params.require(:semester).permit(:semester, :year, :student_csv, :client_csv))
             flash[:success] = "Semester was successfully updated!"
             redirect_to semester_url(@semester)
         else
@@ -102,7 +102,7 @@ class SemestersController < ApplicationController
         clientScore = []
 
         # Downloads and temporarily store the student_csv file
-        semester.sponsor_csv.open do |tempfile|
+        semester.client_csv.open do |tempfile|
             begin
                 @sponsorData = SmarterCSV.process(tempfile.path)
 
@@ -323,7 +323,7 @@ class SemestersController < ApplicationController
 
         begin
             # Downloads and temporarily store the student_csv file
-            @semester.sponsor_csv.open do |tempClient|
+            @semester.client_csv.open do |tempClient|
                 begin
                     @clientData = SmarterCSV.process(tempClient.path)
                     @cliSurvey = @clientData.find_all{|client_survey| client_survey[:q2]==@team && client_survey[:q22]=="#{@sprint}"}
@@ -519,6 +519,6 @@ class SemestersController < ApplicationController
     private
 
         def semester_params
-            params.require(:semester).permit(:semester, :year, :student_csv, :sponsor_csv, sprints_attributes: [:id, :name, :start_date, :end_date, :_destroy])
+            params.require(:semester).permit(:semester, :year, :student_csv, :client_csv, sprints_attributes: [:id, :name, :start_date, :end_date, :_destroy])
         end
 end

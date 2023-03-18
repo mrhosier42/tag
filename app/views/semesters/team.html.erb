@@ -94,38 +94,6 @@
                 </div>
             </div>
             <div class="col-9">
-
-<!--              Hiding team flags (one in big red text) for now-->
-                <%# if !@flags.empty? %>
-<!--                    <div class="bg-danger text-white p-2">-->
-<!--                        <h1>Team Flags</h1>-->
-<!--                        <div class="mb-2 pb-2">-->
-<!--                            <div>-->
-<!--                                <div>-->
-<!--                                    <ul>-->
-                                        <%# if @flags.include?("student blank") %>
-<!--                                            <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> There is no student survey data for this semester</p>-->
-                                        <%# end %>
-                                        <%# if @flags.include?("client blank") %>
-<!--                                            <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> There is no sponsor survey data for this semester</p>-->
-                                        <%# end %>
-                                        <%# if @flags.include?("missing submit") %>
-<!--                                            <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> At least one of the students failed to submit a survey</p>-->
-                                        <%# end %>
-                                        <%# if @flags.include?("low score") %>
-<!--                                            <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> At least one of the students received an average rating lower than 4</p>-->
-                                        <%# end %>
-                                        <%# if !get_client_score(@semester, @team, @sprint).instance_of?(String)%>
-                                            <%# if get_client_score(@semester, @team, @sprint) <= 3 %>
-<!--                                                <p class="fs-4"><%#= image_tag "exclamation-triangle-fill.svg", class:"pr-2 ", style: "height:32px"%> The client is unsatisfied</p>-->
-                                            <%# end %>
-                                        <%# end %>
-<!--                                    </ul>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-                <%# end %>
                 <% unless @flags.include?("student blank") %>
                     <div>
                         <h1 id="tms">Team Member Scores</h1>
