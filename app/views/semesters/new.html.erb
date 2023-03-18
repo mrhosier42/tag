@@ -1,11 +1,10 @@
-<div class="container">
+<div class="container bg-color1">
     <div class="d-flex bg-color1 text-white justify-content-center align-items-center m-5 p-3">
         <div class="d-flex flex-column">
             <h1>New Semester</h1>
             <div>
                 <%= bootstrap_form_with model: @semester, url: semesters_path, method: :post, local: true do |f| %>
                     <div class="field-dark">
-<!--                        removed summer-->
                         <% semester_array = ['Fall','Spring'] %>
                         <%= f.select :semester, semester_array%>
                         <%= f.select :year, (Time.zone.now.year - 5)..(Time.zone.now.year + 10) %>
