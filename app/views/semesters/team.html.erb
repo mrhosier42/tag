@@ -13,18 +13,30 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
-            <% if controller_name == 'controller_name' && action_name == 'action_name' %>
-              <% prev_sprint_index = @sprints&.index(@sprint)&.-(1) %>
-              <% if prev_sprint_index && prev_sprint_index >= 0 %>
-                <li class="nav-item">
-                  <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[prev_sprint_index]), class: 'nav-link d-flex align-items-center' do %>
-                    <i class="bi bi-chevron-double-left me-1"></i>
-                    <span class="text-white">Sprint left</span>
+            <% if controller_name == 'semesters' && action_name == 'team' %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="teamDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <%= @team %>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="teamDropdown">
+                  <% @teams.each do |team| %>
+                    <li><%= link_to team, semester_team_path(@semester, :team => team, :sprint => @sprint), class: "dropdown-item" %></li>
                   <% end %>
-                </li>
-              <% end %>
-              <!-- Add the rest of the chevrons and their functionality here -->
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="sprintDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Sprint <%= @sprint %>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="sprintDropdown">
+                  <% @sprints.each do |sprint| %>
+                    <li><%= link_to "Sprint #{sprint}", semester_team_path(@semester, :team => @team, :sprint => sprint), class: "dropdown-item" %></li>
+                  <% end %>
+                </ul>
+              </li>
             <% end %>
+
             <% if user_signed_in? %>
               <li class="nav-item">
                 <%= link_to edit_user_registration_path, method: :get, class: 'nav-link d-flex align-items-center' do %>
@@ -47,6 +59,7 @@
         </div>
       </div>
     </nav>
+
     <div class="container">
         <button type="button" class="btn btn-floating btn-lg" id="btn-back-to-top">
             <%= image_tag "arrow-up.svg", style: "height:32px"%>
