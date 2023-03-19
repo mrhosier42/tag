@@ -30,19 +30,29 @@ class SemestersController < ApplicationController
 
     def new
         @semester = Semester.new
-        render :new
+        @semester.sprints.build
+        # render :new
     end
 
     def create
         @semester = Semester.new(semester_params)
+
+        if params[:student_csv].present?
+            @semester.student_csv.attach(params[:student_csv])
+        end
+
+        if params[:client_csv].present?
+            @semester.client_csv.attach(params[:client_csv])
+        end
+
         if @semester.save
-            flash[:success] = "New semester successfully created!"
-            redirect_to semesters_url
+            redirect_to @semester, notice: 'Semester was successfully created.'
         else
-            flash.now[:error] = "Semester creation failed"
             render :new
         end
     end
+
+
 
     def edit
         session[:return_to] ||= request.referer
@@ -172,17 +182,17 @@ class SemestersController < ApplicationController
                 begin
                     @studentData = SmarterCSV.process(tempStudent.path)
 
-                    @studSurvey = @studentData.find_all{|survey| survey[:q2]==@team && survey[:q22]==@sprint}
+                    @student_survey = @studentData.find_all{|survey| survey[:q2]==@team && survey[:q22]==@sprint}
                     @question_titles = @studentData[0]
 
-                    if @studSurvey.blank?
+                    if @student_survey.blank?
                         @flags.append("student blank")
                     end
 
-                    if @studSurvey[0] then @self_submitted_names = [[@studSurvey[0][:q1]],[@studSurvey[0][:q10]]] end
-                    if @studSurvey[0] and @studSurvey[0][:q13_2_text] then @self_submitted_names.push([@studSurvey[0][:q13_2_text]]) end
-                    if @studSurvey[0] and @studSurvey[0][:q23_2_text] then @self_submitted_names.push([@studSurvey[0][:q23_2_text]]) end
-                    if @studSurvey[0] and @studSurvey[0][:q24_2_text] then @self_submitted_names.push([@studSurvey[0][:q24_2_text]]) end
+                    if @student_survey[0] then @self_submitted_names = [[@student_survey[0][:q1]],[@student_survey[0][:q10]]] end
+                    if @student_survey[0] and @student_survey[0][:q13_2_text] then @self_submitted_names.push([@student_survey[0][:q13_2_text]]) end
+                    if @student_survey[0] and @student_survey[0][:q23_2_text] then @self_submitted_names.push([@student_survey[0][:q23_2_text]]) end
+                    if @student_survey[0] and @student_survey[0][:q24_2_text] then @self_submitted_names.push([@student_survey[0][:q24_2_text]]) end
 
                     if @self_submitted_names then @self_submitted_names.each do |name|
                         white = Text::WhiteSimilarity.new
@@ -191,7 +201,7 @@ class SemestersController < ApplicationController
                         name.push([])
                         name.push([])
 
-                        @studSurvey.each do |survey|
+                        @student_survey.each do |survey|
                             max = white.similarity(name[0], survey[:q1])
                             name_to_add = ["#{survey[:q1]}'s survey","q1",survey[:q1]]
                             self_scores = [survey[:q11_1],survey[:q11_2],survey[:q11_3],survey[:q11_4],survey[:q11_5],survey[:q11_6]]
@@ -289,7 +299,7 @@ class SemestersController < ApplicationController
                 end
 
                 # check if students' questions are empty (without any responses)
-                @studSurvey.each do |s|
+                @student_survey.each do |s|
                     if s[:q4] != nil
                         @not_empty_questions.append(1)
                     end
@@ -370,17 +380,17 @@ class SemestersController < ApplicationController
                     # studentData.delete_at(0)
                     # studentData.delete_at(0)
 
-                    studSurvey = studentData.find_all{|survey| survey[:q2]==team && survey[:q22]==sprint}
+                    student_survey = studentData.find_all{|survey| survey[:q2]==team && survey[:q22]==sprint}
                     question_titles = studentData[0]
 
-                    if studSurvey.blank?
+                    if student_survey.blank?
                         flags.append("student blank")
                     end
 
-                    if studSurvey[0] then self_submitted_names = [[studSurvey[0][:q1]],[studSurvey[0][:q10]]] end
-                    if studSurvey[0] and studSurvey[0][:q13_2_text] then self_submitted_names.push([studSurvey[0][:q13_2_text]]) end
-                    if studSurvey[0] and studSurvey[0][:q23_2_text] then self_submitted_names.push([studSurvey[0][:q23_2_text]]) end
-                    if studSurvey[0] and studSurvey[0][:q24_2_text] then self_submitted_names.push([studSurvey[0][:q24_2_text]]) end
+                    if student_survey[0] then self_submitted_names = [[student_survey[0][:q1]],[student_survey[0][:q10]]] end
+                    if student_survey[0] and student_survey[0][:q13_2_text] then self_submitted_names.push([student_survey[0][:q13_2_text]]) end
+                    if student_survey[0] and student_survey[0][:q23_2_text] then self_submitted_names.push([student_survey[0][:q23_2_text]]) end
+                    if student_survey[0] and student_survey[0][:q24_2_text] then self_submitted_names.push([student_survey[0][:q24_2_text]]) end
 
                     if self_submitted_names then self_submitted_names.each do |name|
                         white = Text::WhiteSimilarity.new
@@ -389,7 +399,7 @@ class SemestersController < ApplicationController
                         name.push([])
                         name.push([])
 
-                        studSurvey.each do |survey|
+                        student_survey.each do |survey|
                             max = white.similarity(name[0], survey[:q1])
                             name_to_add = ["#{survey[:q1]}'s survey","q1",survey[:q1]]
                             self_scores = [survey[:q11_1],survey[:q11_2],survey[:q11_3],survey[:q11_4],survey[:q11_5],survey[:q11_6]]
@@ -518,7 +528,13 @@ class SemestersController < ApplicationController
 
     private
 
-        def semester_params
-            params.require(:semester).permit(:semester, :year, :student_csv, :client_csv, sprints_attributes: [:id, :name, :start_date, :end_date, :_destroy])
-        end
+    def semester_params
+        params.permit(
+          :semester, :year, sprints_attributes: [
+          :id, :_destroy, :start_date, :end_date
+        ],
+          student_csv: [], client_csv: []
+        )
+    end
+
 end

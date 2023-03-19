@@ -1,101 +1,107 @@
 <style>
-    .navbar {
-        padding: 12px;
+    .sidebar {
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+        min-height: 100vh;
+        padding: 1rem 2rem;
+        position: sticky;
+        top: 0;
+    }
+
+    .sidebar .bi {
+        vertical-align: middle;
+    }
+
+    .sidebar .btn-toggle-nav li {
+        margin-bottom: 0.5rem; /* Adjust the margin between buttons as needed */
+    }
+
+    .sidebar .btn-toggle-nav button {
+        background-color: #28a0ad;
+        color: #fff;
+        padding: 0.25rem 0.5rem; /* Reduce the padding to make buttons smaller */
+        font-size: 14px;
+        white-space: nowrap;
+        width: 10%; /* Set the width to 100% to make all buttons the same length */
+        text-align: center; /* Center the text in the button */
+        border-top: 1px solid gray; /* Add top border */
+        border-bottom: 1px solid gray; /* Add bottom border */
+    }
+
+    /*TODO: Might remove since its not really used*/
+    .sidebar .btn-toggle-nav button:hover {
+        background-color: #0056b3;
     }
 </style>
 <body>
-    <%# overwrite the navbar %>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-color1 fixed-top">
-      <div class="container-fluid">
-        <%= link_to 'Home', semesters_path, class: "navbar-brand" %>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <% if controller_name == 'controller_name' && action_name == 'action_name' %>
-              <% prev_sprint_index = @sprints&.index(@sprint)&.-(1) %>
-              <% if prev_sprint_index && prev_sprint_index >= 0 %>
-                <li class="nav-item">
-                  <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[prev_sprint_index]), class: 'nav-link d-flex align-items-center' do %>
-                    <i class="bi bi-chevron-double-left me-1"></i>
-                    <span class="text-white">Sprint left</span>
-                  <% end %>
-                </li>
-              <% end %>
-              <!-- Add the rest of the chevrons and their functionality here -->
-            <% end %>
-            <% if user_signed_in? %>
-              <li class="nav-item">
-                <%= link_to edit_user_registration_path, method: :get, class: 'nav-link d-flex align-items-center' do %>
-                  <i class="bi bi-person-circle me-1"></i>
-                  <span class="text-white"><%= current_user.email %></span>
-                <% end %>
-              </li>
-              <li class="nav-item">
-                <%= link_to destroy_user_session_path, method: :delete, class: 'nav-link d-flex align-items-center' do %>
-                  <i class="bi bi-box-arrow-right me-1"></i>
-                  <span class="text-white">Sign Out</span>
-                <% end %>
-              </li>
-            <% else %>
-              <li class="nav-item">
-                <%= link_to 'Sign In', new_user_session_path, class: 'nav-link text-white' %>
-              </li>
-            <% end %>
-          </ul>
-        </div>
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <%= render 'shared/team_sprint_dropdowns' %>
+          <!-- User dropdown (rest of the navbar) -->
+        </ul>
       </div>
-    </nav>
+    </div>
     <div class="container">
         <button type="button" class="btn btn-floating btn-lg" id="btn-back-to-top">
             <%= image_tag "arrow-up.svg", style: "height:32px"%>
         </button>
         <div class="row">
-            <div class="col-3">
+            <div class="col-2 sidebar">
                 <div>
-                    <h1 class="ml-2 mt-2" style="position:fixed;"><%= link_to semester_path(@semester), class: "", style: "position:fixed;" do %><%= image_tag "arrow-left-circle-fill.svg", class:"mr-5 mb-1", style: "height:32px;"%><% end %> <span class="ml-5">Menu</span> </h1>
-                    <br>
+                  <h1 class="ml-2 mt-2" style="position:fixed;">
+                    <%= link_to semester_path(@semester), class: "", style: "position:fixed;" do %>
+                      <i class="bi bi-arrow-return-left" style="font-size: 32px;"></i>
+                    <% end %>
+                  </h1>
+                  <br>
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small mt-5" style="position:fixed;">
                         <li class="border-top my-3" style="position:fixed;"></li>
-                        <li class="mb-2"><button id="btn-jump-to-tms" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Team Member Scores</button></li>
+                        <li class="mb-2"><button id="btn-jump-to-tms" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Member Ratings</button></li>
                         <br>
                         <br>
-                        <li class="mb-2"><button id="btn-jump-to-cs" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Scores</button></li>
+                        <li class="mb-2"><button id="btn-jump-to-cs" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Feedback</button></li>
                         <br>
                         <br>
-                        <li class="mb-2"><button id="btn-jump-to-tmr" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;"> Team Member Responses</button></li>
+                        <li class="mb-2"><button id="btn-jump-to-tmr" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Team Feedback</button></li>
                         <br>
                         <br>
-                        <li class="mb-2"><button id="btn-jump-to-sqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Student Qualitative Questions</button></li>
+                        <li class="mb-2"><button id="btn-jump-to-sqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Student Feedback</button></li>
                         <br>
                         <br>
-                        <li class="mb-2"><button id="btn-jump-to-cqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Qualitative Questions</button></li>
+                        <li class="mb-2"><button id="btn-jump-to-cqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Feedback</button></li>
                         <br>
-                        <br>
-                        <li>
-                            <div>
-                                <%= bootstrap_form_with url: semester_team_path(@semester), method: "get", local: true do |f|%>
-                                    <%= f.select :team, @teams %>
-                                    <%= f.select :sprint, ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"] %>
-                                    <%= f.submit "Submit"%>
-                                <% end %>
-                            </div>
-                        </li>
+<!--                      Already added this to the navbar, redundant but keeping incase we want to replace this with another feature-->
+<!--                        <li>-->
+<!--                            <div>-->
+                                <%#= bootstrap_form_with url: semester_team_path(@semester), method: "get", local: true do |f|%>
+                                    <%#= f.select :team, @teams %>
+                                    <%#= f.select :sprint, ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"] %>
+                                    <%#= f.submit "Submit"%>
+                                <%# end %>
+<!--                            </div>-->
+<!--                        </li>-->
                     </ul>
                 </div>
             </div>
-            <div class="col-9">
+          <div class="col-9">
+            <div class="rounded border p-3 bg-light">
                 <% unless @flags.include?("student blank") %>
                     <div>
-                        <h1 id="tms">Team Member Scores</h1>
+                     <h1 id="team-member-scores"
+                         style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                       Team Member Scores
+                     </h1>
                         <div>
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th>Average Score (including self-scores)</th>
-                                        <th>Average Score (NOT including self-scores)</th>
+                                        <th>Avg. Score</th>
+                                        <th>Avg. Score (excl. self)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -115,7 +121,7 @@
                 <br>
                 <% if !@flags.include?("client blank") %>
                     <div>
-                        <h1 id="cs">Client Scores</h1>
+                        <h1 id="client-scores">Client Scores</h1>
                         <div>
                             <table class="table">
                                 <tr>
@@ -153,16 +159,20 @@
 
                 <br>
                 <% unless @flags.include?("student blank") %>
-                    <div id="tmr">
-                      <h1>Team Member Responses
-                        <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="<% @studSurvey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @studSurvey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">Expand All</button>
-                      </h1>
-                        <div>
-                            <% @studSurvey.each do |s| %>
+                    <div id="team-member-responses">
+                      <div class="d-flex justify-content-between">
+                        <h1 class="text-small" style="font-size: 2rem">Team Feedback</h1>
+                        <button class="btn btn-outline btn-secondary expand-all collapsed" style="font-size: 14px; padding: 5px 10px;" type="button" data-toggle="collapse" data-target="<% @student_survey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @student_survey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">
+                          Expand All
+                        </button>
+                      </div>
+
+                      <div>
+                            <% @student_survey.each do |s| %>
                                 <div class="mb-2">
                                     <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target=<%="##{s[:q1]}Collapse"%> aria-expanded="false" aria-controls=<%="#{s[:q1]}Collapse"%>><%="#{s[:q1]}'s Responses"%></button>
                                   <% if (some_condition?(s, :q11_1) || some_condition?(s, :q21_1) || some_condition?(s, :q15_1) || some_condition?(s, :q16_1) || some_condition?(s, :q25_1) || some_condition?(s, :q11_2) || some_condition?(s, :q21_2) || some_condition?(s, :q15_2) || some_condition?(s, :q16_2) || some_condition?(s, :q25_2) || some_condition?(s, :q11_3) || some_condition?(s, :q21_3) || some_condition?(s, :q15_3) || some_condition?(s, :q16_3) || some_condition?(s, :q25_3) || some_condition?(s, :q11_4) || some_condition?(s, :q21_4) || some_condition?(s, :q15_4) || some_condition?(s, :q16_4) || some_condition?(s, :q25_4) || some_condition?(s, :q11_5) || some_condition?(s, :q21_5) || some_condition?(s, :q15_5) || some_condition?(s, :q16_5) || some_condition?(s, :q25_5) || some_condition?(s, :q11_6) || some_condition?(s, :q21_6) || some_condition?(s, :q15_6) || some_condition?(s, :q16_6) || some_condition?(s, :q25_6)) %>
-                                <div class="multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
+                                <div class="collapse multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
                                   <table class="table">
                                     <thead>
                                     <tr>
@@ -220,7 +230,7 @@
                                                 </tr>
                                             </thead>
                                           <tbody>
-                                          <% ["q11", "q21", "q15", "q16", "q25"].each do |prefix| %>
+                                          <% %w[q11 q21 q15 q16 q25].each do |prefix| %>
                                             <tr>
                                               <th>Attends group meetings and arrives on time</th>
                                               <%= table_cell(s, "#{prefix}_1") %>
@@ -259,7 +269,7 @@
 
                     <br>
                 <div>
-                  <h1 id="sqq">Student Qualitative Questions</h1>
+                  <h1 id="student-qualitative-questions" style="font-size: 2rem;">Student Feedback</h1>
                   <div>
                     <%= render_table(1, :q4) %>
                     <%= render_table(2, :q5) %>
@@ -275,7 +285,7 @@
                 <br>
                 <% unless @flags.include?("client blank") %>
                   <div>
-                    <h1 id="cqq">Client Qualitative Questions</h1>
+                    <h1 id="client-qualitative-questions" style="font-size: 1.75rem">Client Feedback</h1>
                     <div>
                       <%= render_client_table(9, :q4) %>
                       <%= render_client_table(10, :q5) %>
@@ -284,8 +294,10 @@
                     </div>
                   </div>
                 <% end %>
-            </div>
+            </div> <!-- Closing tag for the div with rounded border and light background -->
+          </div>
         </div>
     </div>
-    <script src="scroll_navigation.js"></script>
+    <%= javascript_include_tag 'survey_page/survey_scroll_navigation' %>
+    <%= javascript_include_tag 'survey_page/survey_page_expanding_cols' %>
 </body>
