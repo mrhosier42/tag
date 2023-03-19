@@ -23,7 +23,7 @@ module SprintsHelper
   def team_rows(teams, sprint_list, flags)
     rows = ''
     teams.each do |team|
-      rows += "<tr><th>#{team}</th>"
+      rows += "<tr><th>#{link_to(team, semester_team_path(@semester, team: team))}</th>"
       sprint_list.each do |sprint|
         rows += "<td>"
         if flags[sprint][team].include?("student blank")
