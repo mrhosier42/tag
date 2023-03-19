@@ -181,42 +181,15 @@
                 <br>
                 <% unless @flags.include?("student blank") %>
                     <div id="tmr">
-                        <h1>Team Member Responses <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="<% @studSurvey.each do |s| %> <%="#{s[:q1]}Collapse"%> <%end%>">Expand All</button></h1>
+                      <h1>Team Member Responses
+                        <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="<% @studSurvey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @studSurvey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">Expand All</button>
+                      </h1>
                         <div>
                             <% @studSurvey.each do |s| %>
                                 <div class="mb-2">
                                     <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target=<%="##{s[:q1]}Collapse"%> aria-expanded="false" aria-controls=<%="#{s[:q1]}Collapse"%>><%="#{s[:q1]}'s Responses"%></button>
-                                    <% if   (s[:q11_1] != "Always" && s[:q11_1] != "Most of the time") ||
-                                            (s[:q21_1] != "Always" && s[:q21_1] != "Most of the time") ||
-                                            (s[:q15_1] && s[:q15_1] != "Always" && s[:q15_1] != "Most of the time") ||
-                                            (s[:q16_1] && s[:q16_1] != "Always" && s[:q16_1] != "Most of the time") ||
-                                            (s[:q25_1] && s[:q25_1] != "Always" && s[:q25_1] != "Most of the time") ||
-                                            (s[:q11_2] != "Always" && s[:q11_2] != "Most of the time") ||
-                                            (s[:q21_2] != "Always" && s[:q21_2] != "Most of the time") ||
-                                            (s[:q15_2] && s[:q15_2] != "Always" && s[:q15_2] != "Most of the time") ||
-                                            (s[:q16_2] && s[:q16_2] != "Always" && s[:q16_2] != "Most of the time") ||
-                                            (s[:q25_2] && s[:q25_2] != "Always" && s[:q25_2] != "Most of the time") ||
-                                            (s[:q11_3] != "Always" && s[:q11_3] != "Most of the time") ||
-                                            (s[:q21_3] != "Always" && s[:q21_3] != "Most of the time") ||
-                                            (s[:q15_3] && s[:q15_3] != "Always" && s[:q15_3] != "Most of the time") ||
-                                            (s[:q16_3] && s[:q16_3] != "Always" && s[:q16_3] != "Most of the time") ||
-                                            (s[:q25_3] && s[:q25_3] != "Always" && s[:q25_3] != "Most of the time") ||
-                                            (s[:q11_4] != "Always" && s[:q11_4] != "Most of the time") ||
-                                            (s[:q21_4] != "Always" && s[:q21_4] != "Most of the time") ||
-                                            (s[:q15_4] && s[:q15_4] != "Always" && s[:q15_4] != "Most of the time") ||
-                                            (s[:q16_4] && s[:q16_4] != "Always" && s[:q16_4] != "Most of the time") ||
-                                            (s[:q25_4] && s[:q25_4] != "Always" && s[:q25_4] != "Most of the time") ||
-                                            (s[:q11_5] != "Always" && s[:q11_5] != "Most of the time") ||
-                                            (s[:q21_5] != "Always" && s[:q21_5] != "Most of the time") ||
-                                            (s[:q15_5] && s[:q15_5] != "Always" && s[:q15_5] != "Most of the time") ||
-                                            (s[:q16_5] && s[:q16_5] != "Always" && s[:q16_5] != "Most of the time") ||
-                                            (s[:q25_5] && s[:q25_5] != "Always" && s[:q25_5] != "Most of the time") ||
-                                            (s[:q11_6] != "Always" && s[:q11_6] != "Most of the time") ||
-                                            (s[:q21_6] != "Always" && s[:q21_6] != "Most of the time") ||
-                                            (s[:q15_6] && s[:q15_6] != "Always" && s[:q15_6] != "Most of the time") ||
-                                            (s[:q16_6] && s[:q16_6] != "Always" && s[:q16_6] != "Most of the time") ||
-                                            (s[:q25_6] && s[:q25_6] != "Always" && s[:q25_6] != "Most of the time")  %>
-                                    <div class="multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
+                                  <% if (some_condition?(s, :q11_1) || some_condition?(s, :q21_1) || some_condition?(s, :q15_1) || some_condition?(s, :q16_1) || some_condition?(s, :q25_1) || some_condition?(s, :q11_2) || some_condition?(s, :q21_2) || some_condition?(s, :q15_2) || some_condition?(s, :q16_2) || some_condition?(s, :q25_2) || some_condition?(s, :q11_3) || some_condition?(s, :q21_3) || some_condition?(s, :q15_3) || some_condition?(s, :q16_3) || some_condition?(s, :q25_3) || some_condition?(s, :q11_4) || some_condition?(s, :q21_4) || some_condition?(s, :q15_4) || some_condition?(s, :q16_4) || some_condition?(s, :q25_4) || some_condition?(s, :q11_5) || some_condition?(s, :q21_5) || some_condition?(s, :q15_5) || some_condition?(s, :q16_5) || some_condition?(s, :q25_5) || some_condition?(s, :q11_6) || some_condition?(s, :q21_6) || some_condition?(s, :q15_6) || some_condition?(s, :q16_6) || some_condition?(s, :q25_6)) %>
+                                <div class="multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
                                         <table class="table">
                                             <thead>
                                                 <tr>
@@ -722,6 +695,3 @@
             document.getElementById("cqq").scrollIntoView();
         });
     </script>
-
-    <p><%= name1 %></p>
-
