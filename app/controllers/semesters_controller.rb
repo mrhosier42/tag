@@ -1,9 +1,9 @@
 class SemestersController < ApplicationController
     require 'text'
-    helper_method :getClientScore
-    helper_method :teamExist
-    helper_method :getFlags
-    helper_method :unfinishedSprint
+    helper_method :get_client_score
+    helper_method :team_exist
+    helper_method :get_flags
+    helper_method :unfinished_sprint
 
     def home
         @semesters = Semester.order(:year)
@@ -15,12 +15,12 @@ class SemestersController < ApplicationController
         @semester = Semester.find(params[:id])
         @teams = getTeams(@semester)
         # TODO: allow user to select how many Sprints there are
-        @sprintList = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
+        @sprint_list = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
         @flags = {}
-        @sprintList.each do |sprint|
+        @sprint_list.each do |sprint|
             @flags[sprint] = {}
             @teams.each do |team|
-                @flags[sprint][team] = getFlags(@semester, sprint, team)
+                @flags[sprint][team] = get_flags(@semester, sprint, team)
             end
         end
         @repos = current_user.repositories
@@ -52,7 +52,7 @@ class SemestersController < ApplicationController
 
     def update
         @semester = Semester.find(params[:id])
-        if @semester.update(params.require(:semester).permit(:semester, :year, :student_csv, :sponsor_csv))
+        if @semester.update(params.require(:semester).permit(:semester, :year, :student_csv, :client_csv))
             flash[:success] = "Semester was successfully updated!"
             redirect_to semester_url(@semester)
         else
@@ -97,12 +97,12 @@ class SemestersController < ApplicationController
         return @teams
     end
 
-    def getClientScore(semester, team, sprint)
+    def get_client_score(semester, team, sprint)
         @scores = -1
         clientScore = []
 
         # Downloads and temporarily store the student_csv file
-        semester.sponsor_csv.open do |tempfile|
+        semester.client_csv.open do |tempfile|
             begin
                 @sponsorData = SmarterCSV.process(tempfile.path)
 
@@ -323,7 +323,7 @@ class SemestersController < ApplicationController
 
         begin
             # Downloads and temporarily store the student_csv file
-            @semester.sponsor_csv.open do |tempClient|
+            @semester.client_csv.open do |tempClient|
                 begin
                     @clientData = SmarterCSV.process(tempClient.path)
                     @cliSurvey = @clientData.find_all{|client_survey| client_survey[:q2]==@team && client_survey[:q22]=="#{@sprint}"}
@@ -355,7 +355,7 @@ class SemestersController < ApplicationController
         render :team
     end
 
-    def getFlags(semester, sprint, team)
+    def get_flags(semester, sprint, team)
         # stores all the flags for the team
         flags = []
 
@@ -482,7 +482,7 @@ class SemestersController < ApplicationController
                             flags.append("low score")
                         end
 
-                        cscore = getClientScore(semester, team, sprint) 
+                        cscore = get_client_score(semester, team, sprint) 
                         if cscore == "No Score"
                             flags.append("no client score")
                         end
@@ -499,14 +499,14 @@ class SemestersController < ApplicationController
     end
 
     # Use to test if there are any teams that exist
-    def teamExist(arr)
+    def team_exist(arr)
         if arr.length() > 0
             return true
         end
         return false
     end
 
-    def unfinishedSprint(teams, flags, sprint)
+    def unfinished_sprint(teams, flags, sprint)
         teams.each do |t|
             if flags[sprint][t] != ["student blank"]
                 puts flags[sprint][t]
@@ -519,6 +519,6 @@ class SemestersController < ApplicationController
     private
 
         def semester_params
-            params.require(:semester).permit(:semester, :year, :student_csv, :sponsor_csv, sprints_attributes: [:id, :name, :start_date, :end_date, :_destroy])
+            params.require(:semester).permit(:semester, :year, :student_csv, :client_csv, sprints_attributes: [:id, :name, :start_date, :end_date, :_destroy])
         end
 end

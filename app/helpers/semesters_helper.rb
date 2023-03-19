@@ -12,7 +12,7 @@ module SemestersHelper
 
   def semester_dropdown_toggle(semester)
     link_to '#', class: 'dropdown-toggle', role: 'button', id: 'dropdownMenuLink',
-            data: { toggle: 'dropdown'}, aria: { haspopup: 'true', expanded: 'false' } do
+            data: { bs_toggle: 'dropdown'}, aria: { haspopup: 'true', expanded: 'false' } do
       content_tag(:i, '', class: 'fas ellipsis-v')
     end
   end
@@ -25,9 +25,8 @@ module SemestersHelper
 
   def semester_delete_link(semester)
     link_to 'Delete', semester_path(semester), method: :delete,
-            data: { confirm: "Are you sure you want to delete#{semester.semester} #{semester.year}?" },
+            data: { confirm: "Are you sure you want to delete #{semester.semester} #{semester.year}?" },
             class: 'dropdown-item'
   end
-
 
 end
