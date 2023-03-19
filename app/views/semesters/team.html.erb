@@ -17,7 +17,7 @@
     }
 
     .sidebar .btn-toggle-nav button {
-        background-color: #007bff;
+        background-color: #28a0ad;
         color: #fff;
         padding: 0.25rem 0.5rem; /* Reduce the padding to make buttons smaller */
         font-size: 14px;
@@ -28,11 +28,10 @@
         border-bottom: 1px solid gray; /* Add bottom border */
     }
 
+    /*TODO: Might remove since its not really used*/
     .sidebar .btn-toggle-nav button:hover {
         background-color: #0056b3;
     }
-
-
 </style>
 <body>
     <div class="container-fluid">
@@ -92,14 +91,17 @@
             <div class="rounded border p-3 bg-light">
                 <% unless @flags.include?("student blank") %>
                     <div>
-                     <h1 id="team-member-scores">Team Member Scores</h1>
+                     <h1 id="team-member-scores"
+                         style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                       Team Member Scores
+                     </h1>
                         <div>
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th>Average Score (including self-scores)</th>
-                                        <th>Average Score (NOT including self-scores)</th>
+                                        <th>Avg. Score</th>
+                                        <th>Avg. Score (excl. self)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -159,7 +161,7 @@
                 <% unless @flags.include?("student blank") %>
                     <div id="team-member-responses">
                       <div class="d-flex justify-content-between">
-                        <h1 class="text-small">Team Member Responses</h1>
+                        <h1 class="text-small" style="font-size: 2rem">Team Feedback</h1>
                         <button class="btn btn-outline btn-secondary expand-all collapsed" style="font-size: 14px; padding: 5px 10px;" type="button" data-toggle="collapse" data-target="<% @student_survey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @student_survey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">
                           Expand All
                         </button>
@@ -267,7 +269,7 @@
 
                     <br>
                 <div>
-                  <h1 id="student-qualitative-questions">Student Qualitative Questions</h1>
+                  <h1 id="student-qualitative-questions" style="font-size: 2rem;">Student Feedback</h1>
                   <div>
                     <%= render_table(1, :q4) %>
                     <%= render_table(2, :q5) %>
@@ -283,7 +285,7 @@
                 <br>
                 <% unless @flags.include?("client blank") %>
                   <div>
-                    <h1 id="client-qualitative-questions">Client Qualitative Questions</h1>
+                    <h1 id="client-qualitative-questions" style="font-size: 1.75rem">Client Feedback</h1>
                     <div>
                       <%= render_client_table(9, :q4) %>
                       <%= render_client_table(10, :q5) %>
