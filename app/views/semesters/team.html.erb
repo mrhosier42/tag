@@ -1,3 +1,9 @@
+<style>
+    .nav-arrow {
+        font-size: 32px;
+        line-height: 1;
+    }
+</style>
 <body>
     <%# overwrite the navbar %>
     <nav class="navbar navbar-expand-md navbar-dark bg-color1 fixed-top"; style = "height: 65px;">
@@ -7,45 +13,53 @@
         </button>
         <div class="collapse navbar-collapse"></div>
         <div class="collapse navbar-collapse">
-            <div class="container ml-1" style="max-width:500px">
-                <div class="row">
-                    <div class="col">
-                        <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[@sprints.index(@sprint)-1]) do %>
-                            <%= image_tag "chevron-double-left.svg", class:"", style: "height:48px", title: "sprint left"%>
-                        <% end %>
-                    </div>
-                    <div class="col">
-                        <%= link_to semester_team_path(@semester, :team => @teams[@teams.index(@team)-1], :sprint => @sprint) do %>
-                            <%= image_tag "chevron-left.svg", class:"", style: "height:48px", title: "team left"%>
-                        <% end %>
-                    </div>
-                    <div class="col">
-                        <h2 class="navbar-brand ml-2 text-center"><%= "#{@team}, #{@sprint}"%></h2>
-                    </div>
-                    <div class="col">
-                        <% if @teams[@teams.index(@team)+1].nil? == true %>
-                            <%= link_to semester_team_path(@semester, :team => @teams[0], :sprint => @sprint) do %>
-                                <%= image_tag "chevron-right.svg", class:"", style: "height:48px", title: "team right"%>
-                            <% end %>
-                        <% else %>
-                            <%= link_to semester_team_path(@semester, :team => @teams[@teams.index(@team)+1], :sprint => @sprint) do %>
-                                <%= image_tag "chevron-right.svg", class:"", style: "height:48px", title: "team right"%>
-                            <% end %>
-                        <% end %>
-                    </div>
-                    <div class="col">
-                        <% if @sprints[@sprints.index(@sprint)+1].nil? == true %>
-                            <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[0]) do %>
-                                <%= image_tag "chevron-double-right.svg", class:"", style: "height:48px", title: "sprint right"%>
-                            <% end %>
-                        <% else %>
-                            <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[@sprints.index(@sprint)+1]) do %>
-                                <%= image_tag "chevron-double-right.svg", class:"", style: "height:48px", title: "sprint right"%>
-                            <% end %>
-                        <% end %>
-                    </div>
+          <div class="container ml-1" style="max-width:500px">
+            <div class="row align-items-center text-center">
+              <div class="col-12 col-md">
+                <div class="d-flex justify-content-around">
+                  <div>
+                    <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[@sprints.index(@sprint)-1]) do %>
+                      <i class="bi bi-chevron-double-left nav-arrow" title="sprint left"></i>
+                    <% end %>
+                  </div>
+                  <div>
+                    <%= link_to semester_team_path(@semester, :team => @teams[@teams.index(@team)-1], :sprint => @sprint) do %>
+                      <i class="bi bi-chevron-left nav-arrow" title="team left"></i>
+                    <% end %>
+                  </div>
                 </div>
+              </div>
+              <div class="col-12 col-md">
+                <h2 class="navbar-brand ml-2 text-center"><%= "#{@team}, #{@sprint}"%></h2>
+              </div>
+              <div class="col-12 col-md">
+                <div class="d-flex justify-content-around">
+                  <div>
+                    <% if @teams[@teams.index(@team)+1].nil? == true %>
+                      <%= link_to semester_team_path(@semester, :team => @teams[0], :sprint => @sprint) do %>
+                        <i class="bi bi-chevron-right nav-arrow" title="team right"></i>
+                      <% end %>
+                    <% else %>
+                      <%= link_to semester_team_path(@semester, :team => @teams[@teams.index(@team)+1], :sprint => @sprint) do %>
+                        <i class="bi bi-chevron-right nav-arrow" title="team right"></i>
+                      <% end %>
+                    <% end %>
+                  </div>
+                  <div>
+                    <% if @sprints[@sprints.index(@sprint)+1].nil? == true %>
+                      <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[0]) do %>
+                        <i class="bi bi-chevron-double-right nav-arrow" title="sprint right"></i>
+                      <% end %>
+                    <% else %>
+                      <%= link_to semester_team_path(@semester, :team => @team, :sprint => @sprints[@sprints.index(@sprint)+1]) do %>
+                        <i class="bi bi-chevron-double-right nav-arrow" title="sprint right"></i>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
             <% if user_signed_in? %>
                 <%= link_to current_user.email, edit_user_registration_path, method: :get, class: 'pr-1 nav-link text-white'%>
                 <%= image_tag "person-circle.svg", class:"pr-2" %>

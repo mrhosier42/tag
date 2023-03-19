@@ -57,11 +57,10 @@ module SprintsHelper
 
 
   def icon_html(icon, title)
-    "<div class='p-2 m-0'><p class='p-0 m-0'>" +
+    "<div class='d-inline-flex p-2 m-0'><p class='p-0 m-0'>" +
       ActionController::Base.helpers.image_tag(icon, class: "", style: "height:16px", title: title) +
       "</p></div>"
   end
-
 
 
   def sprint_team_cells(teams, sprint_list, flags, current_team)
