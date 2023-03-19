@@ -30,19 +30,29 @@ class SemestersController < ApplicationController
 
     def new
         @semester = Semester.new
-        render :new
+        @semester.sprints.build
+        # render :new
     end
 
     def create
         @semester = Semester.new(semester_params)
+
+        if params[:student_csv].present?
+            @semester.student_csv.attach(params[:student_csv])
+        end
+
+        if params[:client_csv].present?
+            @semester.client_csv.attach(params[:client_csv])
+        end
+
         if @semester.save
-            flash[:success] = "New semester successfully created!"
-            redirect_to semesters_url
+            redirect_to @semester, notice: 'Semester was successfully created.'
         else
-            flash.now[:error] = "Semester creation failed"
             render :new
         end
     end
+
+
 
     def edit
         session[:return_to] ||= request.referer
@@ -518,7 +528,13 @@ class SemestersController < ApplicationController
 
     private
 
-        def semester_params
-            params.require(:semester).permit(:semester, :year, :student_csv, :client_csv, sprints_attributes: [:id, :name, :start_date, :end_date, :_destroy])
-        end
+    def semester_params
+        params.permit(
+          :semester, :year, sprints_attributes: [
+          :id, :_destroy, :start_date, :end_date
+        ],
+          student_csv: [], client_csv: []
+        )
+    end
+
 end

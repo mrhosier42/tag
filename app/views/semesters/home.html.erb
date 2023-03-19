@@ -1,39 +1,110 @@
-<div class="container">
-    <div class="row">
-        <div class="col-2 sticky-top h-100">
-            <div>
-              <div class="text-center">
-                <div class="d-inline-block mx-auto" style="margin-left: 50px;">
-                  <%= image_tag 'Homepage.png', class: 'w-100', style: 'max-width: 25rem;'%>
-                  <%= link_to "Create Semester", new_semester_path, class: "btn btn btn-primary d-inline-flex align-items-center rounded border-0"%>
+<style>
+    .optional {
+        font-size: 0.7em; /* adjust the font size as needed */
+        font-style: italic;
+        transform: skew(-1deg); /* adjust the skew angle as needed */
+        display: inline-block; /* ensure the span is only as wide as its content */
+    }
+    .dropdown-container {
+        display: inline-block;
+        margin-right: 10px;
+        vertical-align: top;
+    }
+</style>
+<body>
+  <div class="container">
+      <div class="row">
+          <div class="col-2 sticky-top h-100">
+              <div>
+                <div class="text-center">
+                  <div class="d-inline-block mx-auto" style="margin-left: 50px;">
+                    <%= image_tag 'Homepage.png', class: 'w-100', style: 'max-width: 25rem;'%>
+                    <button href="#" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#newSemesterModal">
+                      New Semester
+                    </button>
+                  </div>
                 </div>
+              </div>
+          </div>
+          <div class="col-10 justify-content-center align-items-center text-center">
+              <h3>Select Semester</h3>
+            <div class="box">
+            <div class="semester-list">
+              <% current_year = nil %>
+              <% @semesters.each do |s| %>
+                <% year = s.year %>
+                <% semester = s.semester %>
+                <% if year != current_year %>
+                  <% current_year = year %>
+                  <h3 class="year-header"><%= year %></h3>
+                <% end %>
+                <div class="semester-item">
+                  <div class="semester-name"><%= semester.capitalize %> <%= year %></div>
+                  <div class="semester-link-container">
+                    <%= link_to "#{s.semester} #{s.year}", semester_path(s), class: "lnk-blue d-inline-flex text-decoration-none rounded"%>
+                    <%= semester_dropdown_menu(s) %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          </div>
+      </div>
+  </div>
+  <div class="modal fade" id="newSemesterModal" tabindex="-1" aria-labelledby="newSemesterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newSemesterModalLabel">New Semester</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <%= bootstrap_form_with model: @semester, url: semesters_path, method: :post, local: true do |f| %>
+            <%= f.hidden_field :semester %>
+            <%= f.hidden_field :year %>
+            <div class="form-outline mb-4">
+              <div class="dropdown-container">
+                <% semester_array = %w[Fall Spring] %>
+                <%= select_tag :semester, options_for_select(semester_array), class: 'form-control form-control-lg', id: 'semester' %>
+              </div>
+              <div class="dropdown-container">
+                <%= select_tag :year, options_for_select((Time.zone.now.year - 5)..(Time.zone.now.year + 10)), class: 'form-control form-control-lg', id: 'year' %>
               </div>
             </div>
+<!--            If you want to manually add sprints, you can do it here! It is a useful feature right now. -->
+<!--            <fieldset class="ml-2 mb-4">-->
+<!--              <hr>-->
+<!--              <h5>Semester Date:</h5>-->
+              <%#= f.fields_for :sprints do |sprints_form| %>
+                <%#= render partial: "semesters/sprint_fields", locals: { f: sprints_form } %>
+              <%# end %>
+<!--            </fieldset>-->
+            <hr>
+            <h5>Upload Survey CSVs <span class="optional">(optional)</span></h5>
+            <div class="form-outline mb-4">
+              <%= f.file_field :client_csv, :accept => 'text/csv', class: 'form-control form-control', id: 'client_csv' %>
+            </div>
+            <div class="form-outline mb-4">
+              <%= f.file_field :student_csv, :accept => 'text/csv', class: 'form-control form-control', id: 'student_csv' %>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-center mb-5">
+              <%= f.submit "Submit", class: "btn btn-success btn-block gradient-custom-4 text-white" %>
+            </div>
+          <% end %>
         </div>
-
-        <div class="col-10 justify-content-center align-items-center text-center">
-            <h3>Select Semester</h3>
-          <div class="box">
-          <div class="semester-list">
-            <% current_year = nil %>
-            <% @semesters.each do |s| %>
-              <% year = s.year %>
-              <% semester = s.semester %>
-              <% if year != current_year %>
-                <% current_year = year %>
-                <h3 class="year-header"><%= year %></h3>
-              <% end %>
-              <div class="semester-item">
-                <div class="semester-name"><%= semester.capitalize %> <%= year %></div>
-                <div class="semester-link-container">
-                  <%= link_to "#{s.semester} #{s.year}", semester_path(s), class: "lnk-blue d-inline-flex text-decoration-none rounded"%>
-                  <%= semester_dropdown_menu(s) %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        </div>
-
-        </div>
+      </div>
     </div>
-</div>
+  </div>
+  <script>
+      $(document).ready(function() {
+          $('#semester').change(function() {
+              $('input[name="semester[semester]"]').val($(this).val());
+          });
+
+          $('#year').change(function() {
+              $('input[name="semester[year]"]').val($(this).val());
+          });
+      });
+  </script>
+</body>
