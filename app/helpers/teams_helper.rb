@@ -1,85 +1,66 @@
 module TeamsHelper
 
-  # def check_for_not_always_most_of_the_time(*keys)
-  #   keys.any? do |key|
-  #     s[key] && s[key] != "Always" && s[key] != "Most of the time"
-  #   end
-  # end
-
   # Check any response for each team member
   def some_condition?(s, key)
     s[key] && s[key] != "Always" && s[key] != "Most of the time"
   end
 
-  def display_table_row(title, columns)
-    content_tag(:tr) do
-      concat(content_tag(:th, title))
-      columns.each do |key, value|
-        concat(content_tag(:td, value, class: some_class(key, value)))
+  def render_cell(value, text = nil)
+    classes = if value != "Always" && value != "Most of the time" then "text-white bg-danger" else "" end
+    content = text ? "#{text} - #{value}" : value
+    "<td class=\"#{classes}\">#{content}</td>".html_safe
+  end
+
+  def table_cell(s, question, negative_conditions = ["Always", "Most of the time"])
+    css_class = negative_conditions.none? { |condition| s[question] == condition } ? "text-white bg-danger" : ""
+    content_tag :td, s[question], class: css_class
+  end
+
+  def render_table(question_number, question_key)
+    if @not_empty_questions.include?(question_number)
+      content_tag :table, class: "table table-striped" do
+        thead = content_tag :thead do
+          content_tag :tr do
+            content_tag :th do
+              content_tag :p, @question_titles[question_key]
+            end
+          end
+        end
+
+        tbody = content_tag :tbody do
+          @studSurvey.map do |s|
+            if s[question_key] != nil
+              content_tag :tr do
+                content_tag :td, "#{s[:q1]}: #{s[question_key]}"
+              end
+            end
+          end.join.html_safe
+        end
+
+        thead + tbody
       end
     end
   end
 
-  def some_class(key, value)
-    if value != "Always" && value != "Most of the time"
-      "text-white bg-danger"
-    else
-      ""
-    end
-  end
+  def render_client_table(question_number, question_key)
+    if @not_empty_questions.include?(question_number)
+      content_tag :table, class: "table table-striped" do
+        thead = content_tag :thead do
+          content_tag :tr do
+            content_tag :th do
+              content_tag :p, @client_question_titles[question_key]
+            end
+          end
+        end
 
-  def display_survey_data(s)
-    output = ""
-    6.times do |i|
-      index = i + 1
-      output += "<tr>
-      <th>Attends group meetings and arrives on time</th>
-      <td class='#{danger_class(s[:q11_1])}'>#{s[:q11_1]}</td>
-      <td class='#{danger_class(s[:q21_1])}'>#{s[:q21_1]}</td>
-      #{conditional_td(s, index, :q15_1)}
-      #{conditional_td(s, index, :q16_1)}
-      #{conditional_td(s, index, :q25_1)}
-    </tr>
-    <tr>
-      <th>Does high quality work</th>
-      <td class='#{danger_class(s[:q11_2])}'>#{s[:q11_2]}</td>
-      <td class='#{danger_class(s[:q21_2])}'>#{s[:q21_2]}</td>
-      #{conditional_td(s, index, :q15_2)}
-      #{conditional_td(s, index, :q16_2)}
-      #{conditional_td(s, index, :q25_2)}
-    </tr>
-    <tr>
-      <th>Completes their work on time</th>
-      <td class='#{danger_class(s[:q11_3])}'>#{s[:q11_3]}</td>
-      <td class='#{danger_class(s[:q21_3])}'>#{s[:q21_3]}</td>
-      #{conditional_td(s, index, :q15_3)}
-      #{conditional_td(s, index, :q16_3)}
-      #{conditional_td(s, index, :q25_3)}
-    </tr>
-    <tr>
-      <th>Does a fair share of the team's work</th>
-      <td class='#{danger_class(s[:q11_4])}'>#{s[:q11_4]}</td>
-      <td class='#{danger_class(s[:q21_4])}'>#{s[:q21_4]}</td>
-      #{conditional_td(s, index, :q15_4)}
-      #{conditional_td(s, index, :q16_4)}
-      #{conditional_td(s, index, :q25_4)}
-    </tr>
-    <tr>
-      <th>Communicates effectively and respectfully with their teammates</th>
-      <td class='#{danger_class(s[:q11_5])}'>#{s[:q11_5]}</td>
-      <td class='#{danger_class(s[:q21_5])}'>#{s[:q21_5]}</td>
-      #{conditional_td(s, index, :q15_5)}
-      #{conditional_td(s, index, :q16_5)}
-      #{conditional_td(s, index, :q25_5)}
-    </tr>
-    <tr>
-      <th>Choose one additional category</th>
-      #{conditional_td(s, index, :q11_6_text, :q11_6)}
-      #{conditional_td(s, index, :q21_6_text, :q21_6)}
-      #{conditional_td(s, index, :q15_6_text, :q15_6)}
-      #{conditional_td(s, index, :q16_6_text, :q16_6)}
-      #{conditional_td(s, index, :q25_6_text, :q25_6)}
-    </tr>"
+        tbody = content_tag :tbody do
+          content_tag :tr do
+            content_tag :td, @cliSurvey[0][question_key]
+          end
+        end
+
+        thead + tbody
+      end
     end
   end
 
