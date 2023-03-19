@@ -13,9 +13,9 @@ This application is built on Ruby on Rails web framework.
 # Installating Software
 ## Windows or Linux/macOS
 #### NOTE: Be sure to download and install the corresponding operating system supported files.
-1. Download and install [Ruby 3.2.0](https://www.ruby-lang.org/en/downloads/releases/).
-2. Download and install [Node 19.6.0](https://nodejs.org/en/download/).
-3. Download and install [Postgress](https://www.postgresql.org/download/).
+1. Download and install [Ruby](https://www.ruby-lang.org/en/downloads/releases/)
+2. Download and install [Node](https://nodejs.org/en/download/)
+3. Download and install [Postgress](https://www.postgresql.org/download/)
 
 ## Using the software
 1. Create a workspace folder to download your application.
@@ -25,7 +25,7 @@ This application is built on Ruby on Rails web framework.
 5. Install the necessary dependencies using the following command: ```yarn install```
 6. Install Ruby gems using the following command: ```bundle install```
 7. Create the database using the following command: ```rails db:create```
-8. Run the database migrations using the following command: ```rails db:reset db:migrate db:seed```
+8. Run the database migrations using the following command: ```rails db:reset db:migrate```
 9. Start the server: ```rails server```
 10. Type ```localhost:3000``` into your browser.
 
