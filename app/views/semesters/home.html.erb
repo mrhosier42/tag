@@ -68,8 +68,9 @@
                 <%= select_tag :semester, options_for_select(semester_array), class: 'form-control form-control-lg', id: 'semester' %>
               </div>
               <div class="dropdown-container">
-                <%= select_tag :year, options_for_select((Time.zone.now.year - 5)..(Time.zone.now.year + 10)), class: 'form-control form-control-lg', id: 'year' %>
+                <%= select_tag :year, options_for_select((Time.zone.now.year - 3)..(Time.zone.now.year + 3), Time.zone.now.year), class: 'form-control form-control-lg', id: 'year' %>
               </div>
+
             </div>
 <!--            If you want to manually add sprints, you can do it here! It is a useful feature right now. -->
 <!--            <fieldset class="ml-2 mb-4">-->

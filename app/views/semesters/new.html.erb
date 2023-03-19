@@ -8,10 +8,9 @@
               <h2 class="text-uppercase text-center mb-5">New Semester</h2>
               <%= bootstrap_form_with(model: @semester, url: semesters_path, method: :post, local: true) do |f| %>
                 <div class="form-outline mb-4">
-                  <% semester_array = ['Fall', 'Spring'] %>
+                  <% semester_array = %w[Fall Spring] %>
                   <%= f.select :semester, semester_array, {}, class: 'form-control form-control-lg', id: 'semester' %>
-<!--                  Modify line below to edit the range of years to choose from when creating new semesters-->
-                  <%= f.select :year, (Time.zone.now.year + 10), {}, class: 'form-control form-control-lg', id: 'year' %>
+                  <%= f.select :year, options_for_select((Time.zone.now.year - 3)..(Time.zone.now.year + 3), Time.zone.now.year), {}, class: 'form-control form-control-lg', id: 'year' %>
                 </div>
                 <fieldset class="ml-2 mb-4">
                   <legend>Sprints:</legend>
