@@ -1,39 +1,40 @@
-<section class="vh-100 bg-image" style="background-image: url('<%= asset_path('background/cap.jpg') %>');">
-  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
-    <div class="container h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-          <div class="card" style="border-radius: 15px;">
-            <div class="card-body p-5">
-              <h2 class="text-uppercase text-center mb-5">Edit Semester</h2>
+<!--<section class="vh-100 bg-image" style="background-image: url('<%#= asset_path('background/cap.jpg') %>');">-->
+<!--  <div class="mask d-flex align-items-center h-100 gradient-custom-3">-->
+<!--    <div class="container h-100">-->
+<!--      <div class="row d-flex justify-content-center align-items-center h-100">-->
+<!--        <div class="col-12 col-md-9 col-lg-7 col-xl-6">-->
+<!--          <div class="card" style="border-radius: 15px;">-->
+<!--            <div class="card-body p-5">-->
+<!--              <h2 class="text-uppercase text-center mb-5">Edit Semester</h2>-->
 
-              <%= bootstrap_form_with model: @semester, url: semester_path(@semester), method: :patch, local: true do |f| %>
-                <div class="form-outline mb-4">
-                  <% semester_array = ['Fall', 'Spring'] %>
-                  <%= f.select :semester, semester_array, {}, class: 'form-control form-control-lg', id: 'semester' %>
-                  <%= f.select :year, (Time.zone.now.year - 10)..(Time.zone.now.year + 10), {}, class: 'form-control form-control-lg', id: 'year' %>
-                </div>
+              <%#= bootstrap_form_with model: @semester, url: semester_path(@semester), method: :patch, local: true do |f| %>
+<!--                  Doesn't make sense to be able to change the semester year and-->
+<!--                <div class="form-outline mb-4">-->
+                  <%# semester_array = ['Fall', 'Spring'] %>
+                  <%#= f.select :semester, semester_array, {}, class: 'form-control form-control-lg', id: 'semester' %>
+                  <%#= f.select :year, (Time.zone.now.year - 10)..(Time.zone.now.year + 10), {}, class: 'form-control form-control-lg', id: 'year' %>
+<!--                </div>-->
 
-                <div class="form-outline mb-4">
-                  <%= f.file_field :student_csv, :accept => 'text/csv', class: 'form-control form-control-lg', id: 'student_csv' %>
-                </div>
+<!--                <div class="form-outline mb-4">-->
+                  <%#= f.file_field :student_csv, :accept => 'text/csv', class: 'form-control form-control-lg', id: 'student_csv' %>
+<!--                </div>-->
 
-                <div class="form-outline mb-4">
-                  <%= f.file_field :client_csv, :accept => 'text/csv', class: 'form-control form-control-lg', id: 'client_csv' %>
-                </div>
+<!--                <div class="form-outline mb-4">-->
+                  <%#= f.file_field :client_csv, :accept => 'text/csv', class: 'form-control form-control-lg', id: 'client_csv' %>
+<!--                </div>-->
 
-                <div class="d-flex justify-content-center mb-4">
-                  <%= f.submit "Update", class: "btn btn-success btn-block btn-lg gradient-custom-4 text-body" %>
-                </div>
+<!--                <div class="d-flex justify-content-center mb-4">-->
+                  <%#= f.submit "Update", class: "btn btn-success btn-block btn-lg gradient-custom-4 text-body" %>
+<!--                </div>-->
 
-                <div class="d-flex justify-content-center mb-5">
-                  <%= link_to "Back", semester_path(@semester), class: "btn btn-secondary btn-block btn-lg gradient-custom-4 text-body" %>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!--                <div class="d-flex justify-content-center mb-5">-->
+                  <%#= link_to "Back", semester_path(@semester), class: "btn btn-secondary btn-block btn-lg gradient-custom-4 text-body" %>
+<!--                </div>-->
+              <%# end %>
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
