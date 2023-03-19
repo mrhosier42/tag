@@ -182,17 +182,17 @@ class SemestersController < ApplicationController
                 begin
                     @studentData = SmarterCSV.process(tempStudent.path)
 
-                    @studSurvey = @studentData.find_all{|survey| survey[:q2]==@team && survey[:q22]==@sprint}
+                    @student_survey = @studentData.find_all{|survey| survey[:q2]==@team && survey[:q22]==@sprint}
                     @question_titles = @studentData[0]
 
-                    if @studSurvey.blank?
+                    if @student_survey.blank?
                         @flags.append("student blank")
                     end
 
-                    if @studSurvey[0] then @self_submitted_names = [[@studSurvey[0][:q1]],[@studSurvey[0][:q10]]] end
-                    if @studSurvey[0] and @studSurvey[0][:q13_2_text] then @self_submitted_names.push([@studSurvey[0][:q13_2_text]]) end
-                    if @studSurvey[0] and @studSurvey[0][:q23_2_text] then @self_submitted_names.push([@studSurvey[0][:q23_2_text]]) end
-                    if @studSurvey[0] and @studSurvey[0][:q24_2_text] then @self_submitted_names.push([@studSurvey[0][:q24_2_text]]) end
+                    if @student_survey[0] then @self_submitted_names = [[@student_survey[0][:q1]],[@student_survey[0][:q10]]] end
+                    if @student_survey[0] and @student_survey[0][:q13_2_text] then @self_submitted_names.push([@student_survey[0][:q13_2_text]]) end
+                    if @student_survey[0] and @student_survey[0][:q23_2_text] then @self_submitted_names.push([@student_survey[0][:q23_2_text]]) end
+                    if @student_survey[0] and @student_survey[0][:q24_2_text] then @self_submitted_names.push([@student_survey[0][:q24_2_text]]) end
 
                     if @self_submitted_names then @self_submitted_names.each do |name|
                         white = Text::WhiteSimilarity.new
@@ -201,7 +201,7 @@ class SemestersController < ApplicationController
                         name.push([])
                         name.push([])
 
-                        @studSurvey.each do |survey|
+                        @student_survey.each do |survey|
                             max = white.similarity(name[0], survey[:q1])
                             name_to_add = ["#{survey[:q1]}'s survey","q1",survey[:q1]]
                             self_scores = [survey[:q11_1],survey[:q11_2],survey[:q11_3],survey[:q11_4],survey[:q11_5],survey[:q11_6]]
@@ -299,7 +299,7 @@ class SemestersController < ApplicationController
                 end
 
                 # check if students' questions are empty (without any responses)
-                @studSurvey.each do |s|
+                @student_survey.each do |s|
                     if s[:q4] != nil
                         @not_empty_questions.append(1)
                     end
@@ -380,17 +380,17 @@ class SemestersController < ApplicationController
                     # studentData.delete_at(0)
                     # studentData.delete_at(0)
 
-                    studSurvey = studentData.find_all{|survey| survey[:q2]==team && survey[:q22]==sprint}
+                    student_survey = studentData.find_all{|survey| survey[:q2]==team && survey[:q22]==sprint}
                     question_titles = studentData[0]
 
-                    if studSurvey.blank?
+                    if student_survey.blank?
                         flags.append("student blank")
                     end
 
-                    if studSurvey[0] then self_submitted_names = [[studSurvey[0][:q1]],[studSurvey[0][:q10]]] end
-                    if studSurvey[0] and studSurvey[0][:q13_2_text] then self_submitted_names.push([studSurvey[0][:q13_2_text]]) end
-                    if studSurvey[0] and studSurvey[0][:q23_2_text] then self_submitted_names.push([studSurvey[0][:q23_2_text]]) end
-                    if studSurvey[0] and studSurvey[0][:q24_2_text] then self_submitted_names.push([studSurvey[0][:q24_2_text]]) end
+                    if student_survey[0] then self_submitted_names = [[student_survey[0][:q1]],[student_survey[0][:q10]]] end
+                    if student_survey[0] and student_survey[0][:q13_2_text] then self_submitted_names.push([student_survey[0][:q13_2_text]]) end
+                    if student_survey[0] and student_survey[0][:q23_2_text] then self_submitted_names.push([student_survey[0][:q23_2_text]]) end
+                    if student_survey[0] and student_survey[0][:q24_2_text] then self_submitted_names.push([student_survey[0][:q24_2_text]]) end
 
                     if self_submitted_names then self_submitted_names.each do |name|
                         white = Text::WhiteSimilarity.new
@@ -399,7 +399,7 @@ class SemestersController < ApplicationController
                         name.push([])
                         name.push([])
 
-                        studSurvey.each do |survey|
+                        student_survey.each do |survey|
                             max = white.similarity(name[0], survey[:q1])
                             name_to_add = ["#{survey[:q1]}'s survey","q1",survey[:q1]]
                             self_scores = [survey[:q11_1],survey[:q11_2],survey[:q11_3],survey[:q11_4],survey[:q11_5],survey[:q11_6]]

@@ -124,6 +124,7 @@
     <orderEntry type="library" scope="PROVIDED" name="zeitwerk (v2.6.7, rbenv: 3.2.1) [gem]" level="application" />
     <orderEntry type="library" name="popper.js" level="application" />
     <orderEntry type="library" name="bootstrap-icons" level="application" />
+    <orderEntry type="library" name="jquery-3.6.4" level="application" />
   </component>
   <component name="RModuleSettingsStorage">
     <LOAD_PATH number="0" />

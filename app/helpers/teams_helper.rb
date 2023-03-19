@@ -28,7 +28,7 @@ module TeamsHelper
         end
 
         tbody = content_tag :tbody do
-          @studSurvey.map do |s|
+          @student_survey.map do |s|
             if s[question_key] != nil
               content_tag :tr do
                 content_tag :td, "#{s[:q1]}: #{s[question_key]}"
