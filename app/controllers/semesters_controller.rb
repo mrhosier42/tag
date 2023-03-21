@@ -279,7 +279,7 @@ class SemestersController < ApplicationController
                         unless name[1].blank?
                             name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
                         else
-                            name.push("*Did not submit survey*")
+                            name.push("Did not submit survey")
                         end
                         name.push((name[2].sum / name[2].size.to_f).round(1))
 
@@ -477,7 +477,7 @@ class SemestersController < ApplicationController
                         unless name[1].blank?
                             name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
                         else
-                            name.push("*Did not submit survey*")
+                            name.push("Did not submit survey")
                         end
                         name.push((name[2].sum / name[2].size.to_f).round(1))
 

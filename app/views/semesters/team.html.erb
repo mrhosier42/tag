@@ -27,11 +27,6 @@
         border-top: 1px solid gray; /* Add top border */
         border-bottom: 1px solid gray; /* Add bottom border */
     }
-
-    /*TODO: Might remove since its not really used*/
-    .sidebar .btn-toggle-nav button:hover {
-        background-color: #0056b3;
-    }
 </style>
 <body>
     <div class="container-fluid">
@@ -74,16 +69,6 @@
                         <br>
                         <li class="mb-2"><button id="btn-jump-to-cqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Feedback</button></li>
                         <br>
-<!--                      Already added this to the navbar, redundant but keeping incase we want to replace this with another feature-->
-<!--                        <li>-->
-<!--                            <div>-->
-                                <%#= bootstrap_form_with url: semester_team_path(@semester), method: "get", local: true do |f|%>
-                                    <%#= f.select :team, @teams %>
-                                    <%#= f.select :sprint, ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"] %>
-                                    <%#= f.submit "Submit"%>
-                                <%# end %>
-<!--                            </div>-->
-<!--                        </li>-->
                     </ul>
                 </div>
             </div>
@@ -109,7 +94,7 @@
                                         <tr>
                                             <th><%=name[0]%></th>
                                             <td class="<%=if name[-2]&.is_a?(String) or name[-2]&. < 4 then "text-white bg-danger" end%>"><%=name[-2]%></td>
-                                            <td class="<%=if name.last().is_a?(String) && name.last().to_i < 4 then "text-white bg-danger" end%>"><%=name.last()%></td>
+                                            <td class="<%= if name.last.is_a?(String) && name.last.to_i < 4 then "text-white bg-danger" end%>"><%= name.last%></td>
                                         </tr>
                                     <% end %>
                                 </tbody>
@@ -117,61 +102,61 @@
                         </div>
                     </div>
                 <% end %>
-
                 <br>
-                <% if !@flags.include?("client blank") %>
-                    <div>
-                        <h1 id="client-scores">Client Scores</h1>
-                        <div>
-                            <table class="table">
-                                <tr>
-                                    <th>The team was on time and professional during our meeting</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_1] != "Exceeded expectations" && @cliSurvey[0][:q2_1] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_1]%></td>
-                                </tr>
-                                <tr>
-                                    <th>The team was prepared for their meeting with me</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_2] != "Exceeded expectations" && @cliSurvey[0][:q2_2] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_2]%></td>
-                                </tr>
-                                <tr>
-                                    <th>The team is communicating with me clearly</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_3] != "Exceeded expectations" && @cliSurvey[0][:q2_3] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_3]%></td>
-                                </tr>
-                                <tr>
-                                    <th>The team met the goals we agreed to at our last meeting</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_4] != "Exceeded expectations" && @cliSurvey[0][:q2_4] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_4]%></td>
-                                </tr>
-                                <tr>
-                                    <th>The team listended to my feedback</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_5] != "Exceeded expectations" && @cliSurvey[0][:q2_5] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_5]%></td>
-                                </tr>
-                                <tr>
-                                    <th>The team set appropriate goals for the next two weeks</th>
-                                    <td class="<%=if @cliSurvey[0][:q2_6] != "Exceeded expectations" && @cliSurvey[0][:q2_6] != "Met expectations" then "text-white bg-danger" end%>"><%=@cliSurvey[0][:q2_6]%></td>
-                                </tr>
-                                <tr>
-                                    <th>Clients average score</th>
-                                    <td><%=get_client_score(@semester, @team, @sprint)%></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                <% end %>
+                <% unless @flags.include?("client blank") %>
+              <div>
+                <h1 id="client-scores">Client Scores</h1>
+                <div>
+                  <table class="table">
+                    <tr>
+                      <th>The team was on time and professional during our meeting</th>
+                      <td class="<%= if @cliSurvey[0][:q2_1] != "Exceeded expectations " && @cliSurvey[0][:q2_1] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_1] %></td>
+                    </tr>
+                    <tr>
+                      <th>The team was prepared for their meeting with me</th>
+                      <td class="<%= if @cliSurvey[0][:q2_2] != "Exceeded expectations " && @cliSurvey[0][:q2_2] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_2] %></td>
+                    </tr>
+                    <tr>
+                      <th>The team is communicating with me clearly</th>
+                      <td class="<%= if @cliSurvey[0][:q2_3] != "Exceeded expectations " && @cliSurvey[0][:q2_3] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_3] %></td>
+                    </tr>
+                    <tr>
+                      <th>The team met the goals we agreed to at our last meeting</th>
+                      <td class="<%= if @cliSurvey[0][:q2_4] != "Exceeded expectations " && @cliSurvey[0][:q2_4] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_4] %></td>
+                    </tr>
+                    <tr>
+                      <th>The team listended to my feedback</th>
+                      <td class="<%= if @cliSurvey[0][:q2_5] != "Exceeded expectations " && @cliSurvey[0][:q2_5] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_5] %></td>
+                    </tr>
+                    <tr>
+                      <th>The team set appropriate goals for the next two weeks</th>
+                      <td class="<%= if @cliSurvey[0][:q2_6] != "Exceeded expectations " && @cliSurvey[0][:q2_6] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_6] %></td>
+                    </tr>
+                    <tr>
+                      <th>Clients average score</th>
+                      <td><%= get_client_score(@semester, @team, @sprint) %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <%  end %>
 
                 <br>
                 <% unless @flags.include?("student blank") %>
                     <div id="team-member-responses">
                       <div class="d-flex justify-content-between">
                         <h1 class="text-small" style="font-size: 2rem">Team Feedback</h1>
-                        <button class="btn btn-outline btn-secondary expand-all collapsed" style="font-size: 14px; padding: 5px 10px;" type="button" data-toggle="collapse" data-target="<% @student_survey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @student_survey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">
-                          Expand All
-                        </button>
+                        <div class="expand-all-wrapper ml-auto">
+                          <button class="btn btn-outline btn-primary expand-all collapsed" style="font-size: 15px;" type="button" data-toggle="collapse" data-target="<% @student_survey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @student_survey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">
+                            Expand All
+                          </button>
+                        </div>
                       </div>
-
                       <div>
                             <% @student_survey.each do |s| %>
                                 <div class="mb-2">
                                     <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target=<%="##{s[:q1]}Collapse"%> aria-expanded="false" aria-controls=<%="#{s[:q1]}Collapse"%>><%="#{s[:q1]}'s Responses"%></button>
-                                  <% if (some_condition?(s, :q11_1) || some_condition?(s, :q21_1) || some_condition?(s, :q15_1) || some_condition?(s, :q16_1) || some_condition?(s, :q25_1) || some_condition?(s, :q11_2) || some_condition?(s, :q21_2) || some_condition?(s, :q15_2) || some_condition?(s, :q16_2) || some_condition?(s, :q25_2) || some_condition?(s, :q11_3) || some_condition?(s, :q21_3) || some_condition?(s, :q15_3) || some_condition?(s, :q16_3) || some_condition?(s, :q25_3) || some_condition?(s, :q11_4) || some_condition?(s, :q21_4) || some_condition?(s, :q15_4) || some_condition?(s, :q16_4) || some_condition?(s, :q25_4) || some_condition?(s, :q11_5) || some_condition?(s, :q21_5) || some_condition?(s, :q15_5) || some_condition?(s, :q16_5) || some_condition?(s, :q25_5) || some_condition?(s, :q11_6) || some_condition?(s, :q21_6) || some_condition?(s, :q15_6) || some_condition?(s, :q16_6) || some_condition?(s, :q25_6)) %>
+                                  <% if some_condition?(s, :q11_1) || some_condition?(s, :q21_1) || some_condition?(s, :q15_1) || some_condition?(s, :q16_1) || some_condition?(s, :q25_1) || some_condition?(s, :q11_2) || some_condition?(s, :q21_2) || some_condition?(s, :q15_2) || some_condition?(s, :q16_2) || some_condition?(s, :q25_2) || some_condition?(s, :q11_3) || some_condition?(s, :q21_3) || some_condition?(s, :q15_3) || some_condition?(s, :q16_3) || some_condition?(s, :q25_3) || some_condition?(s, :q11_4) || some_condition?(s, :q21_4) || some_condition?(s, :q15_4) || some_condition?(s, :q16_4) || some_condition?(s, :q25_4) || some_condition?(s, :q11_5) || some_condition?(s, :q21_5) || some_condition?(s, :q15_5) || some_condition?(s, :q16_5) || some_condition?(s, :q25_5) || some_condition?(s, :q11_6) || some_condition?(s, :q21_6) || some_condition?(s, :q15_6) || some_condition?(s, :q16_6) || some_condition?(s, :q25_6) %>
                                 <div class="collapse multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
                                   <table class="table">
                                     <thead>
