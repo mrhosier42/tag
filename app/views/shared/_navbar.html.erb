@@ -22,7 +22,7 @@
           <ul class="dropdown-menu" aria-labelledby="userDropdown">
             <% if user_signed_in? %>
               <li><%= link_to 'Edit Profile', edit_user_registration_path, method: :get, class: 'dropdown-item' %></li>
-              <li><%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: 'dropdown-item' %></li>
+              <li><%= link_to 'Sign Out', destroy_user_session_path, data: { turbo_method: :delete }, class: 'dropdown-item' %></li>
             <% else %>
               <li><%= link_to 'Sign In', new_user_session_path, class: 'dropdown-item' %></li>
             <% end %>
