@@ -58,7 +58,7 @@
                         <li class="mb-2"><button id="btn-jump-to-tms" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Member Ratings</button></li>
                         <br>
                         <br>
-                        <li class="mb-2"><button id="btn-jump-to-cs" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Feedback</button></li>
+                        <li class="mb-2"><button id="btn-jump-to-cs" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Scores</button></li>
                         <br>
                         <br>
                         <li class="mb-2"><button id="btn-jump-to-tmr" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Team Feedback</button></li>
@@ -110,27 +110,27 @@
                   <table class="table">
                     <tr>
                       <th>The team was on time and professional during our meeting</th>
-                      <td class="<%= if @cliSurvey[0][:q2_1] != "Exceeded expectations " && @cliSurvey[0][:q2_1] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_1] %></td>
+                      <td class="<%= if @client_survey[0][:q2_1] != "Exceeded expectations " && @client_survey[0][:q2_1] != "Met expectations " then "text - white bg - danger" end %>"><%= @client_survey[0][:q2_1] %></td>
                     </tr>
                     <tr>
                       <th>The team was prepared for their meeting with me</th>
-                      <td class="<%= if @cliSurvey[0][:q2_2] != "Exceeded expectations " && @cliSurvey[0][:q2_2] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_2] %></td>
+                      <td class="<%= if @client_survey[0][:q2_2] != "Exceeded expectations " && @client_survey[0][:q2_2] != "Met expectations " then "text - white bg - danger" end %>"><%= @client_survey[0][:q2_2] %></td>
                     </tr>
                     <tr>
                       <th>The team is communicating with me clearly</th>
-                      <td class="<%= if @cliSurvey[0][:q2_3] != "Exceeded expectations " && @cliSurvey[0][:q2_3] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_3] %></td>
+                      <td class="<%= if @client_survey[0][:q2_3] != "Exceeded expectations " && @client_survey[0][:q2_3] != "Met expectations " then "text - white bg - danger" end %>"><%= @client_survey[0][:q2_3] %></td>
                     </tr>
                     <tr>
                       <th>The team met the goals we agreed to at our last meeting</th>
-                      <td class="<%= if @cliSurvey[0][:q2_4] != "Exceeded expectations " && @cliSurvey[0][:q2_4] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_4] %></td>
+                      <td class="<%= if @client_survey[0][:q2_4] != "Exceeded expectations " && @client_survey[0][:q2_4] != "Met expectations " then "text - white bg - danger" end %>"><%= @client_survey[0][:q2_4] %></td>
                     </tr>
                     <tr>
                       <th>The team listended to my feedback</th>
-                      <td class="<%= if @cliSurvey[0][:q2_5] != "Exceeded expectations " && @cliSurvey[0][:q2_5] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_5] %></td>
+                      <td class="<%= if @client_survey[0][:q2_5] != "Exceeded expectations " && @client_survey[0][:q2_5] != "Met expectations " then "text - white bg - danger" end %>"><%= @client_survey[0][:q2_5] %></td>
                     </tr>
                     <tr>
                       <th>The team set appropriate goals for the next two weeks</th>
-                      <td class="<%= if @cliSurvey[0][:q2_6] != "Exceeded expectations " && @cliSurvey[0][:q2_6] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_6] %></td>
+                      <td class="<%= if @client_survey[0][:q2_6] != "Exceeded expectations " && @client_survey[0][:q2_6] != "Met expectations " then "text - white bg - danger" end %>"><%= @client_survey[0][:q2_6] %></td>
                     </tr>
                     <tr>
                       <th>Clients average score</th>

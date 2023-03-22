@@ -13,7 +13,7 @@ class SemestersController < ApplicationController
     def show
         session[:return_to] ||= request.referer
         @semester = Semester.find(params[:id])
-        @teams = getTeams(@semester)
+        @teams = get_teams(@semester)
         # TODO: allow user to select how many Sprints there are
         @sprint_list = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
         @flags = {}
@@ -53,7 +53,6 @@ class SemestersController < ApplicationController
     end
 
 
-
     def edit
         session[:return_to] ||= request.referer
         @semester = Semester.find(params[:id])
@@ -77,25 +76,27 @@ class SemestersController < ApplicationController
         redirect_to semester_path, notice: 'Semester was successfully deleted.'
     end
 
-    def getTeams(semester)
+
+
+    def get_teams(semester)
         @teams = []
 
         begin
             # Downloads and temporarily store the student_csv file
             semester.student_csv.open do |tempfile|
                 begin
-                    @studentData = SmarterCSV.process(tempfile.path)
+                    @student_data = SmarterCSV.process(tempfile.path)
 
                     # Delete the 2 header columns before the data
-                    @studentData.delete_at(0)
-                    @studentData.delete_at(0)
+                    @student_data.delete_at(0)
+                    @student_data.delete_at(0)
 
-                    @studentData.each do |row|
+                    @student_data.each do |row|
                         if @teams.exclude? row[:q2]
                             @teams.append(row[:q2])
                         end
                     end
-                    @teams.uniq()
+                    @teams.uniq
                 rescue => exception
                     flash.now[:alert] = "Error! Unable to read data. Please update your student data file"
                 end
@@ -104,32 +105,32 @@ class SemestersController < ApplicationController
             flash.now[:alert] = "This semester does not have a student survey"
         end
         session[:teams_list] = @teams
-        return @teams
+        @teams
     end
 
     def get_client_score(semester, team, sprint)
         @scores = -1
-        clientScore = []
+        client_score = []
 
         # Downloads and temporarily store the student_csv file
         semester.client_csv.open do |tempfile|
             begin
-                @sponsorData = SmarterCSV.process(tempfile.path)
+                @sponsor_data = SmarterCSV.process(tempfile.path)
 
                 # Delete the 2 header columns before the data
-                @sponsorData.delete_at(0)
-                @sponsorData.delete_at(0)
+                @sponsor_data.delete_at(0)
+                @sponsor_data.delete_at(0)
 
-                @sponsorData.each do |row|
-                    clientScore = []
+                @sponsor_data.each do |row|
+                    client_score = []
                     if row[:q2] == team && row[:q22] == sprint
-                        clientScore.append(row[:q2_1])
-                        clientScore.append(row[:q2_2])
-                        clientScore.append(row[:q2_3])
-                        clientScore.append(row[:q2_4])
-                        clientScore.append(row[:q2_5])
-                        clientScore.append(row[:q2_6])
-                        @scores = calScore(clientScore)
+                        client_score.append(row[:q2_1])
+                        client_score.append(row[:q2_2])
+                        client_score.append(row[:q2_3])
+                        client_score.append(row[:q2_4])
+                        client_score.append(row[:q2_5])
+                        client_score.append(row[:q2_6])
+                        @scores = calculate_score(client_score)
                     end
                 end
             rescue => exception
@@ -139,10 +140,10 @@ class SemestersController < ApplicationController
         if @scores < 0
             return "No Score"
         end
-        return @scores
+        @scores
     end
 
-    def calScore(arr)
+    def calculate_score(arr)
         total = 0
 
         arr.each do |item|
@@ -165,7 +166,7 @@ class SemestersController < ApplicationController
 
     def team
         @semester = Semester.find(params[:semester_id])
-        @teams = getTeams(@semester)
+        @teams = get_teams(@semester)
         @team =  params[:team]
         # TODO: Allow user to select how many Sprint's there are
         @sprints = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
@@ -180,10 +181,10 @@ class SemestersController < ApplicationController
             # Downloads and temporarily store the student_csv file
             @semester.student_csv.open do |tempStudent|
                 begin
-                    @studentData = SmarterCSV.process(tempStudent.path)
+                    @student_data = SmarterCSV.process(tempStudent.path)
 
-                    @student_survey = @studentData.find_all{|survey| survey[:q2]==@team && survey[:q22]==@sprint}
-                    @question_titles = @studentData[0]
+                    @student_survey = @student_data.find_all{|survey| survey[:q2]==@team && survey[:q22]==@sprint}
+                    @question_titles = @student_data[0]
 
                     if @student_survey.blank?
                         @flags.append("student blank")
@@ -243,7 +244,7 @@ class SemestersController < ApplicationController
                                         2
                                     elsif score=="Never"
                                         1
-                                    else 
+                                    else
                                         score
                                     end
                                 }
@@ -260,7 +261,7 @@ class SemestersController < ApplicationController
                                         2
                                     elsif score=="Never"
                                         1
-                                    else 
+                                    else
                                         score
                                     end
                                 }
@@ -276,10 +277,10 @@ class SemestersController < ApplicationController
                         name[1].compact!
                         name[2].compact!
                         including_self_scores = name[1] + name[2]
-                        unless name[1].blank?
-                            name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
-                        else
+                        if name[1].blank?
                             name.push("Did not submit survey")
+                        else
+                            name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
                         end
                         name.push((name[2].sum / name[2].size.to_f).round(1))
 
@@ -323,7 +324,7 @@ class SemestersController < ApplicationController
                     end
                     if s[:q20] != nil
                         @not_empty_questions.append(8)
-                    end    
+                    end
                 end
             end
         rescue => exception
@@ -333,29 +334,29 @@ class SemestersController < ApplicationController
 
         begin
             # Downloads and temporarily store the student_csv file
-            @semester.client_csv.open do |tempClient|
+            @semester.client_csv.open do |temp_client|
                 begin
-                    @clientData = SmarterCSV.process(tempClient.path)
-                    @cliSurvey = @clientData.find_all{|client_survey| client_survey[:q2]==@team && client_survey[:q22]=="#{@sprint}"}
-                    @client_question_titles = @clientData[0]
+                    @client_data = SmarterCSV.process(temp_client.path)
+                    @client_survey = @client_data.find_all{|client_survey| client_survey[:q2]==@team && client_survey[:q22]=="#{@sprint}"}
+                    @client_question_titles = @client_data[0]
 
-                    if @cliSurvey.blank?
+                    if @client_survey.blank?
                         @flags.append("client blank")
                     end
                 end
             end
 
             # check if clients's questions are empty (without any reponses)
-            if @cliSurvey[0][:q4] != nil
+            if @client_survey[0][:q4] != nil
                 @not_empty_questions.append(9)
             end
-            if @cliSurvey[0][:q5] != nil
+            if @client_survey[0][:q5] != nil
                 @not_empty_questions.append(10)
             end
-            if @cliSurvey[0][:q6] != nil
+            if @client_survey[0][:q6] != nil
                 @not_empty_questions.append(11)
             end
-            if @cliSurvey[0][:q7] != nil
+            if @client_survey[0][:q7] != nil
                 @not_empty_questions.append(12)
             end
         rescue => exception
@@ -374,14 +375,14 @@ class SemestersController < ApplicationController
             # Downloads and temporarily store the student_csv file
             semester.student_csv.open do |tempStudent|
                 begin
-                    studentData = SmarterCSV.process(tempStudent.path)
+                    student_data = SmarterCSV.process(tempStudent.path)
 
                     # # Delete the 2 header columns before the data
-                    # studentData.delete_at(0)
-                    # studentData.delete_at(0)
+                    # student_data.delete_at(0)
+                    # student_data.delete_at(0)
 
-                    student_survey = studentData.find_all{|survey| survey[:q2]==team && survey[:q22]==sprint}
-                    question_titles = studentData[0]
+                    student_survey = student_data.find_all{|survey| survey[:q2]==team && survey[:q22]==sprint}
+                    question_titles = student_data[0]
 
                     if student_survey.blank?
                         flags.append("student blank")
@@ -441,7 +442,7 @@ class SemestersController < ApplicationController
                                         2
                                     elsif score=="Never"
                                         1
-                                    else 
+                                    else
                                         score
                                     end
                                 }
@@ -458,7 +459,7 @@ class SemestersController < ApplicationController
                                         2
                                     elsif score=="Never"
                                         1
-                                    else 
+                                    else
                                         score
                                     end
                                 }
@@ -474,10 +475,10 @@ class SemestersController < ApplicationController
                         name[1].compact!
                         name[2].compact!
                         including_self_scores = name[1] + name[2]
-                        unless name[1].blank?
-                            name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
-                        else
+                        if name[1].blank?
                             name.push("Did not submit survey")
+                        else
+                            name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
                         end
                         name.push((name[2].sum / name[2].size.to_f).round(1))
 
@@ -492,7 +493,7 @@ class SemestersController < ApplicationController
                             flags.append("low score")
                         end
 
-                        cscore = get_client_score(semester, team, sprint) 
+                        cscore = get_client_score(semester, team, sprint)
                         if cscore == "No Score"
                             flags.append("no client score")
                         end
@@ -501,19 +502,21 @@ class SemestersController < ApplicationController
                         end
                     end end
                 rescue => exception
+                    # Ignored
                 end
             end
         rescue => exception
+            # Ignored
         end
-        return flags
+        flags
     end
 
     # Use to test if there are any teams that exist
     def team_exist(arr)
-        if arr.length() > 0
+        if arr.length > 0
             return true
         end
-        return false
+        false
     end
 
     def unfinished_sprint(teams, flags, sprint)
@@ -521,9 +524,9 @@ class SemestersController < ApplicationController
             if flags[sprint][t] != ["student blank"]
                 puts flags[sprint][t]
                 return false
-            end 
+            end
         end
-        return true
+        true
     end
 
     private
