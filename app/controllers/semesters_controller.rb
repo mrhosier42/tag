@@ -6,7 +6,7 @@ class SemestersController < ApplicationController
     helper_method :unfinished_sprint
 
     def home
-        @semesters = Semester.order(:year)
+        @semesters = Semester.order(year: :desc)
         render :home
     end
 
