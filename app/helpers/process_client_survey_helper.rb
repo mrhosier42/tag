@@ -1,6 +1,18 @@
 module ProcessClientSurveyHelper
 
-  def process_client_data(semester, team, sprint, flags, not_empty_questions)
+  def process_client_data_for_scores(sponsor_data, team, sprint)
+    sponsor_data.each do |row|
+      if row[:q2] == team && row[:q22] == sprint
+        return [
+          row[:q2_1], row[:q2_2], row[:q2_3],
+          row[:q2_4], row[:q2_5], row[:q2_6]
+        ]
+      end
+    end
+    nil
+  end
+
+  def process_client_data_for_responses(semester, team, sprint, flags, not_empty_questions)
     client_survey = []
     client_question_titles = []
 

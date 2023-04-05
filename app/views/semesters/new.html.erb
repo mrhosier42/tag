@@ -8,7 +8,7 @@
               <h2 class="text-uppercase text-center mb-5">New Semester</h2>
               <%= bootstrap_form_with(model: @semester, url: semesters_path, method: :post, local: true) do |f| %>
                 <div class="form-outline mb-4">
-                  <% semester_array = %w[Fall Spring] %>
+                  <% semester_array = %w[Fall Spring Summer] %>
                   <%= f.select :semester, semester_array, {}, class: 'form-control form-control-lg', id: 'semester' %>
                   <%= f.select :year, options_for_select((Time.zone.now.year - 3)..(Time.zone.now.year + 3), Time.zone.now.year), {}, class: 'form-control form-control-lg', id: 'year' %>
                 </div>
