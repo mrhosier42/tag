@@ -1,5 +1,7 @@
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
+  <title></title>
 </head>
 <style>
     .optional {
@@ -69,6 +71,41 @@
     .card:hover .timestamp {
         color: #555;
     }
+    h3 {
+        animation-duration: 1s;
+        animation-name: slideInFromLeft;
+    }
+
+    .card {
+        animation-duration: 1s;
+        animation-name: fadeIn;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInFromLeft {
+        0% {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .hr-separator {
+        border: none;
+        border-top: 2px solid #ccc;
+        margin: 20px 0;
+    }
 </style>
 <body>
   <div class="container">
@@ -89,9 +126,10 @@
           <h3>Select Semester</h3>
           <div class="row">
             <% grouped_semesters = @semesters.group_by(&:year).sort.reverse %>
-            <% grouped_semesters.each do |year, semesters| %>
+            <% grouped_semesters.each_with_index do |(year, semesters), index| %>
               <% sorted_semesters = semesters.sort_by { |s| s.semester == 'Fall' ? 0 : s.semester == 'Summer' ? 1 : 2 } %>
-              <% sorted_semesters.each do |s| %>
+
+              <% sorted_semesters.each_with_index do |s, semester_index| %>
                 <% card_class = case s.semester
                                 when 'Summer' then 'summer-card'
                                 when 'Spring' then 'spring-card'
@@ -108,12 +146,21 @@
                     </div>
                   <% end %>
                 </div>
+
+                <!-- Add the line separator between years, except for the last year -->
+                <% if semester_index == sorted_semesters.size - 1 && index < grouped_semesters.size - 1 %>
+                  <div class="col-md-12">
+                    <hr class="hr-separator">
+                  </div>
+                <% end %>
               <% end %>
+
             <% end %>
           </div>
         </div>
 
-      </div>
+
+
       </div>
   </div>
   <div class="modal fade" id="newSemesterModal" tabindex="-1" aria-labelledby="newSemesterModalLabel" aria-hidden="true">
@@ -137,14 +184,6 @@
               </div>
 
             </div>
-<!--            If you want to manually add sprints, you can do it here! It is not a useful feature right now. -->
-<!--            <fieldset class="ml-2 mb-4">-->
-<!--              <hr>-->
-<!--              <h5>Semester Date:</h5>-->
-              <%#= f.fields_for :sprints do |sprints_form| %>
-                <%#= render partial: "semesters/sprint_fields", locals: { f: sprints_form } %>
-              <%# end %>
-<!--            </fieldset>-->
             <hr>
             <h5>Upload Survey CSVs <span class="optional">(optional)</span></h5>
             <div class="form-outline mb-4">

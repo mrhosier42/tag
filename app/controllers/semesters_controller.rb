@@ -154,15 +154,15 @@ class SemestersController < ApplicationController
 
 
     def team
+        Rails.logger.debug("Params: #{params.inspect}")
         @semester = Semester.find(params[:semester_id])
+        Rails.logger.debug("Semester: #{@semester.inspect}")
         @teams = get_teams(@semester)
         @teams ||= []
-        Rails.logger.debug("team action: #{@teams.inspect}")
-
-        @team = params[:team]
+        @team = params[:team] || @teams.first
         # TODO: Allow user to select how many Sprint's there are
         @sprints = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
-        @sprint = params[:sprint]
+        @sprint = params[:sprint] || @sprints.first
         @not_empty_questions = []
 
         # Stores all the flags for the team
