@@ -2,3 +2,4 @@
 //= require survey_page/survey_page_expanding_cols
 import "@hotwired/turbo-rails";
 // import "controllers";
+import "@hotwired/turbo-rails"

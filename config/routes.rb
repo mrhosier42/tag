@@ -24,13 +24,3 @@ Rails.application.routes.draw do
   get 'semesters/:semester_id/sprints/:id/edit', to: 'sprints#edit', as: 'edit_semester_sprint'
 
 end
-
-# TODO: Simplify routes in the future
-# # Repository controller
-# get 'semesters/:semester_id/repositories/new', to: 'repositories#new', as: 'post_new_repository'
-# post 'semesters/:semester_id/repositories', to: 'repositories#create', as: 'create_new_repository'
-# get 'semesters/:semester_id/repositories/show', to: 'repositories#show', as: 'show_repository'
-#
-# # Page controller
-# get 'semesters/:semester_id/github_key', to: 'pages#github_key', as: 'enter_github_key'
-# post 'semesters/:semester_id/github_key', to: 'pages#post_github_key'
