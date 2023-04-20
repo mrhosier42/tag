@@ -23,7 +23,7 @@
             <% if user_signed_in? %>
               <li><%= link_to 'Edit Profile', edit_user_registration_path, method: :get, class: 'dropdown-item' %></li>
               <li>
-                <%= form_with url: destroy_user_session_path, method: :delete, id: "sign_out_form", class: "d-none" do |form| %>
+                <%= form_with url: destroy_user_session_path, method: :delete, id: "sign_out_form", class: "d-none" do |_| %>
                 <% end %>
                 <%= link_to 'Sign Out', '#', class: 'dropdown-item', id: 'sign_out_link', onclick: 'submitSignOutForm(event)' %>
               </li>

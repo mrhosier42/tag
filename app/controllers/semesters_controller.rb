@@ -129,7 +129,7 @@ class SemestersController < ApplicationController
                         clientScore.append(row[:q2_4])
                         clientScore.append(row[:q2_5])
                         clientScore.append(row[:q2_6])
-                        @scores = calScore(clientScore)
+                        @scores = calc_client_average_score(clientScore)
                     end
                 end
             rescue => exception
@@ -142,7 +142,7 @@ class SemestersController < ApplicationController
         return @scores
     end
 
-    def calScore(arr)
+    def calc_client_average_score(arr)
         total = 0
 
         arr.each do |item|
@@ -346,7 +346,7 @@ class SemestersController < ApplicationController
                 end
             end
 
-            # check if clients's questions are empty (without any reponses)
+            # check if clients questions are empty (without any responses)
             if @cliSurvey[0][:q4] != nil
                 @not_empty_questions.append(9)
             end
