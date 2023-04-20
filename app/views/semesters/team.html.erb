@@ -63,7 +63,7 @@
           <li class="mb-2"><button id="btn-jump-to-tms" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Team Member Scores</button></li>
           <br>
           <br>
-          <li class="mb-2"><button id="btn-jump-to-cs" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Feedback</button></li>
+          <li class="mb-2"><button id="btn-jump-to-cs" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Scores</button></li>
           <br>
           <br>
           <li class="mb-2"><button id="btn-jump-to-tmr" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Team Feedback</button></li>
@@ -161,7 +161,7 @@
               <% @student_survey.each do |s| %>
                 <div class="mb-2">
                   <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target=<%="##{s[:q1]}Collapse"%> aria-expanded="false" aria-controls=<%="#{s[:q1]}Collapse"%>><%="#{s[:q1]}'s Responses"%></button>
-                  <% if (some_condition?(s, :q11_1) || some_condition?(s, :q21_1) || some_condition?(s, :q15_1) || some_condition?(s, :q16_1) || some_condition?(s, :q25_1) || some_condition?(s, :q11_2) || some_condition?(s, :q21_2) || some_condition?(s, :q15_2) || some_condition?(s, :q16_2) || some_condition?(s, :q25_2) || some_condition?(s, :q11_3) || some_condition?(s, :q21_3) || some_condition?(s, :q15_3) || some_condition?(s, :q16_3) || some_condition?(s, :q25_3) || some_condition?(s, :q11_4) || some_condition?(s, :q21_4) || some_condition?(s, :q15_4) || some_condition?(s, :q16_4) || some_condition?(s, :q25_4) || some_condition?(s, :q11_5) || some_condition?(s, :q21_5) || some_condition?(s, :q15_5) || some_condition?(s, :q16_5) || some_condition?(s, :q25_5) || some_condition?(s, :q11_6) || some_condition?(s, :q21_6) || some_condition?(s, :q15_6) || some_condition?(s, :q16_6) || some_condition?(s, :q25_6)) %>
+                  <% if some_condition?(s, :q11_1) || some_condition?(s, :q21_1) || some_condition?(s, :q15_1) || some_condition?(s, :q16_1) || some_condition?(s, :q25_1) || some_condition?(s, :q11_2) || some_condition?(s, :q21_2) || some_condition?(s, :q15_2) || some_condition?(s, :q16_2) || some_condition?(s, :q25_2) || some_condition?(s, :q11_3) || some_condition?(s, :q21_3) || some_condition?(s, :q15_3) || some_condition?(s, :q16_3) || some_condition?(s, :q25_3) || some_condition?(s, :q11_4) || some_condition?(s, :q21_4) || some_condition?(s, :q15_4) || some_condition?(s, :q16_4) || some_condition?(s, :q25_4) || some_condition?(s, :q11_5) || some_condition?(s, :q21_5) || some_condition?(s, :q15_5) || some_condition?(s, :q16_5) || some_condition?(s, :q25_5) || some_condition?(s, :q11_6) || some_condition?(s, :q21_6) || some_condition?(s, :q15_6) || some_condition?(s, :q16_6) || some_condition?(s, :q25_6) %>
                     <div class="collapse multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
                       <table class="table">
                         <thead>

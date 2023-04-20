@@ -146,15 +146,15 @@ class SemestersController < ApplicationController
         total = 0
 
         arr.each do |item|
-            if item=="Exceeded expectations"
+            if item.downcase == "exceeded expectations"
                 total = total + 5.0
-            elsif item=="Met expectations"
+            elsif item.downcase == "met expectations"
                 total = total + 4.0
-            elsif item=="About half the time"
+            elsif item.downcase == "about half the time"
                 total = total + 3.0
-            elsif item=="Sometimes"
+            elsif item.downcase == "sometimes"
                 total = total + 2.0
-            elsif item=="Never"
+            elsif item.downcase == "never"
                 total = total + 1.0
             end
         end
@@ -162,6 +162,7 @@ class SemestersController < ApplicationController
         total = total.round(1)
         return total
     end
+
 
     def team
         @semester = Semester.find(params[:semester_id])
