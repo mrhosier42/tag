@@ -167,10 +167,13 @@ class SemestersController < ApplicationController
     def team
         @semester = Semester.find(params[:semester_id])
         @teams = getTeams(@semester)
+        @teams ||= []
         @team =  params[:team]
+
         # TODO: Allow user to select how many Sprint's there are
         @sprints = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
-        @sprint = params[:sprint]
+        # @sprint = params[:sprint]
+        @sprint = params[:sprint] || @sprints.first
         @not_empty_questions = [] # check if questions are empty (without any responses)
 
         # stores all the flags for the team
