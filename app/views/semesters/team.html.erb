@@ -147,18 +147,17 @@
             </table>
           </div>
         </div>
-        <%  end %>
+        <% end %>
 
         <br>
         <% unless @flags.include?("student blank") %>
           <div id="team-member-responses">
             <div class="d-flex justify-content-between">
               <h1 class="text-small" style="font-size: 2rem">Team Reflections</h1>
-              <button class="btn btn-outline btn-secondary expand-all collapsed" style="font-size: 14px; padding: 5px 10px;" type="button" data-toggle="collapse" data-target="<% @student_survey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @student_survey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">
+              <button class="btn btn-outline btn-primary expand-all" id="expand-collapse-btn" style="font-size: 15px; padding: 4px 8px;" type="button" data-toggle="collapse" data-target="<% @student_survey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @student_survey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">
                 Expand All
               </button>
             </div>
-
             <div>
               <% @student_survey.each do |s| %>
                 <div class="mb-2">
