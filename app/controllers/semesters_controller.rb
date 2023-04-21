@@ -280,11 +280,15 @@ class SemestersController < ApplicationController
                         name[1].compact!
                         name[2].compact!
                         including_self_scores = name[1] + name[2]
-                        unless name[1].blank?
+
+                        if including_self_scores.present?
                             name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
+                        elsif name[2].present?
+                            name.push((name[2].sum / name[2].size.to_f).round(1))
                         else
                             name.push("*Did not submit survey*")
                         end
+
                         name.push((name[2].sum / name[2].size.to_f).round(1))
 
                         # stores the flags for the team

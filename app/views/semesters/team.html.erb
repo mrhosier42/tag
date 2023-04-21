@@ -96,6 +96,7 @@
                 </thead>
                 <tbody>
                 <% @self_submitted_names.each do |name|%>
+                  <% Rails.logger.debug "=== Name data: #{name.inspect} ===" %>
                   <tr>
                     <th><%=name[0]%></th>
                     <td class="<%=if name[-2]&.is_a?(String) or name[-2]&. < 4 then "text-white bg-danger" end%>"><%=name[-2]%></td>
@@ -107,6 +108,7 @@
             </div>
           </div>
         <% end %>
+
 
         <br>
         <% unless @flags.include?("client blank") %>
