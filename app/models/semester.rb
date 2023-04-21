@@ -17,7 +17,6 @@ class Semester < ApplicationRecord
     accepts_nested_attributes_for :sprints, allow_destroy: true, reject_if: :all_blank
 
     validates :semester, presence: true
-    # removed summer
-    validates :semester, inclusion: { in: ['Fall','Spring'] }
+    validates :semester, inclusion: { in: %w[Fall Spring Summer] }
     validates :year, presence: true
 end

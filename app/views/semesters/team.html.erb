@@ -27,262 +27,214 @@
         border-top: 1px solid gray; /* Add top border */
         border-bottom: 1px solid gray; /* Add bottom border */
     }
+
+    /*TODO: Might remove since its not really used*/
+    .sidebar .btn-toggle-nav button:hover {
+        background-color: #0056b3;
+    }
 </style>
 <body>
-    <div class="container-fluid">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <%= render 'shared/team_sprint_dropdowns' %>
-          <!-- User dropdown (rest of the navbar) -->
+<div class="container-fluid">
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+      <%= render 'shared/team_sprint_dropdowns' %>
+      <!-- User dropdown (rest of the navbar) -->
+    </ul>
+  </div>
+</div>
+<div class="container">
+  <button type="button" class="btn btn-floating btn-lg" id="btn-back-to-top">
+    <%= image_tag "arrow-up.svg", style: "height:32px"%>
+  </button>
+  <div class="row">
+    <div class="col-2 sidebar">
+      <div>
+        <h1 class="ml-2 mt-2" style="position:fixed;">
+          <%= link_to semester_path(@semester), class: "", style: "position:fixed;" do %>
+            <i class="bi bi-arrow-return-left" style="font-size: 32px;"></i>
+          <% end %>
+        </h1>
+        <br>
+        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small mt-5" style="position:fixed;">
+          <li class="border-top my-3" style="position:fixed;"></li>
+          <li class="mb-2"><button id="btn-jump-to-tms" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Student Scores</button></li>
+          <br>
+          <br>
+          <li class="mb-2"><button id="btn-jump-to-cs" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Scores</button></li>
+          <br>
+          <br>
+          <li class="mb-2"><button id="btn-jump-to-tmr" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Team Reflections</button></li>
+          <br>
+          <br>
+          <li class="mb-2"><button id="btn-jump-to-sqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Peer Evaluation</button></li>
+          <br>
+          <br>
+          <li class="mb-2"><button id="btn-jump-to-cqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Evaluation</button></li>
+          <br>
         </ul>
       </div>
     </div>
-    <div class="container">
-        <button type="button" class="btn btn-floating btn-lg" id="btn-back-to-top">
-            <%= image_tag "arrow-up.svg", style: "height:32px"%>
-        </button>
-        <div class="row">
-            <div class="col-2 sidebar">
-                <div>
-                  <h1 class="ml-2 mt-2" style="position:fixed;">
-                    <%= link_to semester_path(@semester), class: "", style: "position:fixed;" do %>
-                      <i class="bi bi-arrow-return-left" style="font-size: 32px;"></i>
-                    <% end %>
-                  </h1>
-                  <br>
-                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small mt-5" style="position:fixed;">
-                        <li class="border-top my-3" style="position:fixed;"></li>
-                        <li class="mb-2"><button id="btn-jump-to-tms" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Member Ratings</button></li>
-                        <br>
-                        <br>
-                        <li class="mb-2"><button id="btn-jump-to-cs" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Feedback</button></li>
-                        <br>
-                        <br>
-                        <li class="mb-2"><button id="btn-jump-to-tmr" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Team Feedback</button></li>
-                        <br>
-                        <br>
-                        <li class="mb-2"><button id="btn-jump-to-sqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Student Feedback</button></li>
-                        <br>
-                        <br>
-                        <li class="mb-2"><button id="btn-jump-to-cqq" class="ml-0 btn btn-t d-inline-flex rounded border-0" style="position:fixed;">Client Feedback</button></li>
-                        <br>
-                    </ul>
-                </div>
+    <div class="col-9">
+      <div class="rounded border p-3 bg-light">
+        <% unless @flags.include?("student blank") %>
+          <div>
+            <h1 id="team-member-scores"
+                style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+              Student Scores
+            </h1>
+            <div>
+              <table class="table">
+                <thead>
+                <tr>
+                  <th></th>
+                  <th>Average Score</th>
+                  <th>Average Score (excl. self)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @self_submitted_names.each do |name|%>
+                  <tr>
+                    <th><%=name[0]%></th>
+                    <td class="<%=if name[-2]&.is_a?(String) or name[-2]&. < 4 then "text-white bg-danger" end%>"><%=name[-2]%></td>
+                    <td class="<%=if name.last().is_a?(String) && name.last().to_i < 4 then "text-white bg-danger" end%>"><%=name.last()%></td>
+                  </tr>
+                <% end %>
+                </tbody>
+              </table>
             </div>
-          <div class="col-9">
-            <div class="rounded border p-3 bg-light">
-                <% unless @flags.include?("student blank") %>
-                    <div>
-                     <h1 id="team-member-scores"
-                         style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-                       Team Member Scores
-                     </h1>
-                        <div>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Avg. Score</th>
-                                        <th>Avg. Score (excl. self)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% @self_submitted_names.each do |name|%>
-                                        <tr>
-                                            <th><%=name[0]%></th>
-                                            <td class="<%=if name[-2]&.is_a?(String) or name[-2]&. < 4 then "text-white bg-danger" end%>"><%=name[-2]%></td>
-                                            <td class="<%= if name.last.is_a?(String) && name.last.to_i < 4 then "text-white bg-danger" end%>"><%= name.last%></td>
-                                        </tr>
-                                    <% end %>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                <% end %>
-                <br>
-                <% unless @flags.include?("client blank") %>
-              <div>
-                <h1 id="client-scores">Client Scores</h1>
-                <div>
-                  <table class="table">
-                    <tr>
-                      <th>The team was on time and professional during our meeting</th>
-                      <td class="<%= if @cliSurvey[0][:q2_1] != "Exceeded expectations " && @cliSurvey[0][:q2_1] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_1] %></td>
-                    </tr>
-                    <tr>
-                      <th>The team was prepared for their meeting with me</th>
-                      <td class="<%= if @cliSurvey[0][:q2_2] != "Exceeded expectations " && @cliSurvey[0][:q2_2] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_2] %></td>
-                    </tr>
-                    <tr>
-                      <th>The team is communicating with me clearly</th>
-                      <td class="<%= if @cliSurvey[0][:q2_3] != "Exceeded expectations " && @cliSurvey[0][:q2_3] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_3] %></td>
-                    </tr>
-                    <tr>
-                      <th>The team met the goals we agreed to at our last meeting</th>
-                      <td class="<%= if @cliSurvey[0][:q2_4] != "Exceeded expectations " && @cliSurvey[0][:q2_4] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_4] %></td>
-                    </tr>
-                    <tr>
-                      <th>The team listended to my feedback</th>
-                      <td class="<%= if @cliSurvey[0][:q2_5] != "Exceeded expectations " && @cliSurvey[0][:q2_5] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_5] %></td>
-                    </tr>
-                    <tr>
-                      <th>The team set appropriate goals for the next two weeks</th>
-                      <td class="<%= if @cliSurvey[0][:q2_6] != "Exceeded expectations " && @cliSurvey[0][:q2_6] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_6] %></td>
-                    </tr>
-                    <tr>
-                      <th>Clients average score</th>
-                      <td><%= get_client_score(@semester, @team, @sprint) %></td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <%  end %>
+          </div>
+        <% end %>
 
-                <br>
-                <% unless @flags.include?("student blank") %>
-                    <div id="team-member-responses">
-                      <div class="d-flex justify-content-between">
-                        <h1 class="text-small" style="font-size: 2rem">Team Feedback</h1>
-                        <div class="expand-all-wrapper ml-auto">
-                          <button class="btn btn-outline btn-primary expand-all collapsed" style="font-size: 15px;" type="button" data-toggle="collapse" data-target="<% @student_survey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @student_survey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">
-                            Expand All
-                          </button>
-                        </div>
-                      </div>
-                      <div>
-                            <% @student_survey.each do |s| %>
-                                <div class="mb-2">
-                                    <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target=<%="##{s[:q1]}Collapse"%> aria-expanded="false" aria-controls=<%="#{s[:q1]}Collapse"%>><%="#{s[:q1]}'s Responses"%></button>
-                                  <% if some_condition?(s, :q11_1) || some_condition?(s, :q21_1) || some_condition?(s, :q15_1) || some_condition?(s, :q16_1) || some_condition?(s, :q25_1) || some_condition?(s, :q11_2) || some_condition?(s, :q21_2) || some_condition?(s, :q15_2) || some_condition?(s, :q16_2) || some_condition?(s, :q25_2) || some_condition?(s, :q11_3) || some_condition?(s, :q21_3) || some_condition?(s, :q15_3) || some_condition?(s, :q16_3) || some_condition?(s, :q25_3) || some_condition?(s, :q11_4) || some_condition?(s, :q21_4) || some_condition?(s, :q15_4) || some_condition?(s, :q16_4) || some_condition?(s, :q25_4) || some_condition?(s, :q11_5) || some_condition?(s, :q21_5) || some_condition?(s, :q15_5) || some_condition?(s, :q16_5) || some_condition?(s, :q25_5) || some_condition?(s, :q11_6) || some_condition?(s, :q21_6) || some_condition?(s, :q15_6) || some_condition?(s, :q16_6) || some_condition?(s, :q25_6) %>
-                                <div class="collapse multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
-                                  <table class="table">
-                                    <thead>
-                                    <tr>
-                                      <th></th>
-                                      <th><%= s[:q1] %></th>
-                                      <th><%= s[:q10] %></th>
-                                      <th><%= s[:q13_2_text] if s[:q13_2_text] %></th>
-                                      <th><%= s[:q23_2_text] if s[:q23_2_text] %></th>
-                                      <th><%= s[:q24_2_text] if s[:q24_2_text] %></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <%
-                                      row_titles = [
-                                        "Attends group meetings and arrives on time",
-                                        "Does high quality work",
-                                        "Completes their work on time",
-                                        "Does a fair share of the team's work",
-                                        "Communicates effectively and respectfully with their teammates",
-                                        "Choose one additional category"
-                                      ]
-                                      columns = [:q11, :q21, :q15, :q16, :q25]
-                                    %>
-                                    <% row_titles.each_with_index do |row_title, row_idx| %>
-                                      <tr>
-                                        <th><%= row_title %></th>
-                                        <% columns.each do |col| %>
-                                          <% if s["#{col}_#{row_idx + 1}".to_sym] %>
-                                            <%= render_cell(s["#{col}_#{row_idx + 1}".to_sym], row_idx == 5 ? s["#{col}_#{row_idx + 1}_text".to_sym] : nil) %>
-                                          <% end %>
-                                        <% end %>
-                                      </tr>
-                                    <% end %>
-                                    </tbody>
-                                  </table>
-
-                                </div>
-                                    <% else %>
-                                    <div class="collapse multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th><%=s[:q1]%></th>
-                                                    <th><%=s[:q10]%></th>
-                                                    <%if s[:q13_2_text]%>
-                                                        <th><%=s[:q13_2_text]%></th>
-                                                    <%end%>
-                                                    <%if s[:q23_2_text]%>
-                                                        <th><%=s[:q23_2_text]%></th>
-                                                    <%end%>
-                                                    <%if s[:q24_2_text]%>
-                                                        <th><%=s[:q24_2_text]%></th>
-                                                    <%end%>
-                                                </tr>
-                                            </thead>
-                                          <tbody>
-                                          <% %w[q11 q21 q15 q16 q25].each do |prefix| %>
-                                            <tr>
-                                              <th>Attends group meetings and arrives on time</th>
-                                              <%= table_cell(s, "#{prefix}_1") %>
-                                            </tr>
-                                            <tr>
-                                              <th>Does high quality work</th>
-                                              <%= table_cell(s, "#{prefix}_2") %>
-                                            </tr>
-                                            <tr>
-                                              <th>Completes their work on time</th>
-                                              <%= table_cell(s, "#{prefix}_3") %>
-                                            </tr>
-                                            <tr>
-                                              <th>Does a fair share of the team's work</th>
-                                              <%= table_cell(s, "#{prefix}_4") %>
-                                            </tr>
-                                            <tr>
-                                              <th>Communicates effectively and respectfully with their teammates</th>
-                                              <%= table_cell(s, "#{prefix}_5") %>
-                                            </tr>
-                                            <tr>
-                                              <th>Choose one additional category</th>
-                                              <td class="<%=if s["#{prefix}_6"] != "Always" && s["#{prefix}_6"] != "Most of the time" then "text-white bg-danger" end%>">
-                                                <%=s["#{prefix}_6_text"]%> - <%=s["#{prefix}_6"]%>
-                                              </td>
-                                            </tr>
-                                          <% end %>
-                                          </tbody>
-                                        </table>
-                                    </div>
-                                <% end %>
-                                </div>
-                            <% end %>
-                        </div>
-                    </div>
-
-                    <br>
-                <div>
-                  <h1 id="student-qualitative-questions" style="font-size: 2rem;">Student Feedback</h1>
-                  <div>
-                    <%= render_table(1, :q4) %>
-                    <%= render_table(2, :q5) %>
-                    <%= render_table(3, :q6) %>
-                    <%= render_table(4, :q7) %>
-                    <%= render_table(5, :q8) %>
-                    <%= render_table(6, :q18) %>
-                    <%= render_table(7, :q19) %>
-                    <%= render_table(8, :q20) %>
-                  </div>
-                </div>
-            <% end %>
-                <br>
-                <% unless @flags.include?("client blank") %>
-                  <div>
-                    <h1 id="client-qualitative-questions" style="font-size: 1.75rem">Client Feedback</h1>
-                    <div>
-                      <%= render_client_table(9, :q4) %>
-                      <%= render_client_table(10, :q5) %>
-                      <%= render_client_table(11, :q6) %>
-                      <%= render_client_table(12, :q7) %>
-                    </div>
-                  </div>
-                <% end %>
-            </div> <!-- Closing tag for the div with rounded border and light background -->
+        <br>
+        <% unless @flags.include?("client blank") %>
+        <div>
+          <h1 id="client-scores">Client Scores</h1>
+          <div>
+            <table class="table">
+              <tr>
+                <th>The team was on time and professional during our meeting</th>
+                <td class="<%= if @cliSurvey[0][:q2_1] != "Exceeded expectations " && @cliSurvey[0][:q2_1] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_1] %></td>
+              </tr>
+              <tr>
+                <th>The team was prepared for their meeting with me</th>
+                <td class="<%= if @cliSurvey[0][:q2_2] != "Exceeded expectations " && @cliSurvey[0][:q2_2] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_2] %></td>
+              </tr>
+              <tr>
+                <th>The team is communicating with me clearly</th>
+                <td class="<%= if @cliSurvey[0][:q2_3] != "Exceeded expectations " && @cliSurvey[0][:q2_3] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_3] %></td>
+              </tr>
+              <tr>
+                <th>The team met the goals we agreed to at our last meeting</th>
+                <td class="<%= if @cliSurvey[0][:q2_4] != "Exceeded expectations " && @cliSurvey[0][:q2_4] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_4] %></td>
+              </tr>
+              <tr>
+                <th>The team listended to my feedback</th>
+                <td class="<%= if @cliSurvey[0][:q2_5] != "Exceeded expectations " && @cliSurvey[0][:q2_5] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_5] %></td>
+              </tr>
+              <tr>
+                <th>The team set appropriate goals for the next two weeks</th>
+                <td class="<%= if @cliSurvey[0][:q2_6] != "Exceeded expectations " && @cliSurvey[0][:q2_6] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_6] %></td>
+              </tr>
+              <tr>
+                <th>Clients average score</th>
+                <td><%= get_client_score(@semester, @team, @sprint) %></td>
+              </tr>
+            </table>
           </div>
         </div>
+        <%  end %>
+
+        <br>
+        <% unless @flags.include?("student blank") %>
+          <div id="team-member-responses">
+            <div class="d-flex justify-content-between">
+              <h1 class="text-small" style="font-size: 2rem">Team Reflections</h1>
+              <button class="btn btn-outline btn-secondary expand-all collapsed" style="font-size: 14px; padding: 5px 10px;" type="button" data-toggle="collapse" data-target="<% @student_survey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @student_survey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">
+                Expand All
+              </button>
+            </div>
+
+            <div>
+              <% @student_survey.each do |s| %>
+                <div class="mb-2">
+                  <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target=<%="##{s[:q1]}Collapse"%> aria-expanded="false" aria-controls=<%="#{s[:q1]}Collapse"%>><%="#{s[:q1]}'s Responses"%></button>
+                  <div class="collapse multi-collapse" id=<%="#{s[:q1]}Collapse"%>>
+                    <table class="table">
+                      <thead>
+                      <tr>
+                        <th></th>
+                        <th><%= s[:q1] %></th>
+                        <th><%= s[:q10] %></th>
+                        <th><%= s[:q13_2_text] if s[:q13_2_text] %></th>
+                        <th><%= s[:q23_2_text] if s[:q23_2_text] %></th>
+                        <th><%= s[:q24_2_text] if s[:q24_2_text] %></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <% row_titles = [
+                        "Attends group meetings and arrives on time",
+                        "Does high quality work",
+                        "Completes their work on time",
+                        "Does a fair share of the team's work",
+                        "Communicates effectively and respectfully with their teammates",
+                        "Choose one additional category"
+                      ]
+                         columns = [:q11, :q21, :q15, :q16, :q25]
+                      %>
+                      <% row_titles.each_with_index do |row_title, row_idx| %>
+                        <tr>
+                          <th><%= row_title %></th>
+                          <% columns.each do |col| %>
+                            <% if s["#{col}_#{row_idx + 1}".to_sym].present? %>
+                              <%= render_cell(s["#{col}_#{row_idx + 1}".to_sym], row_idx == 5 ? s["#{col}_#{row_idx + 1}_text".to_sym] : nil) %>
+                            <% else %>
+                              <td></td>
+                            <% end %>
+                          <% end %>
+                        </tr>
+                      <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <br>
+          <div>
+            <h1 id="student-qualitative-questions" style="font-size: 2rem;">Peer Evaluation</h1>
+            <div>
+              <%= render_table(1, :q4) %>
+              <%= render_table(2, :q5) %>
+              <%= render_table(3, :q6) %>
+              <%= render_table(4, :q7) %>
+              <%= render_table(5, :q8) %>
+              <%= render_table(6, :q18) %>
+              <%= render_table(7, :q19) %>
+              <%= render_table(8, :q20) %>
+            </div>
+          </div>
+        <% end %>
+        <br>
+        <% unless @flags.include?("client blank") %>
+          <div>
+            <h1 id="client-qualitative-questions" style="font-size: 1.75rem">Client Evaluation</h1>
+            <div>
+              <%= render_client_table(9, :q4) %>
+              <%= render_client_table(10, :q5) %>
+              <%= render_client_table(11, :q6) %>
+              <%= render_client_table(12, :q7) %>
+            </div>
+          </div>
+        <% end %>
+      </div>
     </div>
-    <%= javascript_include_tag 'survey_page/survey_scroll_navigation' %>
-    <%= javascript_include_tag 'survey_page/survey_page_expanding_cols' %>
+  </div>
+</div>
+<%= javascript_include_tag 'survey_page/survey_scroll_navigation' %>
+<%= javascript_include_tag 'survey_page/survey_page_expanding_cols' %>
 </body>

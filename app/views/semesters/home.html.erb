@@ -1,3 +1,8 @@
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
+  <title></title>
+</head>
 <style>
     .optional {
         font-size: 0.7em; /* adjust the font size as needed */
@@ -5,10 +10,101 @@
         transform: skew(-1deg); /* adjust the skew angle as needed */
         display: inline-block; /* ensure the span is only as wide as its content */
     }
+
     .dropdown-container {
         display: inline-block;
         margin-right: 10px;
         vertical-align: top;
+    }
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .card {
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        margin-bottom: 12px;
+    }
+
+    .summer-card {
+        background-color: #FFE78F;
+        border: 1px solid #FFD700;
+        box-shadow: 0 4px 8px rgba(255, 215, 0, 0.1);
+    }
+
+    .spring-card {
+        background-color: #C8F2C2;
+        border: 1px solid #98FB98;
+        box-shadow: 0 4px 8px rgba(152, 251, 152, 0.1);
+    }
+
+    .fall-card {
+        background-color: #FFC8B2;
+        border: 1px solid #FFA07A;
+        box-shadow: 0 4px 8px rgba(255, 160, 122, 0.1);
+    }
+
+    .timestamp {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #333;
+        transition: color 0.3s ease;
+    }
+
+    .card:hover .timestamp {
+        color: #555;
+    }
+    h3 {
+        animation-duration: 1s;
+        animation-name: slideInFromLeft;
+    }
+
+    .card {
+        animation-duration: 1s;
+        animation-name: fadeIn;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInFromLeft {
+        0% {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .hr-separator {
+        border: none;
+        border-top: 2px solid #ccc;
+        margin: 20px 0;
     }
 </style>
 <body>
@@ -26,29 +122,45 @@
                 </div>
               </div>
           </div>
-          <div class="col-10 justify-content-center align-items-center text-center">
-              <h3>Select Semester</h3>
-            <div class="box">
-            <div class="semester-list">
-              <% current_year = nil %>
-              <% @semesters.each do |s| %>
-                <% year = s.year %>
-                <% semester = s.semester %>
-                <% if year != current_year %>
-                  <% current_year = year %>
-                  <h3 class="year-header"><%= year %></h3>
-                <% end %>
-                <div class="semester-item">
-                  <div class="semester-name"><%= semester.capitalize %> <%= year %></div>
-                  <div class="semester-link-container">
-                    <%= link_to "#{s.semester} #{s.year}", semester_path(s), class: "lnk-blue d-inline-flex text-decoration-none rounded"%>
-                    <%= semester_dropdown_menu(s) %>
-                  </div>
+        <div class="col-10 justify-content-center align-items-center text-center">
+          <h3>Select Semester</h3>
+          <div class="row">
+            <% grouped_semesters = @semesters.group_by(&:year).sort.reverse %>
+            <% grouped_semesters.each_with_index do |(year, semesters), index| %>
+              <% sorted_semesters = semesters.sort_by { |s| s.semester == 'Fall' ? 0 : s.semester == 'Summer' ? 1 : 2 } %>
+
+              <% sorted_semesters.each_with_index do |s, semester_index| %>
+                <% card_class = case s.semester
+                                when 'Summer' then 'summer-card'
+                                when 'Spring' then 'spring-card'
+                                when 'Fall' then 'fall-card'
+                                else ''
+                                end %>
+                <div class="col-md-12">
+                  <%= link_to semester_path(s), class: 'text-decoration-none' do %>
+                    <div class="card mb-4 <%= card_class %>">
+                      <div class="card-body">
+                        <h5 class="card-title text-dark"><%= "#{s.semester} #{s.year}" %></h5>
+                        <p class="timestamp">Created: <%= s.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+                      </div>
+                    </div>
+                  <% end %>
                 </div>
+
+                <!-- Add the line separator between years, except for the last year -->
+                <% if semester_index == sorted_semesters.size - 1 && index < grouped_semesters.size - 1 %>
+                  <div class="col-md-12">
+                    <hr class="hr-separator">
+                  </div>
+                <% end %>
               <% end %>
-            </div>
+
+            <% end %>
           </div>
-          </div>
+        </div>
+
+
+
       </div>
   </div>
   <div class="modal fade" id="newSemesterModal" tabindex="-1" aria-labelledby="newSemesterModalLabel" aria-hidden="true">
@@ -64,7 +176,7 @@
             <%= f.hidden_field :year %>
             <div class="form-outline mb-4">
               <div class="dropdown-container">
-                <% semester_array = %w[Fall Spring] %>
+                <% semester_array = %w[Fall Spring Summer] %>
                 <%= select_tag :semester, options_for_select(semester_array), class: 'form-control form-control-lg', id: 'semester' %>
               </div>
               <div class="dropdown-container">
@@ -72,14 +184,6 @@
               </div>
 
             </div>
-<!--            If you want to manually add sprints, you can do it here! It is a useful feature right now. -->
-<!--            <fieldset class="ml-2 mb-4">-->
-<!--              <hr>-->
-<!--              <h5>Semester Date:</h5>-->
-              <%#= f.fields_for :sprints do |sprints_form| %>
-                <%#= render partial: "semesters/sprint_fields", locals: { f: sprints_form } %>
-              <%# end %>
-<!--            </fieldset>-->
             <hr>
             <h5>Upload Survey CSVs <span class="optional">(optional)</span></h5>
             <div class="form-outline mb-4">
@@ -109,3 +213,4 @@
       });
   </script>
 </body>
+

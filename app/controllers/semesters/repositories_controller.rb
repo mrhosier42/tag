@@ -10,6 +10,7 @@ class RepositoriesController < ApplicationController
         @semester = Semester.find(params[:semester_id])
         @repo = Repository.find(params[:repo_id])
         @sprint = Sprint.find(params[:sprint_id])
+
         session[:repo_id] = params[:repo_id]
         session[:repo_sprint_id] = params[:sprint_id]
         

@@ -129,7 +129,7 @@ class SemestersController < ApplicationController
                         clientScore.append(row[:q2_4])
                         clientScore.append(row[:q2_5])
                         clientScore.append(row[:q2_6])
-                        @scores = calScore(clientScore)
+                        @scores = calc_client_average_score(clientScore)
                     end
                 end
             rescue => exception
@@ -142,19 +142,19 @@ class SemestersController < ApplicationController
         return @scores
     end
 
-    def calScore(arr)
+    def calc_client_average_score(arr)
         total = 0
 
         arr.each do |item|
-            if item=="Exceeded expectations"
+            if item.downcase == "exceeded expectations"
                 total = total + 5.0
-            elsif item=="Met expectations"
+            elsif item.downcase == "met expectations"
                 total = total + 4.0
-            elsif item=="About half the time"
+            elsif item.downcase == "about half the time"
                 total = total + 3.0
-            elsif item=="Sometimes"
+            elsif item.downcase == "sometimes"
                 total = total + 2.0
-            elsif item=="Never"
+            elsif item.downcase == "never"
                 total = total + 1.0
             end
         end
@@ -163,13 +163,17 @@ class SemestersController < ApplicationController
         return total
     end
 
+
     def team
         @semester = Semester.find(params[:semester_id])
         @teams = getTeams(@semester)
+        @teams ||= []
         @team =  params[:team]
+
         # TODO: Allow user to select how many Sprint's there are
         @sprints = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
-        @sprint = params[:sprint]
+        # @sprint = params[:sprint]
+        @sprint = params[:sprint] || @sprints.first
         @not_empty_questions = [] # check if questions are empty (without any responses)
 
         # stores all the flags for the team
@@ -243,7 +247,7 @@ class SemestersController < ApplicationController
                                         2
                                     elsif score=="Never"
                                         1
-                                    else 
+                                    else
                                         score
                                     end
                                 }
@@ -260,7 +264,7 @@ class SemestersController < ApplicationController
                                         2
                                     elsif score=="Never"
                                         1
-                                    else 
+                                    else
                                         score
                                     end
                                 }
@@ -279,7 +283,7 @@ class SemestersController < ApplicationController
                         unless name[1].blank?
                             name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
                         else
-                            name.push("Did not submit survey")
+                            name.push("*Did not submit survey*")
                         end
                         name.push((name[2].sum / name[2].size.to_f).round(1))
 
@@ -295,7 +299,8 @@ class SemestersController < ApplicationController
                         end
                     end end
                 rescue => exception
-                    flash.now[:alert] = "Unable to process file"
+                    # TODO: This displays when there's data displaying on the survey page for a sprint that does that data
+                    # flash.now[:alert] = "Unable to process file"
                 end
 
                 # check if students' questions are empty (without any responses)
@@ -323,7 +328,7 @@ class SemestersController < ApplicationController
                     end
                     if s[:q20] != nil
                         @not_empty_questions.append(8)
-                    end    
+                    end
                 end
             end
         rescue => exception
@@ -345,7 +350,7 @@ class SemestersController < ApplicationController
                 end
             end
 
-            # check if clients's questions are empty (without any reponses)
+            # check if clients questions are empty (without any responses)
             if @cliSurvey[0][:q4] != nil
                 @not_empty_questions.append(9)
             end
@@ -441,7 +446,7 @@ class SemestersController < ApplicationController
                                         2
                                     elsif score=="Never"
                                         1
-                                    else 
+                                    else
                                         score
                                     end
                                 }
@@ -458,7 +463,7 @@ class SemestersController < ApplicationController
                                         2
                                     elsif score=="Never"
                                         1
-                                    else 
+                                    else
                                         score
                                     end
                                 }
@@ -477,7 +482,7 @@ class SemestersController < ApplicationController
                         unless name[1].blank?
                             name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
                         else
-                            name.push("Did not submit survey")
+                            name.push("*Did not submit survey*")
                         end
                         name.push((name[2].sum / name[2].size.to_f).round(1))
 
@@ -492,7 +497,7 @@ class SemestersController < ApplicationController
                             flags.append("low score")
                         end
 
-                        cscore = get_client_score(semester, team, sprint) 
+                        cscore = get_client_score(semester, team, sprint)
                         if cscore == "No Score"
                             flags.append("no client score")
                         end
@@ -521,7 +526,7 @@ class SemestersController < ApplicationController
             if flags[sprint][t] != ["student blank"]
                 puts flags[sprint][t]
                 return false
-            end 
+            end
         end
         return true
     end
