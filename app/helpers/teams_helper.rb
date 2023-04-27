@@ -55,7 +55,7 @@ module TeamsHelper
 
         tbody = content_tag :tbody do
           content_tag :tr do
-            content_tag :td, @cliSurvey[0][question_key]
+            content_tag :td, @cliSurvey[0][question_key] || 'N/A'
           end
         end
 
@@ -63,6 +63,5 @@ module TeamsHelper
       end
     end
   end
-
 
 end

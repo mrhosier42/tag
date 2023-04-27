@@ -225,7 +225,8 @@
           </div>
         <% end %>
         <br>
-        <% unless @flags.include?("client blank") %>
+        <%= puts 'DEBUGGING (@cliSurvey on teams.html.erb) HERE:',  @cliSurvey.inspect %>
+        <% unless @flags.include?("client blank") || @cliSurvey.blank? %> %>
           <div>
             <h1 id="client-qualitative-questions" style="font-size: 1.75rem">Client Evaluation</h1>
             <div>

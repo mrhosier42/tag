@@ -6,6 +6,8 @@ class SemestersController < ApplicationController
     helper_method :unfinished_sprint
 
     include PreprocessorHelper
+    include TeamsHelper
+    include SprintsHelper
 
     def home
         @semesters = Semester.order(:year)
@@ -350,16 +352,20 @@ class SemestersController < ApplicationController
 
                     Rails.logger.debug("Processing client data...")
 
-                    @clientData.each do |client_survey|
-                        Rails.logger.debug("Team: #{client_survey[:q2]}, Sprint: #{client_survey[:q22]}")
-                    end
-
                     max_similarity = 0
                     best_matching_team = nil
 
                     Rails.logger.debug("Looking for best match for: #{@team}")
 
                     @clientData.each do |client_survey|
+                        # Skip the row if the team name is empty or starts with '{'
+                        next if client_survey[:q2].blank? || client_survey[:q2].start_with?('{')
+
+                        # Skip the row if the sprint value is empty
+                        next if client_survey[:q22].blank?
+
+                        Rails.logger.debug("Team: #{client_survey[:q2]}, Sprint: #{client_survey[:q22]}")
+
                         similarities = compare_strings(@team, client_survey[:q2])
                         avg_similarity = (similarities[:jaro_winkler] + similarities[:levenshtein]) / 2.0
 
@@ -375,23 +381,26 @@ class SemestersController < ApplicationController
                     Rails.logger.debug("Best matching team name: #{best_matching_team}, similarity score: #{max_similarity}")
 
                     @cliSurvey = @clientData.find_all { |client_survey| client_survey[:q2] == best_matching_team && client_survey[:q22] == "#{@sprint}" }
-                    @client_question_titles = @clientData[0]
+                    @cliSurvey.map! do |client_survey|
+                        client_survey.select { |key, _| key.to_s.start_with?('q') }
+                    end
 
-                    Rails.logger.debug("CliSurvey data after filtering: #{@cliSurvey.inspect}")
+                    @client_question_titles = @clientData[0].select { |key, _| key.to_s.start_with?('q') }
+
+                    Rails.logger.debug("DEBUG: CliSurvey data after filtering: #{@cliSurvey.inspect}")
 
                     if @cliSurvey.blank?
                         @flags.append("client blank")
                     end
                 rescue => inner_exception
-                    Rails.logger.debug("Inner exception: #{inner_exception}")
+                    Rails.logger.debug("DEBUG: Inner exception: #{inner_exception}")
                 end
             end
         rescue => exception
             flash.now[:alert] = "This semester does not have a client survey"
             @flags.append("client blank")
-            Rails.logger.debug("Outer exception: #{exception}")
+            Rails.logger.debug("DEBUG: Outer exception: #{exception}")
         end
-
 
         render :team
     end
