@@ -1,3 +1,4 @@
+# broke survey page
 class SemestersController < ApplicationController
     require 'text'
     helper_method :get_client_score
@@ -141,6 +142,7 @@ class SemestersController < ApplicationController
             end
         end
         if @scores < 0
+            puts "DEBUG: @scores is < 0 in get_client_score method"
             return "No Score"
         end
         return @scores
@@ -348,9 +350,9 @@ class SemestersController < ApplicationController
             @semester.client_csv.open do |tempClient|
                 begin
                     @clientData = SmarterCSV.process(tempClient.path)
-                    puts 'DEBUGGING @clientData: ', @clientData
+                    Rails.logger.debug("DEBUGGING @clientData: #{@clientData}")
 
-                    Rails.logger.debug("Processing client data...")
+                    Rails.logger.debug("Processing client data......")
 
                     max_similarity = 0
                     best_matching_team = nil
@@ -392,6 +394,21 @@ class SemestersController < ApplicationController
                     if @cliSurvey.blank?
                         @flags.append("client blank")
                     end
+
+                    # check if clients questions are empty (without any responses)
+                    if @cliSurvey[0][:q4].present?
+                        @not_empty_questions.append(9)
+                    end
+                    if @cliSurvey[0][:q5].present?
+                        @not_empty_questions.append(10)
+                    end
+                    if @cliSurvey[0][:q6].present?
+                        @not_empty_questions.append(11)
+                    end
+                    if @cliSurvey[0][:q7].present?
+                        @not_empty_questions.append(12)
+                    end
+
                 rescue => inner_exception
                     Rails.logger.debug("DEBUG: Inner exception: #{inner_exception}")
                 end

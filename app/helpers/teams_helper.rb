@@ -43,6 +43,10 @@ module TeamsHelper
   end
 
   def render_client_table(question_number, question_key)
+    puts "DEBUG: @client_question_titles[question_key]: #{@client_question_titles[question_key]}"
+    puts "DEBUG: render_client_table called for question #{question_number}"
+    puts "DEBUG: @cliSurvey[0][question_key]: #{@cliSurvey[0][question_key]}"
+
     if @not_empty_questions.include?(question_number)
       content_tag :table, class: "table table-striped" do
         thead = content_tag :thead do

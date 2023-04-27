@@ -81,10 +81,7 @@
       <div class="rounded border p-3 bg-light">
         <% unless @flags.include?("student blank") %>
           <div>
-            <h1 id="team-member-scores"
-                style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-              Student Scores
-            </h1>
+            <h1 id="team-member-scores" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;"> Student Scores</h1>
             <div>
               <table class="table">
                 <thead>
@@ -109,20 +106,16 @@
             </div>
           </div>
         <% end %>
-
-
-        <br>
-<!--        <%# Rails.logger.debug("DEBUG:CliSurvey data for team #{@team}: #{@cliSurvey.inspect}") %> <br>-->
-
+<!--        <br>-->
         <% unless @flags.include?("client blank") || @cliSurvey.blank? %>
           <%#= debug @cliSurvey %>
           <div>
-          <h1 id="client-scores">Client Scores</h1>
+          <h2 id="client-scores" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Scores</h2>
           <div>
             <table class="table">
               <tr>
                 <th>The team was on time and professional during our meeting</th>
-                <td class="<%= 'text-white bg-danger' if @cliSurvey[0][:q2_1] != "Exceeded expectations " && @cliSurvey[0][:q2_1] != "Met expectations " %>"><%= @cliSurvey[0][:q2_1] %></td>
+                <td class="<%= 'text-white bg-danger' if @cliSurvey[0][:q2_1].strip.downcase != "exceeded expectations" && @cliSurvey[0][:q2_1].strip.downcase != "met expectations" %>"><%= @cliSurvey[0][:q2_1] %></td>
               </tr>
               <tr>
                 <th>The team was prepared for their meeting with me</th>
@@ -157,7 +150,7 @@
         <% unless @flags.include?("student blank") %>
           <div id="team-member-responses">
             <div class="d-flex justify-content-between">
-              <h1 class="text-small" style="font-size: 2rem">Team Reflections</h1>
+              <h1 style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Team Reflections</h1>
               <button class="btn btn-outline btn-primary expand-all" id="expand-collapse-btn" style="font-size: 15px; padding: 4px 8px;" type="button" data-toggle="collapse" data-target="<% @student_survey.each do |s| %>#<%= "#{s[:q1]}Collapse" %> <%end%>" aria-expanded="false" aria-controls="<% @student_survey.each do |s| %><%= "#{s[:q1]}Collapse" %> <%end%>">
                 Expand All
               </button>
@@ -211,7 +204,7 @@
 
           <br>
           <div>
-            <h1 id="student-qualitative-questions" style="font-size: 2rem;">Peer Evaluation</h1>
+            <h1 id="student-qualitative-questions" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Peer Evaluation</h1>
             <div>
               <%= render_table(1, :q4) %>
               <%= render_table(2, :q5) %>
@@ -225,10 +218,9 @@
           </div>
         <% end %>
         <br>
-        <%= puts 'DEBUGGING (@cliSurvey on teams.html.erb) HERE:',  @cliSurvey.inspect %>
-        <% unless @flags.include?("client blank") || @cliSurvey.blank? %> %>
+        <% unless @flags.include?("client blank") || @cliSurvey.blank? %>
           <div>
-            <h1 id="client-qualitative-questions" style="font-size: 1.75rem">Client Evaluation</h1>
+            <h1 id="client-qualitative-questions" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Evaluation</h1>
             <div>
               <%= render_client_table(9, :q4) %>
               <%= render_client_table(10, :q5) %>
