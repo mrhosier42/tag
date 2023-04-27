@@ -5,6 +5,8 @@ class SemestersController < ApplicationController
     helper_method :get_flags
     helper_method :unfinished_sprint
 
+    include PreprocessorHelper
+
     def home
         @semesters = Semester.order(:year)
         render :home
@@ -341,36 +343,56 @@ class SemestersController < ApplicationController
         end
 
         begin
-            # Downloads and temporarily store the student_csv file
             @semester.client_csv.open do |tempClient|
                 begin
                     @clientData = SmarterCSV.process(tempClient.path)
-                    @cliSurvey = @clientData.find_all{|client_survey| client_survey[:q2]==@team && client_survey[:q22]=="#{@sprint}"}
+                    puts 'DEBUGGING @clientData: ', @clientData
+
+                    Rails.logger.debug("Processing client data...")
+
+                    @clientData.each do |client_survey|
+                        Rails.logger.debug("Team: #{client_survey[:q2]}, Sprint: #{client_survey[:q22]}")
+                    end
+
+                    max_similarity = 0
+                    best_matching_team = nil
+
+                    Rails.logger.debug("Looking for best match for: #{@team}")
+
+                    @clientData.each do |client_survey|
+                        similarities = compare_strings(@team, client_survey[:q2])
+                        avg_similarity = (similarities[:jaro_winkler] + similarities[:levenshtein]) / 2.0
+
+                        Rails.logger.debug("Comparing #{@team} with #{client_survey[:q2]}")
+                        Rails.logger.debug("Similarity scores: Jaro-Winkler: #{similarities[:jaro_winkler]}, Levenshtein: #{similarities[:levenshtein]}, Average: #{avg_similarity}")
+
+                        if avg_similarity > max_similarity
+                            max_similarity = avg_similarity
+                            best_matching_team = client_survey[:q2]
+                        end
+                    end
+
+                    Rails.logger.debug("Best matching team name: #{best_matching_team}, similarity score: #{max_similarity}")
+
+                    @cliSurvey = @clientData.find_all { |client_survey| client_survey[:q2] == best_matching_team && client_survey[:q22] == "#{@sprint}" }
                     @client_question_titles = @clientData[0]
+
+                    Rails.logger.debug("CliSurvey data after filtering: #{@cliSurvey.inspect}")
 
                     if @cliSurvey.blank?
                         @flags.append("client blank")
                     end
+                rescue => inner_exception
+                    Rails.logger.debug("Inner exception: #{inner_exception}")
                 end
-            end
-
-            # check if clients questions are empty (without any responses)
-            if @cliSurvey[0][:q4] != nil
-                @not_empty_questions.append(9)
-            end
-            if @cliSurvey[0][:q5] != nil
-                @not_empty_questions.append(10)
-            end
-            if @cliSurvey[0][:q6] != nil
-                @not_empty_questions.append(11)
-            end
-            if @cliSurvey[0][:q7] != nil
-                @not_empty_questions.append(12)
             end
         rescue => exception
             flash.now[:alert] = "This semester does not have a client survey"
             @flags.append("client blank")
+            Rails.logger.debug("Outer exception: #{exception}")
         end
+
+
         render :team
     end
 

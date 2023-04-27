@@ -91,12 +91,13 @@
                 <tr>
                   <th></th>
                   <th>Average Score</th>
-                  <th>Average Score (excl. self)</th>
+                  <th>Average Score (excluding self)</th>
                 </tr>
                 </thead>
                 <tbody>
                 <% @self_submitted_names.each do |name|%>
-                  <% Rails.logger.debug "=== Name data: #{name.inspect} ===" %>
+<!--                Uncomment me to inspect to internal data for "Student Scores"-->
+                  <%# Rails.logger.debug "=== Name data: #{name.inspect} ===" %>
                   <tr>
                     <th><%=name[0]%></th>
                     <td class="<%=if name[-2]&.is_a?(String) or name[-2]&. < 4 then "text-white bg-danger" end%>"><%=name[-2]%></td>
@@ -111,14 +112,17 @@
 
 
         <br>
-        <% unless @flags.include?("client blank") %>
-        <div>
+<!--        <%# Rails.logger.debug("DEBUG:CliSurvey data for team #{@team}: #{@cliSurvey.inspect}") %> <br>-->
+
+        <% unless @flags.include?("client blank") || @cliSurvey.blank? %>
+          <%#= debug @cliSurvey %>
+          <div>
           <h1 id="client-scores">Client Scores</h1>
           <div>
             <table class="table">
               <tr>
                 <th>The team was on time and professional during our meeting</th>
-                <td class="<%= if @cliSurvey[0][:q2_1] != "Exceeded expectations " && @cliSurvey[0][:q2_1] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_1] %></td>
+                <td class="<%= 'text-white bg-danger' if @cliSurvey[0][:q2_1] != "Exceeded expectations " && @cliSurvey[0][:q2_1] != "Met expectations " %>"><%= @cliSurvey[0][:q2_1] %></td>
               </tr>
               <tr>
                 <th>The team was prepared for their meeting with me</th>

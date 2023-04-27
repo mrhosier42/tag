@@ -91,3 +91,10 @@ gem 'devise'
 gem "bootstrap", "~> 5.2.2"
 gem "bootstrap_form", "~> 5.1"
 gem 'jquery-rails'
+
+
+# To pre-process student and client survey strings.
+# Student and Client survey data is typed manually on the survey form. These algorithms will help me find similar strings to match.
+gem 'jaro_winkler'
+gem 'levenshtein'
+gem 'fuzzy-string-match'
