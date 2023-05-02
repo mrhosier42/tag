@@ -127,7 +127,7 @@ class SemestersController < ApplicationController
 
                 @sponsorData.each do |row|
                     clientScore = []
-                    if row[:q2] == team && row[:q22] == sprint
+                    if row[:q1_team] == team && row[:q3] == sprint
                         clientScore.append(row[:q2_1])
                         clientScore.append(row[:q2_2])
                         clientScore.append(row[:q2_3])
@@ -361,28 +361,28 @@ class SemestersController < ApplicationController
 
                     @clientData.each do |client_survey|
                         # Skip the row if the team name is empty or starts with '{'
-                        next if client_survey[:q2].blank? || client_survey[:q2].start_with?('{')
+                        next if client_survey[:q1_team].blank? || client_survey[:q1_team].start_with?('{')
 
                         # Skip the row if the sprint value is empty
-                        next if client_survey[:q22].blank?
+                        next if client_survey[:q3].blank?
 
-                        Rails.logger.debug("Team: #{client_survey[:q2]}, Sprint: #{client_survey[:q22]}")
+                        Rails.logger.debug("Team: #{client_survey[:q1_team]}, Sprint: #{client_survey[:q3]}")
 
-                        similarities = compare_strings(@team, client_survey[:q2])
+                        similarities = compare_strings(@team, client_survey[:q1_team])
                         avg_similarity = (similarities[:jaro_winkler] + similarities[:levenshtein]) / 2.0
 
-                        Rails.logger.debug("Comparing #{@team} with #{client_survey[:q2]}")
+                        Rails.logger.debug("Comparing #{@team} with #{client_survey[:q1_team]}")
                         Rails.logger.debug("Similarity scores: Jaro-Winkler: #{similarities[:jaro_winkler]}, Levenshtein: #{similarities[:levenshtein]}, Average: #{avg_similarity}")
 
                         if avg_similarity > max_similarity
                             max_similarity = avg_similarity
-                            best_matching_team = client_survey[:q2]
+                            best_matching_team = client_survey[:q1_team]
                         end
                     end
 
                     Rails.logger.debug("Best matching team name: #{best_matching_team}, similarity score: #{max_similarity}")
 
-                    @cliSurvey = @clientData.find_all { |client_survey| client_survey[:q2] == best_matching_team && client_survey[:q22] == "#{@sprint}" }
+                    @cliSurvey = @clientData.find_all { |client_survey| client_survey[:q1_team] == best_matching_team && client_survey[:q3] == "#{@sprint}" }
                     @cliSurvey.map! do |client_survey|
                         client_survey.select { |key, _| key.to_s.start_with?('q') }
                     end
