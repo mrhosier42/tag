@@ -1,9 +1,14 @@
+# broke survey page
 class SemestersController < ApplicationController
     require 'text'
     helper_method :get_client_score
     helper_method :team_exist
     helper_method :get_flags
     helper_method :unfinished_sprint
+
+    include PreprocessorHelper
+    include TeamsHelper
+    include SprintsHelper
 
     def home
         @semesters = Semester.order(:year)
@@ -137,6 +142,7 @@ class SemestersController < ApplicationController
             end
         end
         if @scores < 0
+            puts "DEBUG: @scores is < 0 in get_client_score method"
             return "No Score"
         end
         return @scores
@@ -341,36 +347,78 @@ class SemestersController < ApplicationController
         end
 
         begin
-            # Downloads and temporarily store the student_csv file
             @semester.client_csv.open do |tempClient|
                 begin
                     @clientData = SmarterCSV.process(tempClient.path)
-                    @cliSurvey = @clientData.find_all{|client_survey| client_survey[:q2]==@team && client_survey[:q22]=="#{@sprint}"}
-                    @client_question_titles = @clientData[0]
+                    Rails.logger.debug("DEBUGGING @clientData: #{@clientData}")
+
+                    Rails.logger.debug("Processing client data......")
+
+                    max_similarity = 0
+                    best_matching_team = nil
+
+                    Rails.logger.debug("Looking for best match for: #{@team}")
+
+                    @clientData.each do |client_survey|
+                        # Skip the row if the team name is empty or starts with '{'
+                        next if client_survey[:q2].blank? || client_survey[:q2].start_with?('{')
+
+                        # Skip the row if the sprint value is empty
+                        next if client_survey[:q22].blank?
+
+                        Rails.logger.debug("Team: #{client_survey[:q2]}, Sprint: #{client_survey[:q22]}")
+
+                        similarities = compare_strings(@team, client_survey[:q2])
+                        avg_similarity = (similarities[:jaro_winkler] + similarities[:levenshtein]) / 2.0
+
+                        Rails.logger.debug("Comparing #{@team} with #{client_survey[:q2]}")
+                        Rails.logger.debug("Similarity scores: Jaro-Winkler: #{similarities[:jaro_winkler]}, Levenshtein: #{similarities[:levenshtein]}, Average: #{avg_similarity}")
+
+                        if avg_similarity > max_similarity
+                            max_similarity = avg_similarity
+                            best_matching_team = client_survey[:q2]
+                        end
+                    end
+
+                    Rails.logger.debug("Best matching team name: #{best_matching_team}, similarity score: #{max_similarity}")
+
+                    @cliSurvey = @clientData.find_all { |client_survey| client_survey[:q2] == best_matching_team && client_survey[:q22] == "#{@sprint}" }
+                    @cliSurvey.map! do |client_survey|
+                        client_survey.select { |key, _| key.to_s.start_with?('q') }
+                    end
+
+                    @client_question_titles = @clientData[0].select { |key, _| key.to_s.start_with?('q') }
+
+                    Rails.logger.debug("DEBUG: CliSurvey data after filtering: #{@cliSurvey.inspect}")
 
                     if @cliSurvey.blank?
                         @flags.append("client blank")
                     end
-                end
-            end
 
-            # check if clients questions are empty (without any responses)
-            if @cliSurvey[0][:q4] != nil
-                @not_empty_questions.append(9)
-            end
-            if @cliSurvey[0][:q5] != nil
-                @not_empty_questions.append(10)
-            end
-            if @cliSurvey[0][:q6] != nil
-                @not_empty_questions.append(11)
-            end
-            if @cliSurvey[0][:q7] != nil
-                @not_empty_questions.append(12)
+                    # check if clients questions are empty (without any responses)
+                    if @cliSurvey[0][:q4].present?
+                        @not_empty_questions.append(9)
+                    end
+                    if @cliSurvey[0][:q5].present?
+                        @not_empty_questions.append(10)
+                    end
+                    if @cliSurvey[0][:q6].present?
+                        @not_empty_questions.append(11)
+                    end
+                    if @cliSurvey[0][:q7].present?
+                        @not_empty_questions.append(12)
+                    end
+
+                rescue => inner_exception
+                    Rails.logger.debug("DEBUG: Inner exception: #{inner_exception}")
+                end
             end
         rescue => exception
             flash.now[:alert] = "This semester does not have a client survey"
             @flags.append("client blank")
+            Rails.logger.debug("DEBUG: Outer exception: #{exception}")
         end
+
         render :team
     end
 

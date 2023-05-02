@@ -103,7 +103,7 @@ module SprintsHelper
   end
 
 
-  def unfinished_sprint(teams, flags, sprint)
-    # TODO: Add the implementation for this method
-  end
+  # def unfinished_sprint(teams, flags, sprint)
+  #   # TODO: Add the implementation for this method
+  # end
 end

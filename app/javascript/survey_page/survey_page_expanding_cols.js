@@ -9,6 +9,9 @@ $(document).ready(function() {
         // Toggle the aria-expanded attribute of the expand-all button
         $expandAllButton.attr("aria-expanded", !isExpanded);
 
+        // Toggle the text of the expand-all button based on the current state
+        $expandAllButton.text(isExpanded ? "Expand All" : "Collapse");
+
         // Expand or collapse all collapsible elements based on the current state
         $collapsibles.collapse(isExpanded ? "hide" : "show");
     });
