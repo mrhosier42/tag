@@ -115,27 +115,28 @@
             <table class="table">
               <tr>
                 <th>The team was on time and professional during our meeting</th>
-                <td class="<%= 'text-white bg-danger' if @cliSurvey[0][:q2_1].strip.downcase != "exceeded expectations" && @cliSurvey[0][:q2_1].strip.downcase != "met expectations" %>"><%= @cliSurvey[0][:q2_1] %></td>
+                <td class="<%= 'text-white bg-danger' if @cliSurvey[0][:q2_1].
+                  strip.downcase != "exceeded expectations" && @cliSurvey[0][:q2_1].strip.downcase != "met expectations" %>"><%= @cliSurvey[0][:q2_1].strip.downcase %></td>
               </tr>
               <tr>
                 <th>The team was prepared for their meeting with me</th>
-                <td class="<%= if @cliSurvey[0][:q2_2] != "Exceeded expectations " && @cliSurvey[0][:q2_2] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_2] %></td>
+                <td class="<%= if @cliSurvey[0][:q2_2].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_2].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_2].strip.downcase %></td>
               </tr>
               <tr>
                 <th>The team is communicating with me clearly</th>
-                <td class="<%= if @cliSurvey[0][:q2_3] != "Exceeded expectations " && @cliSurvey[0][:q2_3] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_3] %></td>
+                <td class="<%= if @cliSurvey[0][:q2_3].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_3].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_3].strip.downcase %></td>
               </tr>
               <tr>
                 <th>The team met the goals we agreed to at our last meeting</th>
-                <td class="<%= if @cliSurvey[0][:q2_4] != "Exceeded expectations " && @cliSurvey[0][:q2_4] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_4] %></td>
+                <td class="<%= if @cliSurvey[0][:q2_4].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_4].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_4].strip.downcase %></td>
               </tr>
               <tr>
                 <th>The team listended to my feedback</th>
-                <td class="<%= if @cliSurvey[0][:q2_5] != "Exceeded expectations " && @cliSurvey[0][:q2_5] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_5] %></td>
+                <td class="<%= if @cliSurvey[0][:q2_5].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_5].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_5].strip.downcase %></td>
               </tr>
               <tr>
                 <th>The team set appropriate goals for the next two weeks</th>
-                <td class="<%= if @cliSurvey[0][:q2_6] != "Exceeded expectations " && @cliSurvey[0][:q2_6] != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_6] %></td>
+                <td class="<%= if @cliSurvey[0][:q2_6].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_6].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_6].strip.downcase %></td>
               </tr>
               <tr>
                 <th>Clients average score</th>
