@@ -1,5 +1,9 @@
 # README
 
+# About
+This app is a continuation of the development of the previous capstone team and GA's that have worked on this app. [Previous Repo Link(https://github.com/amyshannon/capstoneApp)
+This app was upgraded from an old version of rails framework (6.1) and ruby language (2.7), the reason for the upgrade was to make the app compaitble to run on Mac M1 chips, which were not supported at the time. I've also revamped every single page to make it more modern, removed extra cluttered/unucessary pages and merged those pages functionality into the relevant page for seamless access. I've also fixed countless bugs and overhauled some of the existing features, such as the navbar content (now a dropdown), among other things.
+
 # Tool-Assisted Grading (TAG)
 TAG is a web-based application designed to assist professors and teaching assistants in evaluating and grading students. With this application, you can manage grading student an client survey survey's served by Qualtrics (and more features to come).
 
