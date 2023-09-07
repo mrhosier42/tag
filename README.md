@@ -6,9 +6,10 @@ TAG is a web-based application designed to assist professors and teaching assist
 This application is built on Ruby on Rails web framework.
 
 ## Prerequisites
-### You'll need these specific versions
-* Ruby - v3.2.1 (Rails is a gem, you can install rails version once you have Ruby installed)
-* Node - v19.8.1
+* Ruby - v3.2.1
+* Node.js - v19.8.1
+* PostgreSQL - latest
+* [Optional] Ruby version manager (rvm or rbenv if using MacOS or Linux)
 
 # Installating Software
 ## Windows or Linux/macOS
@@ -21,19 +22,20 @@ This application is built on Ruby on Rails web framework.
 1. Create a workspace folder to download your application.
 2. Navigate to your new workspace directory.
 3. Clone the repository using the following command: ```git clone git@github.com:mrhosier42/tag.git```
-4. Install Rails: open your terminal, navigate to your project folderand run the following command: ```gem install rails```
-5. Install the necessary dependencies using the following command: ```yarn install```
-6. Install Ruby gems using the following command: ```bundle install```
-7. Create the database using the following command: ```rails db:create```
-8. Run the database migrations using the following command: ```rails db:reset db:migrate```
-9. Start the server: ```rails server```
-10. Type ```localhost:3000``` into your browser.
+4. Enter the Project Directory: ```cd tag```
+5. Install Bundler (if not installed): ```gem install bundler```
+6. Install Ruby Gems: ```bundle install```
+7. Install JS Dependencies: ```yarn install```
+9. Set Up Database: ```rails db:create```
+10. Run Migrations: ```rails db:reset db:migrate```
+11. Start rails server: ```rails server``` (or ```rails s``` for short)
+12. Access the app: Open ```localhost:3000``` into your browser.
 
 
 ## Navigation to survey's:
 1. Sign up with a new account.
 2. Create a new semester.
-3. Input client and student survey data.
+3. Load client and student survey data.
 4. Select a sprint and semester.
 5. View the page team you want to review.
 
