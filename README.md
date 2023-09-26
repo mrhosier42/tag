@@ -51,5 +51,5 @@ You can find three different versions, if you would like to see the changes made
 
 
 ## Special Contrtibutions
-* [@chahmedejaz](https://github.com/chahmedejaz) - Contribution fix [commit](https://github.com/chahmedejaz/tag/commit/5619ba4004cf028a9e4e237f72ffafac22462caa)
+* [@chahmedejaz](https://github.com/chahmedejaz) - [issue](https://github.com/mrhosier42/tag/issues/16) contribution [commit](https://github.com/chahmedejaz/tag/commit/5619ba4004cf028a9e4e237f72ffafac22462caa).
 
