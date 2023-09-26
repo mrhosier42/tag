@@ -49,3 +49,7 @@ This app was upgraded from an old version of rails framework (6.1) and ruby lang
 
 You can find three different versions, if you would like to see the changes made over time. Documentation will also be provided in this repo if you would instead prefer to read version 1 to 3 changes and improvements.
 
+
+## Special Contrtibutions
+* [@chahmedejaz](https://github.com/chahmedejaz) - Contribution fix [commit](https://github.com/chahmedejaz/tag/commit/5619ba4004cf028a9e4e237f72ffafac22462caa)
+
