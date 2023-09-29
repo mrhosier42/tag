@@ -26,6 +26,11 @@ This application is built on Ruby on Rails web framework.
 5. Install Bundler (if not installed): ```gem install bundler```
 6. Install Ruby Gems: ```bundle install```
 7. Install JS Dependencies: ```yarn install```
+   - If Yarn is not installed:
+     - Macos: If you have Homebrew installed: ```brew install yarn```
+     - Windows (using WSL w/ Ubuntu): ```npm install --global yarn```
+     - Linux: ```npm install --global yarn```
+8. Install rails: ```gem install rails```
 9. Set Up Database: ```rails db:create```
 10. Run Migrations: ```rails db:reset db:migrate```
 11. Start rails server: ```rails server``` (or ```rails s``` for short)
