@@ -49,7 +49,7 @@ This application is built on Ruby on Rails web framework.
 #### bundle install issue
 * If you are seeing this message in your terminal: "An error occurred while installing pg (#.#.#), and Bundler cannot continue.", run the command below:
 1. You'll need to install libpq or postgresql client package like so:
-   *```sudo apt install libpq-dev```
+   (a) ```sudo apt install libpq-dev```
 
 
 # History and Progress
