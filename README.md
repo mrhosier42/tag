@@ -44,6 +44,12 @@ This application is built on Ruby on Rails web framework.
 4. Select a sprint and semester.
 5. View the page team you want to review.
 
+## Troubleshooting:
+(Linux - Ubuntu)
+#### bundle install issue
+* If you are seeing this message in your terminal: "An error occurred while installing pg (#.#.#), and Bundler cannot continue.", run the command below:
+1. Run ```sudo apt install libpq-dev```, this will install 
+
 
 # History and Progress
 This app is a continuation of the development of the previous capstone team and GA's that have worked on this app.
