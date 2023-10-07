@@ -175,6 +175,9 @@ class SemestersController < ApplicationController
         @teams = getTeams(@semester)
         @teams ||= []
         @team =  params[:team]
+        #  denzel addition
+        @sprint = params[:sprint] || @sprints.first
+        @not_empty_questions = []
 
         # TODO: Allow user to select how many Sprint's there are
         @sprints = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
@@ -184,7 +187,18 @@ class SemestersController < ApplicationController
 
         # stores all the flags for the team
         @flags = []
+        # denzel addition
+        @teams.each do |team|
+            flags = get_flags(@semester, @sprint, team)
+            if flags.include?("no student score")
+                adjust_student_scores(team, @sprint) # this adjust student scores that havent sumbitted
+            end
+            @flags[team] = flags 
+        end 
 
+        render :team 
+    # end
+        
         # Processes the student data first
         begin
             # Downloads and temporarily store the student_csv file
@@ -425,7 +439,19 @@ class SemestersController < ApplicationController
     def get_flags(semester, sprint, team)
         # stores all the flags for the team
         flags = []
-
+    #    # Denzel addition
+    #    # def get_flags(semester, sprint, team)
+    #        # flags = []
+    #        # unless name[1].blank?
+    #             # name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
+    #            # else
+    #               #  name.push("*Didnt submit survey*")
+    #               #  flags.append("no student score") 
+    #             end
+        
+    #         return flags
+    #     end
+        
         # Processes the student data first
         begin
             # Downloads and temporarily store the student_csv file
@@ -595,3 +621,4 @@ class SemestersController < ApplicationController
     end
 
 end
+
