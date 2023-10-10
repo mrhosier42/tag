@@ -1,5 +1,3 @@
-<script src="https://cdn.jsdelivr.net/npm/@octokit/rest@20.0.2/dist/octokit-rest.min.js"></script>
-
 <style>
     .sidebar {
         background-color: #f8f9fa;
@@ -48,7 +46,6 @@
   </div>
 </div>
 
-<%= javascript_include_tag 'octokit' %>
 <div id="commit-list">
 </div>
 
@@ -243,4 +240,5 @@
 </div>
 <%= javascript_include_tag 'survey_page/survey_scroll_navigation' %>
 <%= javascript_include_tag 'survey_page/survey_page_expanding_cols' %>
+<%= javascript_include_tag 'octokit', type: "module" %>
 </body>
