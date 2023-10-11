@@ -135,7 +135,14 @@ class SemestersController < ApplicationController
                         clientScore.append(row[:q2_5])
                         clientScore.append(row[:q2_6])
                         @scores = calc_client_average_score(clientScore)
+                        
+                    
                     end
+                    Rails.logger.debug("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA #{@scores}")
+                        
+                    Rails.logger.debug("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB #{clientScore}") 
+                   
+                    
                 end
             rescue => exception
                 flash.now[:alert] = "Error! Unable to read sponsor data. Please update your student data file"
@@ -147,8 +154,9 @@ class SemestersController < ApplicationController
         end
         return @scores
     end
-
+    
     def calc_client_average_score(arr)
+
         total = 0
 
         arr.each do |item|
@@ -197,6 +205,7 @@ class SemestersController < ApplicationController
 
                     if @student_survey.blank?
                         @flags.append("student blank")
+                        puts "student blank"
                     end
 
                     if @student_survey[0] then @self_submitted_names = [[@student_survey[0][:q1]],[@student_survey[0][:q10]]] end
@@ -215,6 +224,8 @@ class SemestersController < ApplicationController
                             max = white.similarity(name[0], survey[:q1])
                             name_to_add = ["#{survey[:q1]}'s survey","q1",survey[:q1]]
                             self_scores = [survey[:q11_1],survey[:q11_2],survey[:q11_3],survey[:q11_4],survey[:q11_5],survey[:q11_6]]
+                            Rails.logger.debug("NAMEE ADD")
+                            Rails.logger.debug("#{self_scores}")
                             scores = nil
                             if white.similarity(name[0], survey[:q10]) > max
                                 max = white.similarity(name[0], survey[:q10])
@@ -254,7 +265,7 @@ class SemestersController < ApplicationController
                                     elsif score=="Never"
                                         1
                                     else
-                                        score
+                                        0
                                     end
                                 }
                             end
@@ -271,7 +282,7 @@ class SemestersController < ApplicationController
                                     elsif score=="Never"
                                         1
                                     else
-                                        score
+                                        0 
                                     end
                                 }
                             end
@@ -283,10 +294,12 @@ class SemestersController < ApplicationController
                             end
                             name.push(name_to_add)
                         end
+
+                        
                         name[1].compact!
                         name[2].compact!
                         including_self_scores = name[1] + name[2]
-
+                        
                         if including_self_scores.present?
                             name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
                         elsif name[2].present?
@@ -294,10 +307,15 @@ class SemestersController < ApplicationController
                         else
                             name.push("*Did not submit survey*")
                         end
-
+                        
                         name.push((name[2].sum / name[2].size.to_f).round(1))
-
-                        # stores the flags for the team
+                      
+                        # Rails.logger.debug("DEBUGGGGGG #{name[-2]}")
+                      #  Rails.logger.debug("NAMEE ADD")
+                      #Rails.logger.debug("#{self_scores}")
+                       
+                      
+                      # stores the flags for the team
                         if name[-2].is_a?(String) && !@flags.include?("missing submit")
                             @flags.append("missing submit")
                         end
