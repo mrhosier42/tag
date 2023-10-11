@@ -114,7 +114,7 @@ class SemestersController < ApplicationController
 
     def get_client_score(semester, team, sprint)
         @scores = -1
-        clientScore = []
+        
 
         # Downloads and temporarily store the student_csv file
         semester.client_csv.open do |tempfile|
@@ -126,8 +126,14 @@ class SemestersController < ApplicationController
                 @sponsorData.delete_at(0)
 
                 @sponsorData.each do |row|
+                    Rails.logger.debug("Checking conditions for ROW. row[:q1_team]: #{row[:q1_team]}, row[:q3]: #{row[:q3]}, team: #{team}, sprint: #{sprint}")
+
+                    Rails.logger.debug("ROW DATA: #{row}")
                     clientScore = []
                     if row[:q1_team] == team && row[:q3] == sprint
+                        
+                        Rails.logger.debug("MATCH FOUND FOR TEAM #{team} AND SPRINT #{sprint}")
+
                         clientScore.append(row[:q2_1])
                         clientScore.append(row[:q2_2])
                         clientScore.append(row[:q2_3])
@@ -145,6 +151,7 @@ class SemestersController < ApplicationController
                     
                 end
             rescue => exception
+                Rails.logger.error("Error processing CSV: #{exception.message}")
                 flash.now[:alert] = "Error! Unable to read sponsor data. Please update your student data file"
             end
         end
