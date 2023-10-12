@@ -144,9 +144,9 @@ class SemestersController < ApplicationController
                         
                     
                     end
-                    Rails.logger.debug("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA #{@scores}")
+                    Rails.logger.debug("Calculated score:::::::::::::: #{@scores}")
                         
-                    Rails.logger.debug("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB #{clientScore}") 
+                    Rails.logger.debug("List taken:::::::::::::::::::: #{clientScore}") 
                    
                     
                 end
