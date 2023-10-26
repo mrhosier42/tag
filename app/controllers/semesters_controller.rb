@@ -144,10 +144,11 @@ class SemestersController < ApplicationController
                         
                     
                     end
+
                     Rails.logger.debug("Calculated score:::::::::::::: #{@scores}")
                         
                     Rails.logger.debug("List taken:::::::::::::::::::: #{clientScore}") 
-                   
+                   Rails.logger.debug("is it empty:::::::::::::::::::: #{@sponsorData.blank?}")
                     
                 end
             rescue => exception
@@ -374,6 +375,7 @@ class SemestersController < ApplicationController
         begin
             @semester.client_csv.open do |tempClient|
                 begin
+                   # @sponsorData = SmarterCSV.process(tempfile.path)????
                     @clientData = SmarterCSV.process(tempClient.path)
                     Rails.logger.debug("DEBUGGING @clientData: #{@clientData}")
 
