@@ -9,3 +9,6 @@ pin "bootstrap", to: "bootstrap/dist/css/bootstrap.min.css"
 pin "bootstrap.bundle", to: "bootstrap/dist/js/bootstrap.bundle.min.js"
 # end here
 pin_all_from "app/javascript/controllers", under: "controllers"
+#NEWly added - Jeffery HUbbart
+pin 'chartkick', to: 'chartkick.js'
+pin "chart.bundle", to: "Chart.bundle.js"

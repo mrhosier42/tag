@@ -47,6 +47,14 @@ class SprintsController < ApplicationController
       flash.now[:error] = "Sprint could not be updated"
       render :new
     end
+
+    def completed_tasks
+      render json: Task.group(:goal_id).group_by_day(:completed_at).count.chart_json
+    end
+    
+    def line_chart
+      @data = Feat.group_by_day(:created_at).count
+    end
   end
 
   def destroy
@@ -56,6 +64,7 @@ class SprintsController < ApplicationController
     flash[:success] = "Sprint deleted successfully"
     redirect_to semester_sprints_url(@semester)
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -67,4 +76,5 @@ class SprintsController < ApplicationController
     def sprint_params
       params.require(:sprint).permit(:name, :start_date, :end_date, :user_id)
     end
+
 end

@@ -175,7 +175,7 @@ class SemestersController < ApplicationController
         @teams = getTeams(@semester)
         @teams ||= []
         @team =  params[:team]
-
+        @data = 
         # TODO: Allow user to select how many Sprint's there are
         @sprints = ["Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4"]
         # @sprint = params[:sprint]
@@ -593,5 +593,4 @@ class SemestersController < ApplicationController
           student_csv: [], client_csv: []
         )
     end
-
 end
