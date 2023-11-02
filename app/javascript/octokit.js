@@ -11,13 +11,15 @@ document.getElementById('github-form').addEventListener('submit', function(event
     const startDate = document.getElementById('start-date').value;
     const endDate = document.getElementById('end-date').value;
 
-
-    // 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 //
-
     const octokit = new Octokit({
         auth: accessToken,
     });
     
+    // Get a reference to the commit-table and its tbody
+    const commitTable = document.getElementById('commit-table');
+    const commitTableBody = commitTable.querySelector('tbody');
+
+
     // Get a reference to the commit-list element
     const commitList = document.getElementById('commit-list');
 
@@ -31,6 +33,29 @@ document.getElementById('github-form').addEventListener('submit', function(event
     .then((response) => {
         // Handles the API response
         const commits = response.data;
+
+        const authorCommits = {};
+
+        commits.forEach((commit) => {
+            const author = commit.commit.author.name;
+            if (authorCommits[author]) {
+                authorCommits[author]++;
+            } else {
+                authorCommits[author] = 1;
+            }
+        });
+
+        // Clear the table body
+        commitTableBody.innerHTML = '';
+
+        // Populate the table with author commit data
+        for (const author in authorCommits) {
+            const row = commitTableBody.insertRow();
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+            cell1.textContent = author;
+            cell2.textContent = authorCommits[author];
+        }
 
         console.log(commits)
 
