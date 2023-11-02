@@ -21,7 +21,7 @@ def performance_to_score(response)
     when "exceeded expectations" then 3.0
     when "met expectations" then 2.0
     when "did not meet expectations" then 1.0
-    when "" then 0.0
+    when "" then 0.0 
     else
       puts "Invalid response: #{response}"
       0.0
@@ -80,19 +80,26 @@ def filter_csv
 
     puts "\nPerformance Questions:"
     selected_data = row.to_h.select { |header, _| performance_columns.include?(header) }
-    puts selected_data.values.join(", ")
+   
 
+    selected_data.each do |response|
+      value = response[1].to_s.strip.downcase
+      attention_note = (value == "exceeded expectations" || value == "met expectations") ? "" : "(!!!attention!!!)"
+      puts "-#{response[1]} #{attention_note}"
+    end
+  
     # Calculate and print performance score
     performance_score = selected_data.values.map { |response| performance_to_score(response) }.sum / 6
-    puts "Performance Score (max 3): #{performance_score.round(2)}"
+    attention_note = performance_score < 2 ? "(!!!attention!!!)" : ""
+    puts "Performance Score (max 3): #{performance_score.round(2)} #{attention_note}"
 
+ 
     
 
     puts "\nGeneral Questions:"
     selected_data = row.to_h.select { |header, _| (general_columns - performance_columns - sprint_columns - client_columns - team_columns).include?(header) }
-    puts selected_data.values.join(", ")
+    puts selected_data.values.map { |v| v.to_s.strip.empty? ? "-!!!Not Submitted!!!" : "-#{v}" }.join(",\n")
   end
-
   
 end
 

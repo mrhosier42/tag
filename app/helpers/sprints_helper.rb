@@ -23,9 +23,13 @@ module SprintsHelper
   def team_rows(teams, sprint_list, flags)
     rows = ''
     teams.each do |team|
+      Rails.logger.debug "Team: #{team}, Flags: #{flags.inspect}"
       rows += "<tr><th>#{link_to(team, semester_team_path(@semester, team: team))}</th>"
       sprint_list.each do |sprint|
         rows += "<td>"
+        current_flags = flags[sprint][team] || [] # Ensure there's always an array to iterate over
+        Rails.logger.debug "Sprint: #{sprint}, Current Flags: #{current_flags}"
+
         if flags[sprint][team].include?("student blank")
           if unfinished_sprint(teams, flags, sprint)
             rows += icon_html("question-circle-fill.svg", "This sprint has not yet concluded")
