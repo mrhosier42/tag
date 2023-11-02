@@ -9,7 +9,7 @@ class SemestersController < ApplicationController
     include PreprocessorHelper
     include TeamsHelper
     include SprintsHelper
-
+    include ClientScoreHelper
     def home
         @semesters = Semester.order(:year)
         render :home
@@ -112,78 +112,8 @@ class SemestersController < ApplicationController
         return @teams
     end
 
-    def get_client_score(semester, team, sprint)
-        @scores = -1
-        
-
-        # Downloads and temporarily store the student_csv file
-        semester.client_csv.open do |tempfile|
-            begin
-                @sponsorData = SmarterCSV.process(tempfile.path)
-
-                # Delete the 2 header columns before the data
-                @sponsorData.delete_at(0)
-                @sponsorData.delete_at(0)
-
-                @sponsorData.each do |row|
-                    Rails.logger.debug("Checking conditions for ROW. row[:q1_team]: #{row[:q1_team]}, row[:q3]: #{row[:q3]}, team: #{team}, sprint: #{sprint}")
-
-                    Rails.logger.debug("ROW DATA: #{row}")
-                    clientScore = []
-                    if row[:q1_team] == team && row[:q3] == sprint
-                        
-                        Rails.logger.debug("MATCH FOUND FOR TEAM #{team} AND SPRINT #{sprint}")
-
-                        clientScore.append(row[:q2_1])
-                        clientScore.append(row[:q2_2])
-                        clientScore.append(row[:q2_3])
-                        clientScore.append(row[:q2_4])
-                        clientScore.append(row[:q2_5])
-                        clientScore.append(row[:q2_6])
-                        @scores = calc_client_average_score(clientScore)
-                        
-                    
-                    end
-
-                    Rails.logger.debug("Calculated score:::::::::::::: #{@scores}")
-                        
-                    Rails.logger.debug("List taken:::::::::::::::::::: #{clientScore}") 
-                   Rails.logger.debug("is it empty:::::::::::::::::::: #{@sponsorData.blank?}")
-                    
-                end
-            rescue => exception
-                Rails.logger.error("Error processing CSV: #{exception.message}")
-                flash.now[:alert] = "Error! Unable to read sponsor data. Please update your student data file"
-            end
-        end
-        if @scores < 0
-            puts "DEBUG: @scores is < 0 in get_client_score method"
-            return "No Score"
-        end
-        return @scores
-    end
     
-    def calc_client_average_score(arr)
-
-        total = 0
-
-        arr.each do |item|
-            if item.downcase == "exceeded expectations"
-                total = total + 5.0
-            elsif item.downcase == "met expectations"
-                total = total + 4.0
-            elsif item.downcase == "about half the time"
-                total = total + 3.0
-            elsif item.downcase == "sometimes"
-                total = total + 2.0
-            elsif item.downcase == "never"
-                total = total + 1.0
-            end
-        end
-        total = total / 6.0
-        total = total.round(1)
-        return total
-    end
+  
 
 
     def team
