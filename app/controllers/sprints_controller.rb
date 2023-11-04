@@ -57,6 +57,22 @@ class SprintsController < ApplicationController
     redirect_to semester_sprints_url(@semester)
   end
 
+  def github_data
+    client = Octokit::Client.new(access_token: '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')
+    owner = 'github_username'
+    repo = 'repository_name'
+
+    # Replace this logic with your data-fetching requirements
+    @commits = commits_data.map { |commit| [commit[:commit][:author][:date], 1] }
+    @issues = issues_data.map { |issue| [issue[:created_at], 1] }
+
+    respond_to do |format|
+      format.html
+      format.json {render json: { commits: @commits, issues: @issues }}
+    end
+  end
+end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_sprint

@@ -41,7 +41,49 @@ document.getElementById('github-form').addEventListener('submit', function(event
 
         // Update the content of the commit-list element
         commitList.innerHTML = commitsHTML;
+
+
+        const commitDates = commits.map((commit) => commit.commit.author.date);
+        const commitCounts = commits.map(() => 0);
+
+        const chartData = {
+            labels: commitDates,
+            datasets: [
+                {
+                    label: 'Commits',
+                    data: commitCounts,
+                }
+            ],
+        };
+        new Chartkick.LineChart("chart", data)
+
+        // Get the canvas element
+        const canvas = document.getElementById('Commits');
+
+        // Create the chart using Chart.js
+        const ctx = canvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                scales: {
+                    x: {
+                        type: 'time', // This assumes commitDates are in a date format
+                        time: {
+                            unit: 'day', // Adjust as needed
+                        },
+                    },
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
     })
+    })
+    
+     
+
 
     .catch((error) => {
         console.log("Request failed.")
@@ -49,4 +91,6 @@ document.getElementById('github-form').addEventListener('submit', function(event
         // Handles errors
         console.error(error);
     });
-});
+
+
+  
