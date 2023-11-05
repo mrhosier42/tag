@@ -42,8 +42,10 @@ module ClientScoreHelper
               average_distance = (sprint_distance + team_distance) / 2
               if average_distance < smallest_distance && average_distance < similarity_threshold
                 smallest_distance = average_distance
+                Rails.logger.debug("BUG row: #{row}")
                 best_match = row
               end
+              ""
             end
             
             unless best_match

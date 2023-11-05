@@ -505,17 +505,30 @@ class SemestersController < ApplicationController
                         if name.last < 4 && !flags.include?("low score")
                             flags.append("low score")
                         end
+                        
                         Rails.logger.debug "Fetching Client Score for Team: #{team}, Sprint: #{sprint}"
-                        cscore = get_client_score(semester, team, sprint)
-                        Rails.logger.debug "Client Score for Team: #{team}, Sprint: #{sprint}: #{cscore}"
 
-                        if cscore == "No Score"
+                        cscore = get_client_score(semester, team, sprint)
+                        
+                        Rails.logger.debug "Client Score for Team: #{team}, Sprint: #{sprint}: #{cscore}"
+                        
+                        # First, check if the score is a string indicating no data or an error, to prevent comparison errors.
+                        if cscore.is_a?(String)
+                          if cscore == "No Score"
                             flags.append("no client score")
                             Rails.logger.debug "No Client Survey Submitted for Team: #{team.name}"
-                        elsif cscore < 2
+                          elsif cscore.include?("Error")
+                            # Handle the error case if you need to
+                            Rails.logger.debug "Error retrieving client score for Team: #{team.name}: #{cscore}"
+                          end
+                        else
+                          # If the cscore is not a String, it should be a numeric value and can be compared.
+                          if cscore < 2
                             flags.append("low client score")
-                            Rails.logger.debug "Low Client Score for Team: #{team.name}, cscore: #{cscore}"
+                            Rails.logger.debug "Low Client Score for Team: #{team.name}, Score: #{cscore}"
+                          end
                         end
+                        
                     end end
                 rescue => exception
                 end

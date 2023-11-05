@@ -41,14 +41,15 @@ module SprintsHelper
         else
           flags[sprint][team].each do |flag|
             case flag
+            when "low client score"
+              rows += icon_html("exclamation-triangle-fill-red.svg", "The client is unsatisfied")
             when "missing submit"
               rows += icon_html("exclamation-triangle-fill-red.svg", "At least one of the students failed to submit a survey")
             when "low score"
               rows += icon_html("exclamation-triangle-fill-red.svg", "At least one of the students received an average rating lower than 4")
             when "no client score"
               rows += icon_html("exclamation-circle-fill-yellow.svg", "The client did not submit a survey")
-            when "low client score"
-              rows += icon_html("exclamation-triangle-fill-red.svg", "The client is unsatisfied")
+            
             end
           end
         end
