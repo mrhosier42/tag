@@ -510,7 +510,7 @@ class SemestersController < ApplicationController
                         if cscore == "No Score"
                             flags.append("no client score")
                         end
-                        if cscore <= 3
+                        if cscore <2
                             flags.append("low client score")
                         end
                     end end
