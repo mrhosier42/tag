@@ -107,45 +107,40 @@
           </div>
         <% end %>
 <!--        <br>-->
-        <% unless @flags.include?("client blank") || @cliSurvey.blank? %>
-          <%#= debug @cliSurvey %>
-          <div>
-          <h2 id="client-scores" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Scores</h2>
-          <div>
-            <table class="table">
-              <tr>
-                <th>The team was on time and professional during our meeting</th>
-                <td class="<%= 'text-white bg-danger' if @cliSurvey[0][:q2_1].
-                  strip.downcase != "exceeded expectations" && @cliSurvey[0][:q2_1].strip.downcase != "met expectations" %>"><%= @cliSurvey[0][:q2_1].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team was prepared for their meeting with me</th>
-                <td class="<%= if @cliSurvey[0][:q2_2].strip.downcase != "Exceeded expectations" && @cliSurvey[0][:q2_2].strip.downcase != "Met expectations" then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_2].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team is communicating with me clearly</th>
-                <td class="<%= if @cliSurvey[0][:q2_3].strip.downcase != "Exceeded expectations" && @cliSurvey[0][:q2_3].strip.downcase != "Met expectations" then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_3].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team met the goals we agreed to at our last meeting</th>
-                <td class="<%= if @cliSurvey[0][:q2_4].strip.downcase != "exceeded expectations" && @cliSurvey[0][:q2_4].strip.downcase != "met expectations" then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_4].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team listended to my feedback</th>
-                <td class="<%= if @cliSurvey[0][:q2_5].strip.downcase != "Exceeded expectations" && @cliSurvey[0][:q2_5].strip.downcase != "Met expectations" then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_5].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team set appropriate goals for the next two weeks</th>
-                <td class="<%= if @cliSurvey[0][:q2_6].strip.downcase != "Exceeded expectations" && @cliSurvey[0][:q2_6].strip.downcase != "Met expectations" then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_6].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>Clients average score</th>
-                <td><%= get_client_score(@semester, @team, @sprint) %></td>
-              </tr>
-            </table>
+      <!-- Client Scores Section -->
+      <% if @cliSurvey.blank? %>
+          <div class="d-flex justify-content-center mt-4 mb-4">
+            <div class="card w-50">
+              <div class="card-body">
+                <p class="card-text text-center">
+                  <strong>Attention:</strong> Client survey response is not available. Please check if the client has submitted their survey or confirm there are no issues with the CSV file.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-        <% end %>
+        <% else %>
+            <h2 id="client-scores" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Scores</h2>
+            <div>
+              <table class="table">
+                <% @cliSurvey[0].each do |question, response| %>
+                  <% if question.to_s.start_with?('q2_') %>
+                    <tr>
+                      <th><%= question.to_s.humanize.titleize %></th>
+                      <td class="<%= 'text-white bg-danger' unless response.present? && ['exceeded expectations', 'met expectations'].include?(response.strip.downcase) %>">
+                        <%= response.present? ? response.strip.downcase.titleize : 'Not answered' %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+
+          <tr>
+            <th>Clients average score</th>
+            <td><%= get_client_score(@semester, @team, @sprint) %></td>
+          </tr>
+        </table>
+      <% end %>
+
+        <!-- End of Client Scores Section -->
 
         <br>
         <% unless @flags.include?("student blank") %>

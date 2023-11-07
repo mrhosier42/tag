@@ -63,4 +63,7 @@ module ClientScoreHelper
           end    
         end      
       end
-    end
+
+ 
+
+end

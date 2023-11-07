@@ -348,6 +348,10 @@ class SemestersController < ApplicationController
 
                     Rails.logger.debug("DEBUG: CliSurvey data after filtering: #{@cliSurvey.inspect}")
 
+
+                
+
+
                     if @cliSurvey.blank?
                         @flags.append("client blank")
                     end
