@@ -108,41 +108,57 @@
         <% end %>
 <!--        <br>-->
       <!-- Client Scores Section -->
+      <!-- Client Scores Section -->
       <% if @cliSurvey.blank? %>
-          <div class="d-flex justify-content-center mt-4 mb-4">
-            <div class="card w-50">
-              <div class="card-body">
-                <p class="card-text text-center">
-                  <strong>Attention:</strong> Client survey response is not available. Please check if the client has submitted their survey or confirm there are no issues with the CSV file.
-                </p>
-              </div>
+        <!-- If there's no survey data, this message will display -->
+        <div class="d-flex justify-content-center mt-4 mb-4">
+          <div class="card w-50">
+            <div class="card-body">
+              <p class="card-text text-center">
+                <strong>Attention:</strong> Client survey response is not available. Please check if the client has submitted their survey or confirm there are no issues with the CSV file.
+              </p>
             </div>
           </div>
-        <% else %>
-            <h2 id="client-scores" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Scores</h2>
-            <div>
-              <table class="table">
-                <% @cliSurvey[0].each do |question, response| %>
-                  <% if question.to_s.start_with?('q2_') %>
-                    <tr>
-                      <th><%= question.to_s.humanize.titleize %></th>
-                      <td class="<%= 'text-white bg-danger' unless response.present? && ['exceeded expectations', 'met expectations'].include?(response.strip.downcase) %>">
-                        <%= response.present? ? response.strip.downcase.titleize : 'Not answered' %>
-                      </td>
-                    </tr>
-                  <% end %>
-                <% end %>
+        </div>
+      <% else %>
+        <!-- If there's survey data, it should display in this section -->
+        <h2 id="client-scores" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Scores</h2>
+        <div>
+          <table class="table">
+            <%# Debugging: Output the @full_questions to see what it contains %>
+            <% Rails.logger.debug "@full_questions: #{@full_questions}" %>
+            <% @full_questions.each do |code, full_question| %>
+              <% code_downcased = code.to_s.downcase.strip %>
+              <% if code_downcased.start_with?('q2_') %>
+                <% response = @cliSurvey[0][code] %>
 
-          <tr>
-            <th>Clients average score</th>
-             <td class="<%= 'text-white bg-danger' if get_client_score(@semester, @team, @sprint).to_f < 2 %>">
-               <%= get_client_score(@semester, @team, @sprint) %>
+                <% Rails.logger.debug "checking cliSurvay: #{@cliSurvey}" %>
+                <% Rails.logger.debug "Entered condition for code: #{code_downcased}" %>
+                <% Rails.logger.debug "Response for #{code_downcased}: #{response}" %>
+                <tr>
+                  <th><%= full_question %></th>
+                  <td class="<%= 'text-white bg-danger' if response.blank? || !['exceeded expectations', 'met expectations'].include?(response.strip.downcase) %>">
+                    <%= response.present? ? response.strip.downcase.titleize : 'Not answered' %>
+                  </td>
+                </tr>
+              <% else %>
+                <% Rails.logger.debug "Skipped code: #{code_downcased}" %>
+              <% end %>
+            <% end %>
+
+            <tr>
+              <th>Clients average score</th>
+              <td class="<%= 'text-white bg-danger' if get_client_score(@semester, @team, @sprint).to_f < 2 %>">
+                <%= get_client_score(@semester, @team, @sprint) %>
               </td>
-          </tr>
-        </table>
+            </tr>
+          </table>
+        </div>
+        <%=debug(@cliSurvey)=%>
+         <%=debug(@full_questions)=%>
       <% end %>
+      <!-- End of Client Scores Section -->
 
-        <!-- End of Client Scores Section -->
 
         <br>
         <% unless @flags.include?("student blank") %>
@@ -234,3 +250,8 @@
 <%= javascript_include_tag 'survey_page/survey_scroll_navigation' %>
 <%= javascript_include_tag 'survey_page/survey_page_expanding_cols' %>
 </body>
+
+
+
+
+

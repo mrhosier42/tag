@@ -131,6 +131,9 @@ class SemestersController < ApplicationController
         # stores all the flags for the team
         @flags = []
 
+    
+
+
         # Processes the student data first
         begin
             # Downloads and temporarily store the student_csv file
@@ -311,6 +314,11 @@ class SemestersController < ApplicationController
 
                     Rails.logger.debug("Processing client data......")
 
+                    @semester.client_csv.open do |file|
+                        # Now 'file' is a Tempfile object which you can read from
+                        @full_questions = extract_full_questions(file.path)
+                    end
+
                     max_similarity = 0
                     best_matching_team = nil
 
@@ -349,7 +357,8 @@ class SemestersController < ApplicationController
                     Rails.logger.debug("DEBUG: CliSurvey data after filtering: #{@cliSurvey.inspect}")
 
 
-                
+                    Rails.logger.debug "Full Questions: #{@full_questions}"
+                    Rails.logger.debug "CLI Survey: #{@cliSurvey}"
 
 
                     if @cliSurvey.blank?

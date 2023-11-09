@@ -65,6 +65,16 @@ module ClientScoreHelper
         end      
       end
 
+
+      def extract_full_questions(csv_path)
+        csv = CSV.read(csv_path, headers: true)
+        question_headers = csv.headers.grep(/\Aq2_\d+\z/i)
+        full_questions = csv[0].values_at(*question_headers)
+        Hash[question_headers.zip(full_questions)]
+      end
+      
+
+      
  
 
 end
