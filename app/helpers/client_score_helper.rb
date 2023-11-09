@@ -9,6 +9,7 @@ module ClientScoreHelper
         when "exceeded expectations" then 3.0
         when "met expectations" then 2.0
         when "did not meet expectations" then 1.0
+        when "" then 0.0
         else 0.0
         end
       end

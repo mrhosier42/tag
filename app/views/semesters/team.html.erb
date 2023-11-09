@@ -135,7 +135,9 @@
 
           <tr>
             <th>Clients average score</th>
-            <td><%= get_client_score(@semester, @team, @sprint) %></td>
+             <td class="<%= 'text-white bg-danger' if get_client_score(@semester, @team, @sprint).to_f < 2 %>">
+               <%= get_client_score(@semester, @team, @sprint) %>
+              </td>
           </tr>
         </table>
       <% end %>
