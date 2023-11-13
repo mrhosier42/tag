@@ -73,7 +73,6 @@ module ClientScoreHelper
         Hash[question_headers.zip(full_questions)]
       end
       
-
       
  
 

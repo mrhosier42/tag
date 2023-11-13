@@ -122,19 +122,18 @@
         </div>
       <% else %>
         <!-- If there's survey data, it should display in this section -->
-        <h2 id="client-scores" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Scores</h2>
-        <div>
-          <table class="table">
-            <%# Debugging: Output the @full_questions to see what it contains %>
-            <% Rails.logger.debug "@full_questions: #{@full_questions}" %>
+        <h2 id="client-scores">Client Scores</h2>
+        <table class="table">
+          <%# Debug the structure of @cliSurvey[0] to ensure it's as expected %>
+            <% Rails.logger.debug "@cliSurvey[0]: #{@cliSurvey[0]}" %>
+            <%# Iterate over the full questions %>
             <% @full_questions.each do |code, full_question| %>
-              <% code_downcased = code.to_s.downcase.strip %>
-              <% if code_downcased.start_with?('q2_') %>
-                <% response = @cliSurvey[0][code] %>
-
-                <% Rails.logger.debug "checking cliSurvay: #{@cliSurvey}" %>
-                <% Rails.logger.debug "Entered condition for code: #{code_downcased}" %>
-                <% Rails.logger.debug "Response for #{code_downcased}: #{response}" %>
+              <%# Convert the code to a lowercase symbol before checking %>
+              <% sym_code = code.downcase.to_sym %>
+              <% if @cliSurvey[0].has_key?(sym_code) %>
+                <%# Access the response using the symbolized and lowercased code %>
+                <% response = @cliSurvey[0][sym_code] %>
+                <% Rails.logger.debug "Response for #{sym_code}: #{response}" %>
                 <tr>
                   <th><%= full_question %></th>
                   <td class="<%= 'text-white bg-danger' if response.blank? || !['exceeded expectations', 'met expectations'].include?(response.strip.downcase) %>">
@@ -142,10 +141,9 @@
                   </td>
                 </tr>
               <% else %>
-                <% Rails.logger.debug "Skipped code: #{code_downcased}" %>
+                <% Rails.logger.debug "No response found for #{sym_code}" %>
               <% end %>
             <% end %>
-
             <tr>
               <th>Clients average score</th>
               <td class="<%= 'text-white bg-danger' if get_client_score(@semester, @team, @sprint).to_f < 2 %>">
@@ -153,9 +151,9 @@
               </td>
             </tr>
           </table>
+          
         </div>
-        <%=debug(@cliSurvey)=%>
-         <%=debug(@full_questions)=%>
+       
       <% end %>
       <!-- End of Client Scores Section -->
 

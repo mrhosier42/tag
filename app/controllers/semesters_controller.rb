@@ -313,10 +313,11 @@ class SemestersController < ApplicationController
                     Rails.logger.debug("DEBUGGING @clientData: #{@clientData}")
 
                     Rails.logger.debug("Processing client data......")
-
+                  
                     @semester.client_csv.open do |file|
                         # Now 'file' is a Tempfile object which you can read from
                         @full_questions = extract_full_questions(file.path)
+                         
                     end
 
                     max_similarity = 0
