@@ -121,6 +121,31 @@
           </div>
         </div>
       <% else %>
+      <%# Check if any responses have a value of '0', indicating a missing response %>
+        <%# First, define the expected keys %>
+        <% expected_keys = ['q2_1', 'q2_2', 'q2_3', 'q2_4', 'q2_5', 'q2_6'].map(&:to_sym) %>
+
+        <%# Then, check if any expected key is missing in the survey response %>
+        <% missing_responses = expected_keys.any? { |key| !@cliSurvey[0].has_key?(key) } %>
+        <% Rails.logger.debug "Missing responses: #{missing_responses}" %>
+
+        <%# Display a message if missing responses are detected %>
+        <% if missing_responses %>
+          <div class="d-flex justify-content-center mt-4 mb-4">
+          <div class="card w-50">
+            <div class="card-body">
+              <p class="card-text text-center">
+                <strong>Note:</strong> One or more client responses are missing. Please review your CSV file for completeness.
+              </p>
+            </div>
+          </div>
+          </div>
+        <% end %>
+        
+        <%Rails.logger.debug "missing_responses : #{missing_responses}"%>
+        
+        
+      
         <!-- If there's survey data, it should display in this section -->
         <h2 id="client-scores">Client Scores</h2>
         <table class="table">

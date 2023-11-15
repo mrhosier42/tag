@@ -13,13 +13,20 @@ module ClientScoreHelper
         else 0.0
         end
       end
-
       def calculate_score(matching_row, performance_columns)
         performance_scores = performance_columns.map do |col|
           response = matching_row[col]
           performance_to_score(response)
         end
-        performance_average = performance_scores.sum / performance_scores.size
+      
+        # Filter out the scores that are zero
+        positive_scores = performance_scores.reject { |score| score.zero? }
+      
+        # If there are no positive scores (all were zero), return zero or some default value
+        return 0.0 if positive_scores.empty?
+      
+        # Calculate the average from the positive scores only
+        performance_average = positive_scores.sum.to_f / positive_scores.size
         performance_average.round(1)
       end
       
