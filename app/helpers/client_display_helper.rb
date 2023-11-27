@@ -1,4 +1,6 @@
 module ClientDisplayHelper
+
+    include ClientSurveyPatternsHelper
     def process_client_data(semester, team, sprint)
       client_data = {}
       flags = []

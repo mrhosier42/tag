@@ -151,6 +151,7 @@ class SemestersController < ApplicationController
                         puts "student blank"
                     end
 
+                    
                     if @student_survey[0] then @self_submitted_names = [[@student_survey[0][:q1]],[@student_survey[0][:q10]]] end
                     if @student_survey[0] and @student_survey[0][:q13_2_text] then @self_submitted_names.push([@student_survey[0][:q13_2_text]]) end
                     if @student_survey[0] and @student_survey[0][:q23_2_text] then @self_submitted_names.push([@student_survey[0][:q23_2_text]]) end
@@ -269,6 +270,9 @@ class SemestersController < ApplicationController
                             @flags.append("low score")
                         end
                     end end
+
+                    Rails.logger.debug "Self submitted names: #{@self_submitted_names.inspect}"
+
                 rescue => exception
                     # TODO: This displays when there's data displaying on the survey page for a sprint that does that data
                     # flash.now[:alert] = "Unable to process file"

@@ -92,15 +92,33 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% @self_submitted_names.each do |name|%>
-<!--                Uncomment me to inspect to internal data for "Student Scores"-->
-                  <%# Rails.logger.debug "=== Name data: #{name.inspect} ===" %>
+                <% if @self_submitted_names.present? %>
+                <% @self_submitted_names.each do |name| %>
                   <tr>
-                    <th><%=name[0]%></th>
-                    <td class="<%=if name[-2]&.is_a?(String) or name[-2]&. < 4 then "text-white bg-danger" end%>"><%=name[-2]%></td>
-                    <td class="<%=if name.last().is_a?(String) && name.last().to_i < 4 then "text-white bg-danger" end%>"><%=name.last()%></td>
+                    <!-- Output the name -->
+                    <th><%= name[0] %></th>
+              
+                    <!-- Check if the second to last item is a String or less than 4 -->
+                    <!-- Apply 'text-white bg-danger' class if the condition is true -->
+                    <td class="<%= 'text-white bg-danger' if name[-2].is_a?(String) || name[-2].to_f < 4 %>">
+                      <%= name[-2] %>
+                    </td>
+              
+                    <!-- Check if the last item is not a String and is less than 4 -->
+                    <!-- Apply 'text-white bg-danger' class if the condition is true -->
+                    <td class="<%= 'text-white bg-danger' if name.last.is_a?(String) && name.last.to_f < 4 %>">
+                      <%= name.last %>
+                    </td>
                   </tr>
                 <% end %>
+                <% else %>
+                  <!-- Handle the case where @self_submitted_names is nil or empty -->
+                  <tr>
+                    <td colspan="2" >No data available</td>
+                    <td colspan="3" >No data available</td>
+                  </tr>
+                <% end %>
+              
                 </tbody>
               </table>
             </div>
@@ -258,11 +276,12 @@
         <% unless @flags.include?("client blank") || @cliSurvey.blank? %>
           <div>
             <h1 id="client-qualitative-questions" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Evaluation</h1>
+            
             <div>
-              <%= render_client_table(9, :q4) %>
-              <%= render_client_table(10, :q5) %>
-              <%= render_client_table(11, :q6) %>
-              <%= render_client_table(12, :q7) %>
+              <%= raw render_client_table(9, :q4, @cliSurvey, @client_question_titles) %>
+              <%= raw render_client_table(10, :q5, @cliSurvey, @client_question_titles) %>
+              <%= raw render_client_table(11, :q6, @cliSurvey, @client_question_titles) %>
+              <%= raw render_client_table(12, :q7, @cliSurvey, @client_question_titles) %>
             </div>
           </div>
         <% end %>

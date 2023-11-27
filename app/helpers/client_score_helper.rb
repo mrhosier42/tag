@@ -1,7 +1,5 @@
 module ClientScoreHelper
-      SPRINT_PATTERN = /\Aq3\z/i
-      TEAM_PATTERN = /\Aq1_team\z/i
-      PERFORMANCE_PATTERN = /\Aq2_\d+\z/i
+    include ClientSurveyPatternsHelper
 
       def performance_to_score(response)
         response = response.to_s.downcase
