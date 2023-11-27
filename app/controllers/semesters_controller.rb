@@ -311,11 +311,12 @@ class SemestersController < ApplicationController
             @flags.append("student blank")
         end
 
+        #data for rendering the client with the help of the client related helpers 
         client_data, flags = process_client_data(@semester, @team, @sprint)
         @full_questions = client_data[:full_questions]
         @cliSurvey = client_data[:cliSurvey]
         @flags = flags
-       
+        
 
         render :team
     end

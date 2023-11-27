@@ -42,31 +42,5 @@ module TeamsHelper
     end
   end
 
-  def render_client_table(question_number, question_key, cliSurvey, client_question_titles)
-    #puts "DEBUG: @client_question_titles[question_key]: #{@client_question_titles[question_key]}"
-    puts "DEBUG: render_client_table called for question #{question_number}"
-    puts "DEBUG: @cliSurvey[0][question_key]: #{@cliSurvey[0][question_key]}"
-    
-    return unless cliSurvey[0][question_key].present?
-
-    table = content_tag :table, class: "table table-striped" do
-      thead = content_tag :thead do
-        content_tag :tr do
-          content_tag :th do
-            client_question_titles[question_key]
-          end
-        end
-      end
-
-      tbody = content_tag :tbody do
-        content_tag :tr do
-          content_tag :td, cliSurvey[0][question_key]
-        end
-      end
-
-      thead + tbody
-    end
-
-    table.html_safe
-  end
+  
 end

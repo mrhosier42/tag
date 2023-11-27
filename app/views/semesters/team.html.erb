@@ -273,18 +273,29 @@
           </div>
         <% end %>
         <br>
-        <% unless @flags.include?("client blank") || @cliSurvey.blank? %>
-          <div>
-            <h1 id="client-qualitative-questions" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Evaluation</h1>
-            
+        <% unless @flags.include?("client blank") %>
+          <% if @cliSurvey.present? %>
             <div>
-              <%= raw render_client_table(9, :q4, @cliSurvey, @client_question_titles) %>
-              <%= raw render_client_table(10, :q5, @cliSurvey, @client_question_titles) %>
-              <%= raw render_client_table(11, :q6, @cliSurvey, @client_question_titles) %>
-              <%= raw render_client_table(12, :q7, @cliSurvey, @client_question_titles) %>
+              <h1 id="client-qualitative-questions" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Evaluation</h1>
+              
+              <% @cliSurvey.each do |survey| %>
+                <% if survey[:client_evaluation].present? %>
+                  <div>
+                    <% survey[:client_evaluation].each do |evaluation_question, evaluation_answer| %>
+                      <p>
+                        <strong><%= evaluation_question %>:</strong> <%= evaluation_answer %>
+                      </p>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% end %>
             </div>
-          </div>
+          <% else %>
+            <!-- Handle the case where @cliSurvey is nil or empty -->
+            <p>No client evaluation data available.</p>
+          <% end %>
         <% end %>
+
       </div>
     </div>
   </div>

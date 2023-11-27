@@ -20,6 +20,10 @@ module ClientDisplayHelper
             similarities = compare_strings(team, client_survey[:q1_team])
             avg_similarity = (similarities[:jaro_winkler] + similarities[:levenshtein]) / 2.0
   
+            performance_data = match_pattern(client_survey, PERFORMANCE_PATTERN)
+            client_evaluation_data = match_client_evaluation(client_survey, CLIENT_EVALUATION)
+
+
             if avg_similarity > max_similarity
               max_similarity = avg_similarity
               best_matching_team = client_survey[:q1_team]
@@ -54,5 +58,17 @@ module ClientDisplayHelper
       question_headers = csv.headers.grep(/\Aq2_\d+\z/i)
       full_questions = csv[0].values_at(*question_headers)
       Hash[question_headers.zip(full_questions)]
+    end
+     
+    # Helper method to match a single pattern
+    def match_pattern(client_survey, pattern)
+        client_survey.select { |key, _| key.to_s.match(pattern) }
+    end
+
+    # Helper method to match multiple patterns
+    def match_client_evaluation(client_survey, patterns)
+        patterns.flat_map do |pattern|
+            client_survey.select { |key, _| key.to_s.match(pattern) }
+        end
     end
 end
