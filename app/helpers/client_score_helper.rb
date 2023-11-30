@@ -1,9 +1,6 @@
 module ClientScoreHelper  
-      #include ClientSurveyPatternsHelper
-      SPRINT_PATTERN = /\Aq3\z/i
-      TEAM_PATTERN = /\Aq1_team\z/i
-      PERFORMANCE_PATTERN = /\Aq2_\d+\z/i
-      CLIENT_EVALUATION  = [/\Aq7\z/i,/\Aq4\z/i,/\Aq5\z/i,/\Aq6\z/i]
+      include ClientSurveyPatternsHelper
+      
       def performance_to_score(response)
         response = response.to_s.downcase
         case response
@@ -18,7 +15,7 @@ module ClientScoreHelper
         performance_scores = performance_columns.map do |col|
           response = matching_row[col]
           performance_to_score(response)
-        end
+        end 
       
         # Filter out the scores that are zero
         positive_scores = performance_scores.reject { |score| score.zero? }
@@ -80,6 +77,8 @@ module ClientScoreHelper
         full_questions = csv[0].values_at(*question_headers)
         Hash[question_headers.zip(full_questions)]
       end
+
+      
       
       
  

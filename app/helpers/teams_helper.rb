@@ -1,5 +1,7 @@
 module TeamsHelper
 
+
+  include ClientSurveyPatternsHelper
   # Check any response for each team member
   def some_condition?(s, key)
     s[key] && s[key] != "Always" && s[key] != "Most of the time"
@@ -43,16 +45,18 @@ module TeamsHelper
   end
 
   def render_client_table(question_number, question_key)
-    #puts "DEBUG: @client_question_titles[question_key]: #{@client_question_titles[question_key]}"
+   # puts "DEBUG: @client_question_titles[question_key]: #{@client_question_titles[question_key]}"
     puts "DEBUG: render_client_table called for question #{question_number}"
     puts "DEBUG: @cliSurvey[0][question_key]: #{@cliSurvey[0][question_key]}"
 
-    if @not_empty_questions.include?(question_number)
+    
+
+    
       content_tag :table, class: "table table-striped" do
         thead = content_tag :thead do
           content_tag :tr do
             content_tag :th do
-              content_tag :p, @client_question_titles[question_key]
+              content_tag :p, @client_question_titles[question_key] 
             end
           end
         end
@@ -65,7 +69,10 @@ module TeamsHelper
 
         thead + tbody
       end
-    end
   end
 
+ 
+
+  
 end
+

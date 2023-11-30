@@ -7,7 +7,10 @@ module ClientDisplayHelper
         semester.client_csv.open do |tempClient|
           client_data_raw = SmarterCSV.process(tempClient.path)
           full_questions = extract_full_questions(tempClient.path)
-            
+          
+          @client_question_titles = client_data_raw[0].select { |key, _| key.to_s.start_with?('q') }
+
+
           max_similarity = 0
           best_matching_team = nil
   
@@ -26,7 +29,7 @@ module ClientDisplayHelper
   
           cliSurvey = client_data_raw.find_all { |survey| survey[:q1_team] == best_matching_team && survey[:q3] == sprint }
           cliSurvey.map! { |survey| survey.select { |key, _| key.to_s.start_with?('q') } }
-       #   @client_question_titles = @clientData[0].select { |key, _| key.to_s.start_with?('q') }
+          #@client_question_titles = @clientData[0].select { |key, _| key.to_s.start_with?('q') }
   
           if cliSurvey.blank?
             flags.append("client blank")
@@ -53,4 +56,6 @@ module ClientDisplayHelper
       full_questions = csv[0].values_at(*question_headers)
       Hash[question_headers.zip(full_questions)]
     end
+
+   
 end

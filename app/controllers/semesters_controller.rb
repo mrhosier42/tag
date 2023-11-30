@@ -11,6 +11,7 @@ class SemestersController < ApplicationController
     include SprintsHelper
     include ClientScoreHelper
     include ClientDisplayHelper
+    include ClientSurveyPatternsHelper
     
     def home
         @semesters = Semester.order(:year)
@@ -311,7 +312,14 @@ class SemestersController < ApplicationController
         @full_questions = client_data[:full_questions]
         @cliSurvey = client_data[:cliSurvey]
         @flags = flags
-       
+        
+    
+
+
+        #csv_path = get_csv_path
+       # @client_question_titles = extract_titles_from_csv(client_data)
+
+        
 
         render :team
     end

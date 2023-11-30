@@ -148,19 +148,23 @@
         <% missing_responses = expected_keys.any? { |key| !@cliSurvey[0].has_key?(key) } %>
         <% Rails.logger.debug "Missing responses: #{missing_responses}" %>
 
+        <%# Collect the keys of the missing responses %>
+        <% missing_keys = expected_keys.reject { |key| @cliSurvey[0].has_key?(key) } %>
+        <% Rails.logger.debug "Missing responses: #{missing_keys.any?}" %>
+
+        <%# Display a message if missing responses are detected %>
         <%# Display a message if missing responses are detected %>
         <% if missing_responses %>
           <div class="d-flex justify-content-center mt-4 mb-4">
-          <div class="card w-50">
-            <div class="card-body">
-              <p class="card-text text-center">
-                <strong>Note:</strong> One or more client responses are missing. Please review your CSV file for completeness.
-              </p>
+            <div class="card w-50">
+              <div class="card-body">
+                <p class="card-text text-center">
+                  <strong>Note:</strong> One or more client responses are missing for sprint <strong><%= @sprint %></strong> of team <strong><%= @team %></strong>: <strong><%= missing_keys.join(', ') %></strong>. Please review your CSV file for completeness.
+                </p>
+              </div>
             </div>
           </div>
-          </div>
         <% end %>
-        
         <%Rails.logger.debug "missing_responses : #{missing_responses}"%>
         
         
