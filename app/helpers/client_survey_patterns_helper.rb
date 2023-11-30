@@ -1,9 +1,34 @@
 module ClientSurveyPatternsHelper
+
+    #This helper is assigned to help keep all the hardcoded values for the cleint CSV in one place 
+
+
     SPRINT_PATTERN = /\Aq3\z/i
     TEAM_PATTERN = /\Aq1_team\z/i
     PERFORMANCE_PATTERN = /\Aq2_\d+\z/i
     CLIENT_EVALUATION  = [/\Aq7\z/i,/\Aq4\z/i,/\Aq5\z/i,/\Aq6\z/i]
 
-    
-    
+    #there is another hardcoded data inside the heam.html.erb:
+    #<% expected_keys = ['q2_1', 'q2_2', 'q2_3', 'q2_4', 'q2_5', 'q2_6'].map(&:to_sym) %>
+
+    #there is anotehr one in the client_display_helper.rb
+    #  def extract_full_questions(csv_path)
+    #       csv = CSV.read(csv_path, headers: true)
+    #       question_headers = csv.headers.grep(/\Aq2_\d+\z/i)
+    #       full_questions = csv[0].values_at(*question_headers)
+    #       Hash[question_headers.zip(full_questions)]
+    #       end
+
+
+    #used by the client_score_helper
+    def performance_to_score(response)
+        response = response.to_s.downcase
+        case response
+        when "exceeded expectations" then 3.0
+        when "met expectations" then 2.0
+        when "did not meet expectations" then 1.0
+        when "" then 0.0
+        else 0.0
+        end
+    end
 end

@@ -313,7 +313,7 @@ class SemestersController < ApplicationController
         @cliSurvey = client_data[:cliSurvey]
         @flags = flags
         
-    
+       
 
 
         #csv_path = get_csv_path

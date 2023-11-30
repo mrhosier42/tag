@@ -1,16 +1,8 @@
 module ClientScoreHelper  
       include ClientSurveyPatternsHelper
-      
-      def performance_to_score(response)
-        response = response.to_s.downcase
-        case response
-        when "exceeded expectations" then 3.0
-        when "met expectations" then 2.0
-        when "did not meet expectations" then 1.0
-        when "" then 0.0
-        else 0.0
-        end
-      end
+      #      
+      # Look at the client_score_helper
+      #
       def calculate_score(matching_row, performance_columns)
         performance_scores = performance_columns.map do |col|
           response = matching_row[col]
@@ -71,14 +63,7 @@ module ClientScoreHelper
       end
 
 
-      def extract_full_questions(csv_path)
-        csv = CSV.read(csv_path, headers: true)
-        question_headers = csv.headers.grep(/\Aq2_\d+\z/i)
-        full_questions = csv[0].values_at(*question_headers)
-        Hash[question_headers.zip(full_questions)]
-      end
-
-      
+     
       
       
  

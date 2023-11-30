@@ -29,7 +29,7 @@ module ClientDisplayHelper
   
           cliSurvey = client_data_raw.find_all { |survey| survey[:q1_team] == best_matching_team && survey[:q3] == sprint }
           cliSurvey.map! { |survey| survey.select { |key, _| key.to_s.start_with?('q') } }
-          #@client_question_titles = @clientData[0].select { |key, _| key.to_s.start_with?('q') }
+          
   
           if cliSurvey.blank?
             flags.append("client blank")
@@ -50,6 +50,7 @@ module ClientDisplayHelper
   
     private
   
+    #helps display the questions from the second roll in the CSV
     def extract_full_questions(csv_path)
       csv = CSV.read(csv_path, headers: true)
       question_headers = csv.headers.grep(/\Aq2_\d+\z/i)
