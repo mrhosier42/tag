@@ -1,4 +1,4 @@
-import { Octokit, App } from "https://esm.sh/octokit";
+import { Octokit } from "https://esm.sh/octokit";
 
 console.log("Javascript File is executed.");
 
@@ -30,43 +30,46 @@ document.getElementById('github-form').addEventListener('submit', function(event
         until: endDate,
     })
 
-    .then((response) => {
-        // Handles the API response
-        const commits = response.data;
+        .then((response) => {
+            const commits = response.data;
 
-        const authorCommits = {};
+            const authorCommits = {};
+            const commitDates = {};
 
-        commits.forEach((commit) => {
-            const author = commit.commit.author.name;
-            if (authorCommits[author]) {
-                authorCommits[author]++;
-            } else {
-                authorCommits[author] = 1;
-            }
-        });
+            // Process commits to group by author and date
+            commits.forEach((commit) => {
+                const author = commit.commit.author.name;
+                const date = commit.commit.author.date.slice(0, 10); // Extract just the YYYY-MM-DD part
 
-        // Clear the table body
-        commitTableBody.innerHTML = '';
+                if (!authorCommits[author]) {
+                    authorCommits[author] = {};
+                }
+                if (!authorCommits[author][date]) {
+                    authorCommits[author][date] = 0;
+                }
+                authorCommits[author][date]++;
+                commitDates[date] = true;
+            });
 
-        // Populate the table with author commit data
-        for (const author in authorCommits) {
-            const row = commitTableBody.insertRow();
-            const cell1 = row.insertCell(0);
-            const cell2 = row.insertCell(1);
-            cell1.textContent = author;
-            cell2.textContent = authorCommits[author];
-        }
+            // Generate a list of all dates for the x-axis
+            const allDates = Object.keys(commitDates).sort();
 
-        console.log(commits)
+            // Generate datasets for each author
+            const datasets = Object.keys(authorCommits).map(author => {
+                const data = allDates.map(date => authorCommits[author][date] || 0);
 
-        // Create an HTML string to display the commits
-        const commitsHTML = commits.map((commit) => {
-            return `<p><strong>${commit.commit.author.name}</strong>: ${commit.commit.message}</p>`;
-        }).join('');
+                return {
+                    label: author,
+                    data: data,
+                    fill: false,
+                    borderColor: getRandomColor(), // Function to generate random color
+                    tension: 0.1
+                };
+            });
 
-        // Update the content of the commit-list element
-        commitList.innerHTML = commitsHTML;
-    })
+            // Create the chart with these datasets
+            createCommitChart(allDates, datasets);
+        })
 
     .catch((error) => {
         console.log("Request failed.")
@@ -74,4 +77,43 @@ document.getElementById('github-form').addEventListener('submit', function(event
         // Handles errors
         console.error(error);
     });
+});
+
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+function createCommitChart(labels, datasets) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    // Destroys previous chart instance (if it exists)
+    if (window.myChartInstance) {
+        window.myChartInstance.destroy();
+    }
+
+    window.myChartInstance = new Chart(ctx, {
+        type: 'line', // Change type here like 'bar', 'line', etc.
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    createDummyChart(); // Call the function to create the dummy chart
 });
