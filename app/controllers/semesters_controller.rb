@@ -9,7 +9,10 @@ class SemestersController < ApplicationController
     include PreprocessorHelper
     include TeamsHelper
     include SprintsHelper
-
+    include ClientScoreHelper
+    include ClientDisplayHelper
+    include ClientSurveyPatternsHelper
+    
     def home
         @semesters = Semester.order(:year)
         render :home
@@ -112,62 +115,8 @@ class SemestersController < ApplicationController
         return @teams
     end
 
-    def get_client_score(semester, team, sprint)
-        @scores = -1
-        clientScore = []
-
-        # Downloads and temporarily store the student_csv file
-        semester.client_csv.open do |tempfile|
-            begin
-                @sponsorData = SmarterCSV.process(tempfile.path)
-
-                # Delete the 2 header columns before the data
-                @sponsorData.delete_at(0)
-                @sponsorData.delete_at(0)
-
-                @sponsorData.each do |row|
-                    clientScore = []
-                    if row[:q1_team] == team && row[:q3] == sprint
-                        clientScore.append(row[:q2_1])
-                        clientScore.append(row[:q2_2])
-                        clientScore.append(row[:q2_3])
-                        clientScore.append(row[:q2_4])
-                        clientScore.append(row[:q2_5])
-                        clientScore.append(row[:q2_6])
-                        @scores = calc_client_average_score(clientScore)
-                    end
-                end
-            rescue => exception
-                flash.now[:alert] = "Error! Unable to read sponsor data. Please update your student data file"
-            end
-        end
-        if @scores < 0
-            puts "DEBUG: @scores is < 0 in get_client_score method"
-            return "No Score"
-        end
-        return @scores
-    end
-
-    def calc_client_average_score(arr)
-        total = 0
-
-        arr.each do |item|
-            if item.downcase == "exceeded expectations"
-                total = total + 5.0
-            elsif item.downcase == "met expectations"
-                total = total + 4.0
-            elsif item.downcase == "about half the time"
-                total = total + 3.0
-            elsif item.downcase == "sometimes"
-                total = total + 2.0
-            elsif item.downcase == "never"
-                total = total + 1.0
-            end
-        end
-        total = total / 6.0
-        total = total.round(1)
-        return total
-    end
+    
+  
 
 
     def team
@@ -185,6 +134,9 @@ class SemestersController < ApplicationController
         # stores all the flags for the team
         @flags = []
 
+    
+
+
         # Processes the student data first
         begin
             # Downloads and temporarily store the student_csv file
@@ -197,6 +149,7 @@ class SemestersController < ApplicationController
 
                     if @student_survey.blank?
                         @flags.append("student blank")
+                        puts "student blank"
                     end
 
                     if @student_survey[0] then @self_submitted_names = [[@student_survey[0][:q1]],[@student_survey[0][:q10]]] end
@@ -215,6 +168,8 @@ class SemestersController < ApplicationController
                             max = white.similarity(name[0], survey[:q1])
                             name_to_add = ["#{survey[:q1]}'s survey","q1",survey[:q1]]
                             self_scores = [survey[:q11_1],survey[:q11_2],survey[:q11_3],survey[:q11_4],survey[:q11_5],survey[:q11_6]]
+                            Rails.logger.debug("NAMEE ADD")
+                            Rails.logger.debug("#{self_scores}")
                             scores = nil
                             if white.similarity(name[0], survey[:q10]) > max
                                 max = white.similarity(name[0], survey[:q10])
@@ -254,7 +209,7 @@ class SemestersController < ApplicationController
                                     elsif score=="Never"
                                         1
                                     else
-                                        score
+                                        0
                                     end
                                 }
                             end
@@ -271,7 +226,7 @@ class SemestersController < ApplicationController
                                     elsif score=="Never"
                                         1
                                     else
-                                        score
+                                        0 
                                     end
                                 }
                             end
@@ -283,10 +238,12 @@ class SemestersController < ApplicationController
                             end
                             name.push(name_to_add)
                         end
+
+                        
                         name[1].compact!
                         name[2].compact!
                         including_self_scores = name[1] + name[2]
-
+                        
                         if including_self_scores.present?
                             name.push((including_self_scores.sum / including_self_scores.size.to_f).round(1))
                         elsif name[2].present?
@@ -294,10 +251,15 @@ class SemestersController < ApplicationController
                         else
                             name.push("*Did not submit survey*")
                         end
-
+                        
                         name.push((name[2].sum / name[2].size.to_f).round(1))
-
-                        # stores the flags for the team
+                      
+                        # Rails.logger.debug("DEBUGGGGGG #{name[-2]}")
+                      #  Rails.logger.debug("NAMEE ADD")
+                      #Rails.logger.debug("#{self_scores}")
+                       
+                      
+                      # stores the flags for the team
                         if name[-2].is_a?(String) && !@flags.include?("missing submit")
                             @flags.append("missing submit")
                         end
@@ -346,78 +308,18 @@ class SemestersController < ApplicationController
             @flags.append("student blank")
         end
 
-        begin
-            @semester.client_csv.open do |tempClient|
-                begin
-                    @clientData = SmarterCSV.process(tempClient.path)
-                    Rails.logger.debug("DEBUGGING @clientData: #{@clientData}")
+        client_data, flags = process_client_data(@semester, @team, @sprint)
+        @full_questions = client_data[:full_questions]
+        @cliSurvey = client_data[:cliSurvey]
+        @flags = flags
+        
+       
 
-                    Rails.logger.debug("Processing client data......")
 
-                    max_similarity = 0
-                    best_matching_team = nil
+        #csv_path = get_csv_path
+       # @client_question_titles = extract_titles_from_csv(client_data)
 
-                    Rails.logger.debug("Looking for best match for: #{@team}")
-
-                    @clientData.each do |client_survey|
-                        # Skip the row if the team name is empty or starts with '{'
-                        next if client_survey[:q1_team].blank? || client_survey[:q1_team].start_with?('{')
-
-                        # Skip the row if the sprint value is empty
-                        next if client_survey[:q3].blank?
-
-                        Rails.logger.debug("Team: #{client_survey[:q1_team]}, Sprint: #{client_survey[:q3]}")
-
-                        similarities = compare_strings(@team, client_survey[:q1_team])
-                        avg_similarity = (similarities[:jaro_winkler] + similarities[:levenshtein]) / 2.0
-
-                        Rails.logger.debug("Comparing #{@team} with #{client_survey[:q1_team]}")
-                        Rails.logger.debug("Similarity scores: Jaro-Winkler: #{similarities[:jaro_winkler]}, Levenshtein: #{similarities[:levenshtein]}, Average: #{avg_similarity}")
-
-                        if avg_similarity > max_similarity
-                            max_similarity = avg_similarity
-                            best_matching_team = client_survey[:q1_team]
-                        end
-                    end
-
-                    Rails.logger.debug("Best matching team name: #{best_matching_team}, similarity score: #{max_similarity}")
-
-                    @cliSurvey = @clientData.find_all { |client_survey| client_survey[:q1_team] == best_matching_team && client_survey[:q3] == "#{@sprint}" }
-                    @cliSurvey.map! do |client_survey|
-                        client_survey.select { |key, _| key.to_s.start_with?('q') }
-                    end
-
-                    @client_question_titles = @clientData[0].select { |key, _| key.to_s.start_with?('q') }
-
-                    Rails.logger.debug("DEBUG: CliSurvey data after filtering: #{@cliSurvey.inspect}")
-
-                    if @cliSurvey.blank?
-                        @flags.append("client blank")
-                    end
-
-                    # check if clients questions are empty (without any responses)
-                    if @cliSurvey[0][:q4].present?
-                        @not_empty_questions.append(9)
-                    end
-                    if @cliSurvey[0][:q5].present?
-                        @not_empty_questions.append(10)
-                    end
-                    if @cliSurvey[0][:q6].present?
-                        @not_empty_questions.append(11)
-                    end
-                    if @cliSurvey[0][:q7].present?
-                        @not_empty_questions.append(12)
-                    end
-
-                rescue => inner_exception
-                    Rails.logger.debug("DEBUG: Inner exception: #{inner_exception}")
-                end
-            end
-        rescue => exception
-            flash.now[:alert] = "This semester does not have a client survey"
-            @flags.append("client blank")
-            Rails.logger.debug("DEBUG: Outer exception: #{exception}")
-        end
+        
 
         render :team
     end
@@ -553,7 +455,7 @@ class SemestersController < ApplicationController
                         if cscore == "No Score"
                             flags.append("no client score")
                         end
-                        if cscore <= 3
+                        if cscore <2
                             flags.append("low client score")
                         end
                     end end
