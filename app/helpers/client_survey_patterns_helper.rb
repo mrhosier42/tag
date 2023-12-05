@@ -8,16 +8,28 @@ module ClientSurveyPatternsHelper
     PERFORMANCE_PATTERN = /\Aq2_\d+\z/i
     CLIENT_EVALUATION  = [/\Aq7\z/i,/\Aq4\z/i,/\Aq5\z/i,/\Aq6\z/i]
 
-    #there is another hardcoded data inside the heam.html.erb:
+    #there is another hardcoded data inside the team.html.erb:
     #<% expected_keys = ['q2_1', 'q2_2', 'q2_3', 'q2_4', 'q2_5', 'q2_6'].map(&:to_sym) %>
 
-    #there is anotehr one in the client_display_helper.rb
+    #there is another one in the client_display_helper.rb
     #  def extract_full_questions(csv_path)
     #       csv = CSV.read(csv_path, headers: true)
     #       question_headers = csv.headers.grep(/\Aq2_\d+\z/i)
     #       full_questions = csv[0].values_at(*question_headers)
     #       Hash[question_headers.zip(full_questions)]
     #       end
+
+
+    #client_display_helper.rb 
+        #next if client_survey[:q1_team].blank? || client_survey[:q1_team].start_with?('{')
+        #next if client_survey[:q3].blank?
+
+        #similarities = compare_strings(team, client_survey[:q1_team])
+
+        #best_matching_team = client_survey[:q1_team]
+
+        #cliSurvey = client_data_raw.find_all { |survey| survey[:q1_team] == best_matching_team && survey[:q3] == sprint }
+        
 
 
     #used by the client_score_helper

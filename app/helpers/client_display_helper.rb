@@ -15,6 +15,7 @@ module ClientDisplayHelper
           best_matching_team = nil
   
           client_data_raw.each do |client_survey|
+            
             next if client_survey[:q1_team].blank? || client_survey[:q1_team].start_with?('{')
             next if client_survey[:q3].blank?
   

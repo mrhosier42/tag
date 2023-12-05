@@ -1,8 +1,9 @@
 module ClientScoreHelper  
       include ClientSurveyPatternsHelper
       #      
-      # Look at the client_score_helper
+      # Look at the client_servay_pattern_helper
       #
+      
       def calculate_score(matching_row, performance_columns)
         performance_scores = performance_columns.map do |col|
           response = matching_row[col]
@@ -61,11 +62,4 @@ module ClientScoreHelper
           end    
         end      
       end
-
-
-     
-      
-      
- 
-
 end
