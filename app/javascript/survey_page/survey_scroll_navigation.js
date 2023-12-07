@@ -29,4 +29,7 @@ $(document).ready(function() {
     $('#btn-jump-to-cqq').on('click', function() {
         smoothScrollTo($('#client-qualitative-questions'), 60);
     });
+    $('#btn-jump-to-ghc').on('click', function() {
+        smoothScrollTo($('#github-commits'), 60);
+    });
 });
