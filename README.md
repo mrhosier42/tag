@@ -26,6 +26,11 @@ This application is built on Ruby on Rails web framework.
 5. Install Bundler (if not installed): ```gem install bundler```
 6. Install Ruby Gems: ```bundle install```
 7. Install JS Dependencies: ```yarn install```
+   - If Yarn is not installed:
+     - Macos: If you have Homebrew installed: ```brew install yarn```
+     - Windows (using WSL w/ Ubuntu): ```npm install --global yarn```
+     - Linux: ```npm install --global yarn```
+8. Install rails: ```gem install rails```
 9. Set Up Database: ```rails db:create```
 10. Run Migrations: ```rails db:reset db:migrate```
 11. Start rails server: ```rails server``` (or ```rails s``` for short)
@@ -39,6 +44,13 @@ This application is built on Ruby on Rails web framework.
 4. Select a sprint and semester.
 5. View the page team you want to review.
 
+## Troubleshooting:
+(Linux - Ubuntu)
+#### bundle install issue
+* If you are seeing this message in your terminal: "An error occurred while installing pg (#.#.#), and Bundler cannot continue.", run the command below:
+1. You'll need to install libpq or postgresql client package like so:
+   (a) ```sudo apt install libpq-dev```
+
 
 # History and Progress
 This app is a continuation of the development of the previous capstone team and GA's that have worked on this app.
@@ -48,4 +60,8 @@ This app was upgraded from an old version of rails framework (6.1) and ruby lang
 
 
 You can find three different versions, if you would like to see the changes made over time. Documentation will also be provided in this repo if you would instead prefer to read version 1 to 3 changes and improvements.
+
+
+## Special Contrtibutions
+* [@chahmedejaz](https://github.com/chahmedejaz) - [issue](https://github.com/mrhosier42/tag/issues/16) contribution [commit](https://github.com/chahmedejaz/tag/commit/5619ba4004cf028a9e4e237f72ffafac22462caa).
 

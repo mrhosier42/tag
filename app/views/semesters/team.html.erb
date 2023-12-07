@@ -99,60 +99,119 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% @self_submitted_names.each do |name|%>
-<!--                Uncomment me to inspect to internal data for "Student Scores"-->
-                  <%# Rails.logger.debug "=== Name data: #{name.inspect} ===" %>
+                <% if @self_submitted_names.present? %>
+                <% @self_submitted_names.each do |name| %>
                   <tr>
-                    <th><%=name[0]%></th>
-                    <td class="<%=if name[-2]&.is_a?(String) or name[-2]&. < 4 then "text-white bg-danger" end%>"><%=name[-2]%></td>
-                    <td class="<%=if name.last().is_a?(String) && name.last().to_i < 4 then "text-white bg-danger" end%>"><%=name.last()%></td>
+                    <!-- Output the name -->
+                    <th><%= name[0] %></th>
+              
+                    <!-- Check if the second to last item is a String or less than 4 -->
+                    <!-- Apply 'text-white bg-danger' class if the condition is true -->
+                    <td class="<%= 'text-white bg-danger' if name[-2].is_a?(String) || name[-2].to_f < 4 %>">
+                      <%= name[-2] %>
+                    </td>
+              
+                    <!-- Check if the last item is not a String and is less than 4 -->
+                    <!-- Apply 'text-white bg-danger' class if the condition is true -->
+                    <td class="<%= 'text-white bg-danger' if name.last.is_a?(String) && name.last.to_f < 4 %>">
+                      <%= name.last %>
+                    </td>
                   </tr>
                 <% end %>
+                <% else %>
+                  <!-- Handle the case where @self_submitted_names is nil or empty -->
+                  <tr>
+                    <td colspan="2" >No data available</td>
+                    <td colspan="3" >No data available</td>
+                  </tr>
+                <% end %>
+
+
                 </tbody>
               </table>
             </div>
           </div>
         <% end %>
 <!--        <br>-->
-        <% unless @flags.include?("client blank") || @cliSurvey.blank? %>
-          <%#= debug @cliSurvey %>
-          <div>
-          <h2 id="client-scores" style="font-size: 2rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">Client Scores</h2>
-          <div>
-            <table class="table">
-              <tr>
-                <th>The team was on time and professional during our meeting</th>
-                <td class="<%= 'text-white bg-danger' if @cliSurvey[0][:q2_1].
-                  strip.downcase != "exceeded expectations" && @cliSurvey[0][:q2_1].strip.downcase != "met expectations" %>"><%= @cliSurvey[0][:q2_1].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team was prepared for their meeting with me</th>
-                <td class="<%= if @cliSurvey[0][:q2_2].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_2].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_2].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team is communicating with me clearly</th>
-                <td class="<%= if @cliSurvey[0][:q2_3].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_3].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_3].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team met the goals we agreed to at our last meeting</th>
-                <td class="<%= if @cliSurvey[0][:q2_4].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_4].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_4].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team listended to my feedback</th>
-                <td class="<%= if @cliSurvey[0][:q2_5].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_5].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_5].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>The team set appropriate goals for the next two weeks</th>
-                <td class="<%= if @cliSurvey[0][:q2_6].strip.downcase != "Exceeded expectations " && @cliSurvey[0][:q2_6].strip.downcase != "Met expectations " then "text - white bg - danger" end %>"><%= @cliSurvey[0][:q2_6].strip.downcase %></td>
-              </tr>
-              <tr>
-                <th>Clients average score</th>
-                <td><%= get_client_score(@semester, @team, @sprint) %></td>
-              </tr>
-            </table>
+
+      <!-- Client Scores Section -->
+      <% if @cliSurvey.blank? %>
+        <!-- If there's no survey data, this message will display -->
+        <div class="d-flex justify-content-center mt-4 mb-4">
+          <div class="card w-50 border-danger">
+            <div class="card-body bg-danger text-white">
+              <p class="card-text text-center">
+                <strong>Attention:</strong> Client survey response is not available. Please check if the client has submitted their survey or confirm there are no issues with the CSV file.
+              </p>
+            </div>
           </div>
         </div>
+      <% else %>
+
+      <%# Check if any responses have a value of '0', indicating a missing response %>
+        <%# First, define the expected keys %>
+        <% expected_keys = ['q2_1', 'q2_2', 'q2_3', 'q2_4', 'q2_5', 'q2_6'].map(&:to_sym) %>
+
+        <%# Then, check if any expected key is missing in the survey response %>
+        <% missing_responses = expected_keys.any? { |key| !@cliSurvey[0].has_key?(key) } %>
+        <% Rails.logger.debug "Missing responses: #{missing_responses}" %>
+
+        <%# Collect the keys of the missing responses %>
+        <% missing_keys = expected_keys.reject { |key| @cliSurvey[0].has_key?(key) } %>
+        <% Rails.logger.debug "Missing responses: #{missing_keys.any?}" %>
+
+        <!-- If there's survey data, it should display in this section -->
+        <h2 id="client-scores">Client Scores</h2>
+
+        <%# Display a message if missing responses are detected %>
+        <% if missing_responses %>
+            <div class="d-flex justify-content-center mt-4 mb-4">
+              <div class="card w-50 border-danger">
+                <div class="card-body bg-danger text-white">
+                  <p class="card-text text-center">
+                    <strong>Note:</strong> One or more client responses are missing for sprint <strong><%= @sprint %></strong> of team <strong><%= @team %></strong>: <strong><%= missing_keys.join(', ') %></strong>. Please review your CSV file for completeness.
+                  </p>
+                </div>
+              </div>
+            </div>
         <% end %>
+        <%Rails.logger.debug "missing_responses : #{missing_responses}"%>
+        
+
+        <table class="table">
+          <%# Debug the structure of @cliSurvey[0] to ensure it's as expected %>
+            <% Rails.logger.debug "@cliSurvey[0]: #{@cliSurvey[0]}" %>
+            <%# Iterate over the full questions %>
+            <% @full_questions.each do |code, full_question| %>
+              <%# Convert the code to a lowercase symbol before checking %>
+              <% sym_code = code.downcase.to_sym %>
+              <% if @cliSurvey[0].has_key?(sym_code) %>
+                <%# Access the response using the symbolized and lowercased code %>
+                <% response = @cliSurvey[0][sym_code] %>
+                <% Rails.logger.debug "Response for #{sym_code}: #{response}" %>
+                <tr>
+                  <th><%= full_question %></th>
+                  <td class="<%= 'text-white bg-danger' if response.blank? || !['exceeded expectations', 'met expectations'].include?(response.strip.downcase) %>">
+                    <%= response.present? ? response.strip.downcase.titleize : 'Not answered' %>
+                  </td>
+                </tr>
+              <% else %>
+                <% Rails.logger.debug "No response found for #{sym_code}" %>
+              <% end %>
+            <% end %>
+            <tr>
+              <th>Clients average score</th>
+              <td class="<%= 'text-white bg-danger' if get_client_score(@semester, @team, @sprint).to_f < 2 %>">
+                <%= get_client_score(@semester, @team, @sprint) %>
+              </td>
+            </tr>
+          </table>
+          
+        </div>
+       
+      <% end %>
+      <!-- End of Client Scores Section -->
+
 
         <br>
         <% unless @flags.include?("student blank") %>
@@ -321,5 +380,3 @@
 <%= javascript_include_tag 'survey_page/survey_scroll_navigation' %>
 <%= javascript_include_tag 'survey_page/survey_page_expanding_cols' %>
 <%= javascript_include_tag 'octokit', type: "module" %>
-
-</body>
