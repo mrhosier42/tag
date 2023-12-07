@@ -1,6 +1,4 @@
-import { Octokit, App } from "https://esm.sh/octokit";
-
-console.log("Javascript File is executed.");
+import { Octokit } from "https://esm.sh/octokit";
 
 document.getElementById('github-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting the traditional way
@@ -11,13 +9,15 @@ document.getElementById('github-form').addEventListener('submit', function(event
     const startDate = document.getElementById('start-date').value;
     const endDate = document.getElementById('end-date').value;
 
-
-    // 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 //
-
     const octokit = new Octokit({
         auth: accessToken,
     });
     
+    // Get a reference to the commit-table and its tbody
+    const commitTable = document.getElementById('commit-table');
+    const commitTableBody = commitTable.querySelector('tbody');
+
+
     // Get a reference to the commit-list element
     const commitList = document.getElementById('commit-list');
 
@@ -28,62 +28,46 @@ document.getElementById('github-form').addEventListener('submit', function(event
         until: endDate,
     })
 
-    .then((response) => {
-        // Handles the API response
-        const commits = response.data;
+        .then((response) => {
+            const commits = response.data;
 
-        console.log(commits)
+            const authorCommits = {};
+            const commitDates = {};
 
-        // Create an HTML string to display the commits
-        const commitsHTML = commits.map((commit) => {
-            return `<p><strong>${commit.commit.author.name}</strong>: ${commit.commit.message}</p>`;
-        }).join('');
+            // Process commits to group by author and date
+            commits.forEach((commit) => {
+                const author = commit.commit.author.name;
+                const date = commit.commit.author.date.slice(0, 10); // Extract just the YYYY-MM-DD part
 
-        // Update the content of the commit-list element
-        commitList.innerHTML = commitsHTML;
-
-
-        const commitDates = commits.map((commit) => commit.commit.author.date);
-        const commitCounts = commits.map(() => 0);
-
-        const chartData = {
-            labels: commitDates,
-            datasets: [
-                {
-                    label: 'Commits',
-                    data: commitCounts,
+                if (!authorCommits[author]) {
+                    authorCommits[author] = {};
                 }
-            ],
-        };
-        new Chartkick.LineChart("chart", data)
+                if (!authorCommits[author][date]) {
+                    authorCommits[author][date] = 0;
+                }
+                authorCommits[author][date]++;
+                commitDates[date] = true;
+            });
 
-        // Get the canvas element
-        const canvas = document.getElementById('Commits');
+            // Generate a list of all dates for the x-axis
+            const allDates = Object.keys(commitDates).sort();
 
-        // Create the chart using Chart.js
-        const ctx = canvas.getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: chartData,
-            options: {
-                scales: {
-                    x: {
-                        type: 'time', // This assumes commitDates are in a date format
-                        time: {
-                            unit: 'day', // Adjust as needed
-                        },
-                    },
-                    y: {
-                        beginAtZero: true,
-                    },
-                },
-            },
-        });
-    })
-    })
-    
-     
+            // Generate datasets for each author
+            const datasets = Object.keys(authorCommits).map(author => {
+                const data = allDates.map(date => authorCommits[author][date] || 0);
 
+                return {
+                    label: author,
+                    data: data,
+                    fill: false,
+                    borderColor: getRandomColor(), // Function to generate random color
+                    tension: 0.1
+                };
+            });
+
+            // Create the chart with these datasets
+            createCommitChart(allDates, datasets);
+        })
 
     .catch((error) => {
         console.log("Request failed.")
@@ -91,6 +75,43 @@ document.getElementById('github-form').addEventListener('submit', function(event
         // Handles errors
         console.error(error);
     });
+});
+
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+function createCommitChart(labels, datasets) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    // Destroys previous chart instance (if it exists)
+    if (window.myChartInstance) {
+        window.myChartInstance.destroy();
+    }
+
+    window.myChartInstance = new Chart(ctx, {
+        type: 'line', // Change type here like 'bar', 'line', etc.
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
 
 
-  
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    createDummyChart(); // Call the function to create the dummy chart
+});

@@ -80,9 +80,7 @@ gem 'rails-erd', group: :development
 
 gem 'figaro'
 
-gem 'httparty'
-gem 'chartkick'
-gem 'groupdate'
+
 gem 'smarter_csv'
 gem 'text'
 gem 'devise'

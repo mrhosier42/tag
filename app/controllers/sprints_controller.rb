@@ -1,11 +1,13 @@
 class SprintsController < ApplicationController
   before_action :set_sprint, only: [:show, :edit, :update, :destroy]
-
+  include HTTParty
   def index
     @semester = Semester.find(params[:semester_id])
     @sprints = @semester.sprints
     render :index
   end
+    
+
 
   def show
     @semester = Semester.find(params[:semester_id])
